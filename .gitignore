@@ -3,8 +3,8 @@
 # =============== #
 [Tt]emp/
 [Oo]bj/
-Build
-Library/
+[Bb]uild
+[Ll]ibrary/
 sysinfo.txt
 *.stackdump
  
