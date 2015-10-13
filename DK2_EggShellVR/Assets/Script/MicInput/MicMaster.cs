@@ -24,7 +24,7 @@ public class MicMaster
 		//Begin monitoring on default device
 		_micInput.BeginMonitoring (0);
 		_micInput.SampleAggregator.FrameCalculated += SampleIn;
-        return true;
+        	return true;
 	}
 
 	//Get gain whenever there is input

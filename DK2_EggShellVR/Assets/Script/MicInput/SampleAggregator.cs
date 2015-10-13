@@ -4,10 +4,11 @@ public class SampleAggregator
 {
 	public event EventHandler<SampleAvgEventArgs> FrameCalculated;
 	public event EventHandler Restart = delegate { };
-	float avgValue;
-	public int NotificationCount { get; set; }
-	int count;
+	private float avgValue;
+	private int count;
 
+	public int NotificationCount { get; set; }
+	
 	//Resets the counter and avarage for recording the next frame
 	private void Reset()
 	{
