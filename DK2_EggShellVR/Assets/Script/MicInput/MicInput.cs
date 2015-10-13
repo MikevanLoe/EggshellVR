@@ -4,13 +4,14 @@ using NAudio.Wave;
 using NAudio.Mixer;
 
 public class MicInput {
-	WaveIn waveIn;
 	public readonly SampleAggregator sampleAggregator;
-	UnsignedMixerControl volumeControl;
-	double desiredVolume = 100;
-	RecordingState recordingState;
-	WaveFileWriter writer;
-	WaveFormat recordingFormat;
+	
+	private WaveIn waveIn;
+	private UnsignedMixerControl volumeControl;
+	private double desiredVolume = 100;
+	private RecordingState recordingState;
+	private WaveFileWriter writer;
+	private WaveFormat recordingFormat;
 	
 	public WaveFormat RecordingFormat
 	{
