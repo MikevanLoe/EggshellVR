@@ -1,8 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class VoiceResponse : MonoBehaviour {
-	// Punten gebaseerd op jou tijd en de 'stocktijd'
 
 	private float micIn;	
 	private float maxMicIn;
