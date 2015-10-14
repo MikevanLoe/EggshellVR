@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class VoiceResponse : MonoBehaviour {
+public class VoiceResponse : MonoBehaviour
+{
+	public float score;
 
-	private float micIn;	
-	private float maxMicIn;
-	private float minMicIn;
-	private float score;
+	private float micIn, maxMicIn, minMicIn, startTime, endTime, elapsed;
+	private Sentence zin = new Sentence("Test zin", 5.0f);
 
 	void Update()
 	{
@@ -15,9 +15,43 @@ public class VoiceResponse : MonoBehaviour {
 		minMicIn = Mathf.Min (minMicIn, micIn);
 
 		//If the current input is loud enough, increase the score
-		if (micIn > ( (maxMicIn + minMicIn) / 2))
+		ScoreSystem (zin);
+	}
+
+
+	public void ScoreSystem(Sentence spoken)
+	{
+		if (micIn > ((maxMicIn + minMicIn) / 2) && !(startTime > 0.0f))
 		{
-			score += 10;
+			startTime = Time.time;
+		}
+		if (micIn < ((maxMicIn + minMicIn) / 2) && startTime > 0.0f)
+		{
+			endTime = Time.time;
+			elapsed = endTime - startTime;
+
+			if (elapsed > spoken.time)
+			{
+				// Calculate point reduction for speaking too slow
+				float pointReduction = (( elapsed / spoken.time ) * 100 ) - 100;
+
+				// Apply the score and its reduction
+				score += 100 - pointReduction;
+			}
+			else if (elapsed < spoken.time)
+			{
+				// Calculate the percentage of points you get for speaking too fast
+				float pointPercentage = ( elapsed / spoken.time );
+				
+				// Apply the score and its reduction
+				score += 100 * pointPercentage;
+			}
+			else
+			{
+				// Apply the maximum score
+				score += 100;
+			}
 		}
 	}
 }
+	
