@@ -14,43 +14,33 @@ public class VoiceResponse : MonoBehaviour
 		maxMicIn = Mathf.Max(maxMicIn, micIn);
 		minMicIn = Mathf.Min (minMicIn, micIn);
 
-		//If the current input is loud enough, increase the score
+		//
 		ScoreSystem (zin);
 	}
 
 
 	public void ScoreSystem(Sentence spoken)
 	{
+		// If the current input is loud enough, start the timer
 		if (micIn > ((maxMicIn + minMicIn) / 2) && !(startTime > 0.0f))
 		{
 			startTime = Time.time;
 		}
+
+		// If the current input is to soft, stop the timer and give the points
 		if (micIn < ((maxMicIn + minMicIn) / 2) && startTime > 0.0f)
 		{
 			endTime = Time.time;
 			elapsed = endTime - startTime;
 
-			if (elapsed > spoken.time)
-			{
-				// Calculate point reduction for speaking too slow
-				float pointReduction = (( elapsed / spoken.time ) * 100 ) - 100;
+			// Calculate the point reduction for speaking to fast or slow
+			float pointReduction = Mathf.Abs( ( (1/spoken.time) * elapsed ) - 1);
 
-				// Apply the score and its reduction
-				score += 100 - pointReduction;
-			}
-			else if (elapsed < spoken.time)
-			{
-				// Calculate the percentage of points you get for speaking too fast
-				float pointPercentage = ( elapsed / spoken.time );
-				
-				// Apply the score and its reduction
-				score += 100 * pointPercentage;
-			}
-			else
-			{
-				// Apply the maximum score
-				score += 100;
-			}
+			// Give the player the points he earned
+			score += 100 * (1-pointReduction);
+
+			// Reset Timer
+			startTime = 0.0f;
 		}
 	}
 }
