@@ -4,15 +4,15 @@ using System.Collections;
 public class SampleReader : MonoBehaviour {
 	public TextMesh tm;
 
-	private MicMaster mm;
+	private MicrophoneInput mi;
 	// Use this for initialization
 	void Start () {
-		mm = new MicMaster ();
-		mm.Start ();
+		mi = new MicrophoneInput();
+		mi.Start ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		tm.text = mm.MicGain.ToString ();
+		tm.text = mi.GetInputAvg().ToString ();
 	}
 }
