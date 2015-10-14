@@ -10,11 +10,11 @@ public class VoiceResponse : MonoBehaviour
 
 	void Update()
 	{
-		//Calculate the highest and lowest input
+		// Calculate the highest and lowest input
 		maxMicIn = Mathf.Max(maxMicIn, micIn);
 		minMicIn = Mathf.Min (minMicIn, micIn);
 
-		//
+		// Start the timer and give points to the player
 		ScoreSystem (zin);
 	}
 
