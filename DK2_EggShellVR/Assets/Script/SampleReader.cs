@@ -13,6 +13,6 @@ public class SampleReader : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		tm.text = mi.GetInputAvg().ToString ();
+		tm.text = Mathf.Round (mi.GetInputAvg() * 10).ToString ();
 	}
 }
