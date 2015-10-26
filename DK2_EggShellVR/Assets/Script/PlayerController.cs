@@ -18,10 +18,13 @@ public class PlayerController : MonoBehaviour {
 	private float _inventoryProgress;
 	private bool _invOpen = false;
 	private bool _invTweening = false;
+	private GameObject prevLookedAt;
 
 	void Start () 
 	{
 		View = FindTransform (transform, "CenterEyeAnchor");
+		if (View == null)
+			View = transform;
 		Inventory = new List<ItemModel> ();
 	}
 
@@ -61,25 +64,29 @@ public class PlayerController : MonoBehaviour {
 	void CheckLookAt ()
 	{
 		RaycastHit hitData;
-		if (Physics.Raycast (AimObject.position, AimObject.forward, out hitData, InteractRange)) {
+		if (Physics.Raycast (AimObject.position, AimObject.forward, out hitData, InteractRange)) 
+		{
 			GameObject obj = hitData.transform.gameObject;
+			if (obj != prevLookedAt && prevLookedAt != null)
+			{
+				prevLookedAt.SendMessageUpwards ("LookedAway", SendMessageOptions.DontRequireReceiver);
+				obj.SendMessageUpwards ("LookedAt", SendMessageOptions.DontRequireReceiver);
+			}
 			//If it's an item and the player just clicked, pick it up
-			if (obj.tag == "Item") {
-				ItemObject item = obj.GetComponent<ItemObject> ();
+			if (obj.tag == "Item") 	
+			{
+				ItemObject item = obj.GetComponentInParent<ItemObject> ();
 				//If the player wants to pick it up, do that
-				if (Input.GetMouseButtonDown (0)) {
+				if (Input.GetMouseButtonDown (0)) 
+				{
 					AddItem (new ItemModel (item.ItemName, item.Quantity));
-					obj.SendMessage ("PickUp");
-				}
-				else {
-					//Else, display the item name above the item
-					obj.SendMessage ("LookedAt");
+					obj.SendMessageUpwards ("PickUp");
 				}
 			}
-			if (obj.tag == "NPC") {
-				//If looking at NPC, tell the NPC you are looking at him
-				obj.SendMessage ("LookedAt");
-			}
+			prevLookedAt = obj;
+		} else if (prevLookedAt != null) {
+			prevLookedAt.SendMessageUpwards ("LookedAway", SendMessageOptions.DontRequireReceiver);
+			prevLookedAt = null;
 		}
 	}
 

@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class NPCController : MonoBehaviour {
+	public string PersonalityName;
 	public bool RotatesOnX;
 
 	private Transform _center;
@@ -9,6 +11,9 @@ public class NPCController : MonoBehaviour {
 	private StateMachine _stateMachine;
 	private float _curX;
 	private Vector3 _forward;
+	private Dictionary<string, bool> Switches;
+	private Dictionary<string, float> Variables;
+	private Personality _personality;
 
 	void Start () 
 	{
@@ -25,11 +30,20 @@ public class NPCController : MonoBehaviour {
 			Debug.Log ("Failed to set state.");
 			throw new UnityException();
 		}
+		Switches = new Dictionary<string, bool> ();
+		Variables = new Dictionary<string, float> ();
+
+		switch (PersonalityName) {
+		case "HappyFisher":
+			_personality = new HappyFisher(this);
+			break;
+		}
 	}
 
 	void LateUpdate () 
 	{
 		_stateMachine.Handle ();
+		_personality.Update ();
 	}
 
 	public void LookAt(Transform obj)
@@ -48,6 +62,8 @@ public class NPCController : MonoBehaviour {
 			//If the head turns over 90 degrees, start turning in the other direction
 			if(b >= 90)
 				b = 90 - (b - 90);
+			//If the player is to the left of the NPC, make the angle negative so the NPC
+			//still turns in his direction
 			if(dir.x < 0)
 				b *= -1;
 		}
@@ -72,6 +88,37 @@ public class NPCController : MonoBehaviour {
 	public Transform GetCenterTransform()
 	{
 		return _center;
+	}
+
+	public void LookedAt()
+	{
+		_personality.LookedAt ();
+	}
+	
+	public bool GetSwitch(string key)
+	{
+		bool retSwitch;
+		if (Switches.TryGetValue (key, out retSwitch))
+			return retSwitch;
+		return false;
+	}
+	
+	public float GetVariable(string key)
+	{
+		float retVar;
+		if (Variables.TryGetValue (key, out retVar))
+			return retVar;
+		return 0;
+	}
+	
+	public void SetSwitch(string key, bool value)
+	{
+		Switches [key] = value;
+	}
+	
+	public void SetVariable(string key, float value)
+	{
+		Variables [key] = value;
 	}
 
 	public static Transform FindTransform(Transform parent, string name)
