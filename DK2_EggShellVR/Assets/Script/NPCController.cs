@@ -20,7 +20,7 @@ public class NPCController : MonoBehaviour {
 		//Find child object with the name "neck"
 		_neck = FindTransform (transform, "Neck");
 		_center = FindTransform (transform, "Center");
-		_forward = _neck.forward;
+		_forward = transform.forward;
 		_stateMachine = new StateMachine ();
 
 		_stateMachine.Add (new TownState (this, 8));
@@ -37,6 +37,14 @@ public class NPCController : MonoBehaviour {
 		case "HappyFisher":
 			_personality = new HappyFisher(this);
 			break;
+		case "Smith":
+			_personality = new Smith(this);
+			break;
+		case "Guard":
+			_personality = new Guard(this);
+			break;
+		default:
+			throw new UnityException("Chosen personality not found");
 		}
 	}
 

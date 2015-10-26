@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	//Add the item to the player inventory
-	private void AddItem(ItemModel item)
+	public void AddItem(ItemModel item)
 	{
 		//Find the item in the inventory
 		int index = Inventory.FindIndex (i => i.Name == item.Name);
@@ -150,5 +150,26 @@ public class PlayerController : MonoBehaviour {
 			Inventory[index].Quantity += item.Quantity;
 		}
 	}
+	
+	//Remove an item from player inventory
+	public void RemoveItem(string iName)
+	{
+		//Find the item in the inventory
+		int index = Inventory.FindIndex (i => i.Name == iName);
+		//If the inventory doesn't contain this item
+		if (Inventory.FindIndex (i => i.Name == iName) == -1) 
+		{
+			return;
+		}
+		else 
+		{
+			Inventory.RemoveAt(index);
+		}
+	}
 
+	//Check if the player inventory contains a given item
+	public bool HasItem(string iName, float quanitity = 1)
+	{
+		return Inventory.Any (i => i.Name == iName && i.Quantity >= quanitity);
+	}
 }

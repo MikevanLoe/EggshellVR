@@ -1,10 +1,9 @@
 using UnityEngine;
 
 public class HappyFisher : Personality
-{
+{	
+	private const int DelayTime = 5;
 	private float _delayTime;
-
-	const int DelayTime = 5;
 
 	public HappyFisher (NPCController c) : base(c)
 	{
@@ -32,7 +31,8 @@ public class HappyFisher : Personality
 		
 		if (clip == _voiceClips [4])
 			_client.SetSwitch ("DidIntro", true);
-		_audioSource.PlayOneShot (clip);
+		_audioSource.clip = clip;
+		_audioSource.Play();
 	}
 
 	AudioClip SelectClipLookAt ()
@@ -53,6 +53,9 @@ public class HappyFisher : Personality
 
 	public override void Update()
 	{
+		//Don't do anything until the guard is finished with his lines
+		if (!_gameController.GetSwitch ("GuardFinished"))
+			return;
 		//Only do stuff before it's been looked at
 		if (_client.GetSwitch ("LookedAt"))
 			return;
@@ -69,8 +72,9 @@ public class HappyFisher : Personality
 
 		if (clip == _voiceClips [0])
 			_client.SetSwitch ("Greeted", true);
-
-		_audioSource.PlayOneShot (clip);
+		
+		_audioSource.clip = clip;
+		_audioSource.Play();
 
 		_delayTime = Time.time + DelayTime;
 	}
