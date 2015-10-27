@@ -5,18 +5,9 @@
 [Oo]bj/
 [Bb]uild
 [Ll]ibrary/
-[Aa]ssets/
 */Library/
 sysinfo.txt
 *.stackdump
-
-# =============== #
-# Unignore Unity  #
-# =============== #
- 
-![Aa]ssets/Script/
-![Aa]ssets/Script/*
-![Aa]ssets/Script/**/*
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
