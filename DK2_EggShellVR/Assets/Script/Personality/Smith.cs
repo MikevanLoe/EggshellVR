@@ -43,7 +43,7 @@ public class Smith : Personality
 			clip = _voiceClips[1];
 		}
 		if (_client.GetSwitch ("Fixed")) {
-			//Veel plezier met je haak
+			//Nog veel gehad aan die haak?
 			clip = _voiceClips[2];
 		}
 		return clip;
