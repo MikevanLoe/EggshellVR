@@ -5,9 +5,9 @@ public class Sentence
 	public string words;
 	public float time;
 
-	public Sentence (string text, float createdTime)
+	public Sentence (string text, float allowedTime)
 	{
 		words = text;
-		time = createdTime;
+		time = allowedTime;
 	}
 }
