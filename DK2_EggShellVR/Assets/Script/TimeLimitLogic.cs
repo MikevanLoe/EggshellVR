@@ -10,7 +10,7 @@ public class TimeLimitLogic : MonoBehaviour
 
 	private float startTime;
 	private float activeTime;
-	private Sentence zin = new Sentence("Test zin", 5.0f);1
+	private Sentence zin = new Sentence("Test zin", 5.0f);
 
 	void Start(/*Sentence activeSentence*/)
 	{
