@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class TimeLimitLogic : MonoBehaviour
 {
-	const float YSizeTimer = 0.1f;
-	const float ZSizeTimer = 0.001f;
-	const float MaxXTimer = 0.8f;
+	public float YSizeTimer;
+	public float ZSizeTimer;
+	public float MaxXTimer;
 
 	public float sentence;
 	public Transform baseTime;
