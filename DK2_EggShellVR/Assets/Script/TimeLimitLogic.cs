@@ -25,19 +25,16 @@ public class TimeLimitLogic : MonoBehaviour
 	{
 		float activeTime = Time.time - startTime;
 
-		if (activeTime <= 2*sentence)
-		{
-			baseTime.gameObject.SetActive (false);
-			overTime.gameObject.SetActive (true);
-			float xTransform = MaxXTimer * (((1 / sentence) * activeTime) - 1);
-			overTime.localScale = new Vector3 (xTransform, YSizeTimer, ZSizeTimer);
-		}
-		else if (activeTime < sentence)
-		{
+		if (activeTime < sentence) {
 			GameObject takenObj = takenTime.gameObject;
 			takenObj.SetActive (true);
 			float xTransform = MaxXTimer * ((1 / sentence) * activeTime);
 			takenTime.localScale = new Vector3 (xTransform, YSizeTimer, ZSizeTimer);
+		} else if (activeTime <= 2 * sentence) {
+			baseTime.gameObject.SetActive (false);
+			overTime.gameObject.SetActive (true);
+			float xTransform = MaxXTimer * (((1 / sentence) * activeTime) - 1);
+			overTime.localScale = new Vector3 (xTransform, YSizeTimer, ZSizeTimer);
 		}
 	}
 }
