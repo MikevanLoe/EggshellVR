@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-public class StateMachine
+public class StateMachine<T>
 {
-	private List<State> _states;
-	private State _curState;
+	private List<State<T>> _states;
+	private State<T> _curState;
 
 	public StateMachine ()
 	{
-		_states = new List<State> ();
+		_states = new List<State<T>> ();
 	}
 
-	public StateMachine(List<State> s)
+	public StateMachine(List<State<T>> s)
 	{
 		_states = s;
 	}
 
-	public void Add(State s)
+	public void Add(State<T> s)
 	{
 		_states.Add (s);
 		if (_curState == null)
@@ -30,6 +30,7 @@ public class StateMachine
 			if(s.Name == name)
 			{
 				_curState = s;
+				_curState.Enter();
 				return true;
 			}
 		}
@@ -37,7 +38,7 @@ public class StateMachine
 		return false;
 	}
 
-	public State GetCurState()
+	public State<T> GetCurState()
 	{
 		return _curState;
 	}

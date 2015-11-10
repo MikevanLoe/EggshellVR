@@ -2,12 +2,12 @@ using System;
 
 public class Sentence
 {
-	public string words;
-	public float time;
+	public string Words;
+	public float Time;
 
-	public Sentence (string text, float createdTime)
+	public Sentence (string text, float time)
 	{
-		words = text;
-		time = createdTime;
+		Words = text;
+		Time = time;
 	}
 }

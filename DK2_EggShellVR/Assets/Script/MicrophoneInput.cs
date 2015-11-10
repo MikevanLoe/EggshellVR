@@ -42,4 +42,23 @@ public class MicrophoneInput
 		}
 		return avg;
 	}
+	
+	//Returns the avg feed from the microphone over the last tenth of a second
+	public float GetInput()
+	{
+		//Store the audio clip in a float array
+		float[] samples = new float[_micClip.samples * _micClip.channels];
+		_micClip.GetData (samples, 0);
+		
+		//Get the avarage value of all samples in the current recording
+		int count = 0;
+		float avg = 0f;
+		for (int i = _micClip.samples / 10 * 9; i < _micClip.samples; i++) 
+		{
+			count++;
+			//Add the absolute of the current value to the avarage calculation
+			avg = avg + (Math.Abs(samples[i]) - avg) / count;
+		}
+		return avg;
+	}
 }

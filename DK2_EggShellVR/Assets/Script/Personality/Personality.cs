@@ -7,6 +7,7 @@ public abstract class Personality
 	protected AudioSource _audioSource;
 	protected List<AudioClip> _voiceClips;
 	protected GameController _gameController;
+	protected float _demand;
 
 	public Personality (NPCController c)
 	{
@@ -21,7 +22,14 @@ public abstract class Personality
 		_gameController = gameObject.GetComponent<GameController> ();
 	}
 
-	public abstract void LookedAt();
+	public virtual void LookedAt(){}
 
-	public abstract void Update();
+	public virtual void Update(){}
+	
+	public virtual bool MarketCall(float performance)
+	{
+		if (performance > _demand)
+			return true;
+		return false;
+	}
 }

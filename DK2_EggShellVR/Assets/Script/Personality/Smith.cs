@@ -14,6 +14,8 @@ public class Smith : Personality
 
 		var Player = GameObject.FindGameObjectWithTag ("Player");
 		_playerController = Player.GetComponent<PlayerController> ();
+
+		_demand = 40;
 	}
 	
 	public override void LookedAt()
@@ -47,10 +49,5 @@ public class Smith : Personality
 			clip = _voiceClips[2];
 		}
 		return clip;
-	}
-	
-	public override void Update()
-	{
-		//Do nothing
 	}
 }

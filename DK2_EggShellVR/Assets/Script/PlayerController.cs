@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,13 @@ public class PlayerController : MonoBehaviour {
 	public Transform InventoryObject;
 	public Transform InventoryClosed;
 	public Transform InventoryOpen;
-	public TextMesh InventoryText;
 	public float TweenTime;
 
 	private float _inventoryProgress;
 	private bool _invOpen = false;
 	private bool _invTweening = false;
 	private GameObject prevLookedAt;
+	private RigidbodyFirstPersonController _fpsController;
 
 	void Start () 
 	{
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour {
 		if (View == null)
 			View = transform;
 		Inventory = new List<ItemModel> ();
+		_fpsController = GetComponent<RigidbodyFirstPersonController> ();
 	}
 
 	void Update ()
@@ -40,24 +42,19 @@ public class PlayerController : MonoBehaviour {
 			{
 				if(!_invOpen)
 				{
+					//Open inventory
+					_fpsController.enabled = false;
 					InventoryObject.gameObject.SetActive(true);
 					StartCoroutine(OpenAndCloseInventory(InventoryOpen));
 				}
 				else
 				{
+					//Close inventory
+					_fpsController.enabled = true;
 					StartCoroutine(OpenAndCloseInventory(InventoryClosed));
 				}
 			}
 		}
-		string InvString = "";
-		if (Inventory.Any ()) {
-			foreach (ItemModel im in Inventory) {
-				InvString += im.Name + " x" + im.Quantity + "\n"; 
-			}
-		} else {
-			InvString = "Your inventory \nis empty";
-		}
-		InventoryText.text = InvString;
 	}
 
 	//Raycasts forward to find what the player is looking at
@@ -134,20 +131,42 @@ public class PlayerController : MonoBehaviour {
 		}
 		return null;
 	}
-
+	
 	//Add the item to the player inventory
 	public void AddItem(ItemModel item)
 	{
 		//Find the item in the inventory
 		int index = Inventory.FindIndex (i => i.Name == item.Name);
 		//If the inventory doesn't yet contain this item
-		if (Inventory.FindIndex (i => i.Name == item.Name) == -1) 
+		if (index == -1) 
 		{
 			Inventory.Add (item);
 		}
 		else 
 		{
 			Inventory[index].Quantity += item.Quantity;
+			//If the player ran out of this item, remove from inventory
+			if(Inventory[index].Quantity <= 0)
+				Inventory.RemoveAt(index);
+		}
+	}
+	
+	//Remove the item from the inventory
+	public void RemoveItem(ItemModel item)
+	{
+		//Find the item in the inventory
+		int index = Inventory.FindIndex (i => i.Name == item.Name);
+		//If the inventory doesn't contain this item
+		if (index == -1) 
+		{
+			return;
+		}
+		else 
+		{
+			Inventory[index].Quantity -= item.Quantity;
+			//If the player ran out of this item, remove from inventory
+			if(Inventory[index].Quantity <= 0)
+				Inventory.RemoveAt(index);
 		}
 	}
 	
@@ -157,7 +176,7 @@ public class PlayerController : MonoBehaviour {
 		//Find the item in the inventory
 		int index = Inventory.FindIndex (i => i.Name == iName);
 		//If the inventory doesn't contain this item
-		if (Inventory.FindIndex (i => i.Name == iName) == -1) 
+		if (index == -1) 
 		{
 			return;
 		}

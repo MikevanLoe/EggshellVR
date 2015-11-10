@@ -13,6 +13,8 @@ public class HappyFisher : Personality
 		_voiceClips.Add(_gameController.GetClip ("visser_04"));
 		_voiceClips.Add(_gameController.GetClip ("visser_05"));
 		_voiceClips.Add(_gameController.GetClip ("visser_06"));
+
+		_demand = 50;
 	}
 
 	public override void LookedAt()

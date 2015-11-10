@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class CrowdState : State
+public class CrowdState : State<NPCController>
 {
 	private const float StareScoreMax = 100;
 	private const float StareScoreLeast = 55;
@@ -39,6 +39,12 @@ public class CrowdState : State
 	public bool IsPositive()
 	{
 		return _distraction == 0;
+	}
+
+	public override void Enter()
+	{
+		//Turn towards the player
+		_client.transform.LookAt (_player, Vector3.up);
 	}
 	
 	public override bool Handle()

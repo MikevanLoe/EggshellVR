@@ -14,7 +14,9 @@ public class Guard : Personality
 
 		var Player = GameObject.FindGameObjectWithTag ("Player");
 		_playerAudioSource = Player.GetComponent<AudioSource> ();
-		MonoBehaviour.Destroy (_client, DestroyTime);
+		MonoBehaviour.Destroy (_client.gameObject, DestroyTime);
+
+		_demand = Mathf.Infinity;
 	}
 	
 	public override void LookedAt()

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TownState : State
+public class TownState : State<NPCController>
 {
 	private GameObject _player;
 	private float _faceRange;
