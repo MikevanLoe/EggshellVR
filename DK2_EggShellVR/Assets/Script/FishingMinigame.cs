@@ -1,9 +1,30 @@
 using System;
+using UnityEngine;
 
-public class FishingMinigame
+public class FishingMinigame : MonoBehaviour
 {
-	public FishingMinigame ()
-	{
-	}
-}
+	public bool isRodActive;
 
+	public Start ()
+	{
+
+	}
+
+	public void PlaceWalls ()
+	{
+
+	}
+
+	public void SpawnFish()
+	{
+
+	}
+
+	public void UseRod ()
+	{
+
+	}
+
+
+
+}
