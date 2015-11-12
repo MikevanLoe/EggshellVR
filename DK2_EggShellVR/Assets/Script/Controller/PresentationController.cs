@@ -15,6 +15,7 @@ public class PresentationController : MonoBehaviour {
 		public float CrowdAngle;
 		public float Accuracy;
 		public float ScorePerLine;
+		public float MaxScore = 100;
 	}
 
 	public PresentationSettings pSettings = new PresentationSettings();
@@ -31,44 +32,53 @@ public class PresentationController : MonoBehaviour {
 	private string _curKey;
 	private int _curId;
 	private int _curSequence;
-	private float _magicNumber;
+	private float _filler;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
+		//The line display is the text mesh that shows the text the player has to say
 		_lineDisplay = GetComponentInChildren<TextMesh> ();
+		//The voice response object is used to determine when the player is talking
 		_voiceSystem = GetComponent<VoiceResponse> ();
 		if (_lineDisplay == null)
 			throw new UnityException ("Presentation Controller found no TextMesh in children!");
 		if (_voiceSystem == null)
 			throw new UnityException ("Presentation Controller has no VoiceResponse script attachd to it!");
 
-		//This is a magic number I use for a calculation. I don't understand it, but it works.
-		_magicNumber = 1 / pSettings.Accuracy - 1;
+		//This factor is used to round the number later in code between 0 and -1
+		_filler = 1 / pSettings.Accuracy - 1;
 
-		//Get all the lines
+		GetLinesFromJSON ();
+	}
+
+	//Gets all the presentation lines from the JSON file
+	void GetLinesFromJSON ()
+	{
+		//Get all the presentation lines
 		string json = DataReader.GetAllText ("Assets/lines.json");
-
+		//Convert the lines data to a managable format
 		JSONNode data = JSON.Parse (json);
 		var sentences = data ["lines"];
-
 		_lines = new Dictionary<string, List<List<Sentence>>> ();
 		//Loop trough all sentences and place them in the _lines member
-		for (int i = 0; i < sentences.Count; i++) {
-			var sentence = sentences[i];
-			string key  = sentence["key"];
+		for (int i = 0; i < sentences.Count; i++) 
+		{
+			var sentence = sentences [i];
+			string key = sentence ["key"];
 			//If the list doesn't yet have the key, add it
-			if(!_lines.ContainsKey(key))
+			if (!_lines.ContainsKey (key)) 
 			{
-				_lines.Add(key, new List<List<Sentence>>());
+				_lines.Add (key, new List<List<Sentence>> ());
 			}
 			//If the key doesn't yet have the id, add it
-			int id = sentence["id"].AsInt;
-			if(_lines[key].Count >= id)
+			int id = sentence ["id"].AsInt;
+			if (_lines [key].Count >= id) 
 			{
-				_lines[key].Add (new List<Sentence>());
+				_lines [key].Add (new List<Sentence> ());
 			}
 			//Add the line to the id
-			_lines[key][id].Add (new Sentence(sentence["words"], sentence["time"].AsFloat));
+			_lines [key] [id].Add (new Sentence (sentence ["words"], sentence ["time"].AsFloat));
 		}
 	}
 
@@ -77,44 +87,50 @@ public class PresentationController : MonoBehaviour {
 		//Gets a number between 1 and -1 representing the distance from
 		//the accuracy to perfection and the maximum deviation.
 		float factor = 1 - 1 / pSettings.Accuracy * deviation;
-		if (factor < 0) 
-			factor /= _magicNumber;
+		//If the factor is negative, divide it by a factor to round it to -1 at max
+		if (factor < 0)
+			factor /= _filler;
 		float score = pSettings.ScorePerLine * factor;
-		Performance = Mathf.Clamp(Performance + score, 0, 100);
+		Performance = Mathf.Clamp(Performance + score, 0, pSettings.MaxScore);
 		
 		//Get the next sentence and send it to the voice controller
 		Sentence s = GetNextSentence ();
 
-		if (s == null) {
+		//TODO: End the presentation when there is no next line
+		if (s == null) 
+		{
 			_lineDisplay.text = "";
 			Performance = 0;
 		}
-		_voiceSystem.SetSentence (s);
-		_lineDisplay.text = s.Words;
+		else
+		{
+			_voiceSystem.SetSentence (s);
+			_lineDisplay.text = s.Words; //Display the text on the display area
+		}
 		
 		//Bring in audience
-		if (_oldPerformance != Performance) 
+		if (_oldPerformance != Performance) //If the performance score changed
 		{
-			var npcs = GameObject.FindGameObjectsWithTag("NPC");
+			var npcs = GameObject.FindGameObjectsWithTag("NPC"); //Get all NPCs
 			for(int i = 0; i < npcs.Length; i++)
 			{
 				if(npcs[i].GetComponent<NPCController>() != null)
-					npcs[i].SendMessage ("MarketCall", Performance);
+					npcs[i].SendMessage ("MarketCall", Performance); //Ask NPC if they want to/can watch
 			}
 		}
-		
-		_oldPerformance = Performance;
+		_oldPerformance = Performance; //Store the performance for comparison later
 	}
 	
 	//Get the next sentence in sequence
 	private Sentence GetNextSentence ()
 	{
-		//Try to continue in sequence
-		if (_curKey != null && _lines [_curKey] [_curId].Count - 1 > _curSequence) {
+		//Try to get the next line in the sequence
+		if (_curKey != null && _lines [_curKey] [_curId].Count - 1 > _curSequence) 
+		{
 			_curSequence++;
 			return _lines [_curKey] [_curId][_curSequence];
 		}
-		//Continue to next key
+		//If there is no line next in sequence, continue to the next part of the presentation
 		switch (_curKey) {
 		case null:
 			_curKey = "start";
