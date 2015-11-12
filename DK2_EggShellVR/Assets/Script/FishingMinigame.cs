@@ -4,13 +4,14 @@ using UnityEngine;
 public class FishingMinigame : MonoBehaviour
 {
 	public bool isRodActive;
+	public bool isHookOut;
 
 	public void Start ()
 	{
 
 	}
 
-	public void PlaceWalls ()
+	public void LockMovement ()
 	{
 
 	}
@@ -20,11 +21,13 @@ public class FishingMinigame : MonoBehaviour
 
 	}
 
-	public void UseRod ()
+	public void ActivateRod ()
 	{
 
 	}
 
+	public void UseRod ()
+	{
 
-
+	}
 }
