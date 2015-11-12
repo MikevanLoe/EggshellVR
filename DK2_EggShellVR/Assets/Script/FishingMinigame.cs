@@ -5,7 +5,7 @@ public class FishingMinigame : MonoBehaviour
 {
 	public bool isRodActive;
 
-	public Start ()
+	public void Start ()
 	{
 
 	}
