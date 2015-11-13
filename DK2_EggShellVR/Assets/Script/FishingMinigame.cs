@@ -8,12 +8,19 @@ public class FishingMinigame : MonoBehaviour
 
 	public void Start ()
 	{
+		LockMovement ();
+		SpawnFish ();
+
+	}
+
+	public void Update ()
+	{
 
 	}
 
 	public void LockMovement ()
 	{
-
+		// Code van Bas
 	}
 
 	public void SpawnFish()
