@@ -4,9 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PresentationController : MonoBehaviour {
-
-	public bool PlayerIsClose;
-	public bool PresentationStarted;
 	
 	[System.Serializable]
 	public class PresentationSettings
@@ -17,11 +14,12 @@ public class PresentationController : MonoBehaviour {
 		public float ScorePerLine;
 		public float MaxScore = 100;
 	}
-
 	public PresentationSettings pSettings = new PresentationSettings();
+	public bool PlayerIsClose;
+	public bool PresentationStarted;
 	public float Performance;
 	public Transform MarketStand;
-	
+
 	[HideInInspector]
 	public List<GameObject> Audience;
 

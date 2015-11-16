@@ -25,11 +25,11 @@ public class NPCController : MonoBehaviour {
 		//Find child object with the name "Neck"
 		_neck = FindTransform (transform, "Neck");
 		if (_neck == null)
-			throw new UnityException ("NPC has no neck attached");
+			throw new UnityException ("NPC: " + name + " has no neck attached");
 		//Find child object with name "Center"
 		_center = FindTransform (transform, "Center");
 		if (_center == null)
-			throw new UnityException ("NPC has no center attached");
+			throw new UnityException ("NPC: " + name + " has no center attached");
 
 		_forward = transform.forward;
 		_stateMachine = new StateMachine<NPCController> ();

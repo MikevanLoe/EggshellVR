@@ -4,15 +4,16 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 	public List<AudioClip> audioClips;
+
 	private Dictionary<string, AudioClip> VoiceClips;
 	private Dictionary<string, bool> Switches;
 	private Dictionary<string, float> Variables;
 
 	//Awake is called before start
 	void Awake () {
-		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
 
+		//Convert voice clips to a managable format
 		VoiceClips = new Dictionary<string, AudioClip> ();
 		foreach (AudioClip a in audioClips) 
 		{
@@ -23,6 +24,15 @@ public class GameController : MonoBehaviour {
 		Variables = new Dictionary<string, float> ();
 	}
 
+	void Update() {
+		//Refresh lock state when refresh focus
+		if (Input.GetMouseButtonDown(0)	) {
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+		}
+	}
+
+	//Get clip from dictionary by name
 	public AudioClip GetClip(string name)
 	{
 		AudioClip retClip;
@@ -31,6 +41,7 @@ public class GameController : MonoBehaviour {
 		throw new UnityException ("Clip searched not found");
 	}
 
+	//Get global switch
 	public bool GetSwitch(string key)
 	{
 		bool retSwitch;
@@ -38,7 +49,8 @@ public class GameController : MonoBehaviour {
 			return retSwitch;
 		return false;
 	}
-	
+
+	//Get global variable
 	public float GetVariable(string key)
 	{
 		float retVar;
@@ -47,11 +59,13 @@ public class GameController : MonoBehaviour {
 		return 0;
 	}
 
+	//Set global switch
 	public void SetSwitch(string key, bool value)
 	{
 		Switches [key] = value;
 	}
-	
+
+	//Set global variable
 	public void SetVariable(string key, float value)
 	{
 		Variables [key] = value;

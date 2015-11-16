@@ -3,45 +3,39 @@ using System.Collections;
 
 public class MenuController : MonoBehaviour {
 	public CraftingState craftingState;
-
-	[HideInInspector]
-	public PlayerController Player;
+	private PlayerController _player;
 
 	private StateMachine<MenuController> _stateMachine;
-	[SerializeField]
-	private Transform SelectionHighlight;
 
-	// Use this for initialization
-	void Start () {
+	public PlayerController Player {
+		get{ return _player; }
+		private set{ _player = value; }
+	}
+
+	/// <summary>
+	/// Initialize the menu
+	/// </summary>
+	void Init () {
 		Player = transform.parent.GetComponent<PlayerController>();
 		_stateMachine = new StateMachine<MenuController> ();
 
 		craftingState.Start ();
 
 		_stateMachine.Add (craftingState);
-
 		_stateMachine.Set ("CraftingState");
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		_stateMachine.Handle ();
 	}
-	
-	public void SetSelectionPosition(Transform t)
+
+	//Refresh the inventory every time the menu is opened
+	public void OnEnable()
 	{
-		SelectionHighlight.position = t.position;
-		SelectionHighlight.rotation = t.rotation;
-	}
-	
-	public void SetSelectionPosition(Vector3 pos)
-	{
-		SelectionHighlight.position = pos;
-	}
-	
-	public void SetSelectionPosition(Vector3 pos, Quaternion rot)
-	{
-		SelectionHighlight.position = pos;
-		SelectionHighlight.rotation = rot;
+		//Becuase OnEnable is called before start, we have to initialize on the first
+		//time OnEnable is called instead.
+		if (Player == null)
+			Init ();
+		_stateMachine.GetCurState().Enter();
 	}
 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class PlayerController : MonoBehaviour {
-	private Transform View;
 	public List<ItemModel> Inventory;
 	public float InteractRange;
 	public Transform AimObject;
@@ -14,7 +13,8 @@ public class PlayerController : MonoBehaviour {
 	public Transform InventoryClosed;
 	public Transform InventoryOpen;
 	public float TweenTime;
-
+	
+	private Transform _view;
 	private float _inventoryProgress;
 	private bool _invOpen = false;
 	private bool _invTweening = false;
@@ -23,9 +23,9 @@ public class PlayerController : MonoBehaviour {
 
 	void Start () 
 	{
-		View = FindTransform (transform, "CenterEyeAnchor");
-		if (View == null)
-			View = transform;
+		_view = FindTransform (transform, "CenterEyeAnchor");
+		if (_view == null)
+			_view = transform;
 		Inventory = new List<ItemModel> ();
 		_fpsController = GetComponent<RigidbodyFirstPersonController> ();
 	}
@@ -81,7 +81,9 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 			prevLookedAt = obj;
-		} else if (prevLookedAt != null) {
+		} 
+		else if (prevLookedAt != null) 
+		{
 			prevLookedAt.SendMessageUpwards ("LookedAway", SendMessageOptions.DontRequireReceiver);
 			prevLookedAt = null;
 		}
@@ -104,9 +106,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		_invOpen = !_invOpen;
 		if(!_invOpen)
-		{
 			InventoryObject.gameObject.SetActive(false);
-		}
 		_invTweening = false;
 	}
 
@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour {
 	public float GetAngle(Vector3 pos)
 	{
 		Vector3 dir = pos - transform.position;
-		float angle = Vector3.Angle (View.forward, dir);
+		float angle = Vector3.Angle (_view.forward, dir);
 		return angle;
 	}
 
@@ -139,9 +139,7 @@ public class PlayerController : MonoBehaviour {
 		int index = Inventory.FindIndex (i => i.Name == item.Name);
 		//If the inventory doesn't yet contain this item
 		if (index == -1) 
-		{
 			Inventory.Add (item);
-		}
 		else 
 		{
 			Inventory[index].Quantity += item.Quantity;
@@ -158,9 +156,7 @@ public class PlayerController : MonoBehaviour {
 		int index = Inventory.FindIndex (i => i.Name == item.Name);
 		//If the inventory doesn't contain this item
 		if (index == -1) 
-		{
 			return;
-		}
 		else 
 		{
 			Inventory[index].Quantity -= item.Quantity;
@@ -177,13 +173,9 @@ public class PlayerController : MonoBehaviour {
 		int index = Inventory.FindIndex (i => i.Name == iName);
 		//If the inventory doesn't contain this item
 		if (index == -1) 
-		{
 			return;
-		}
-		else 
-		{
+		else
 			Inventory.RemoveAt(index);
-		}
 	}
 
 	//Check if the player inventory contains a given item
