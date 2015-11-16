@@ -5,7 +5,6 @@ public class FishingMinigame : MonoBehaviour
 {
 	public bool isRodActive;
 	public bool isHookOut;
-
 	public float WanderRadius;
 	public float WanderDistance;
 	public float WanderJitter;
@@ -17,12 +16,14 @@ public class FishingMinigame : MonoBehaviour
 	{
 		LockMovement ();
 		SpawnFish ();
-
 	}
 
 	public void Update ()
 	{
+		if(Input.GetButtonDown("Fire1"))
+			ActivateRod ();
 
+		MoveFish ();
 	}
 
 	public void LockMovement ()
@@ -44,11 +45,8 @@ public class FishingMinigame : MonoBehaviour
 	{
 		//first, add a small random vector to the target’s position (RandomClamped
 		//returns a value between -1 and 1)
-		System.Random randomX = new System.Random ();
-		System.Random randomZ = new System.Random ();
-
-		WanderTarget += new Vector2 (randomX.Next(-1, 2) * WanderJitter,
-		                             randomZ.Next(-1, 2) * WanderJitter);
+		WanderTarget += new Vector2 (UnityEngine.Random.Range(-1, 2) * WanderJitter,
+		                             UnityEngine.Random.Range(-1, 2) * WanderJitter);
 		
 		//reproject this new vector back onto a unit circle
 		WanderTarget.Normalize ();
@@ -64,6 +62,7 @@ public class FishingMinigame : MonoBehaviour
 
 	public void ActivateRod ()
 	{
+		isRodActive = !isRodActive;
 
 	}
 
