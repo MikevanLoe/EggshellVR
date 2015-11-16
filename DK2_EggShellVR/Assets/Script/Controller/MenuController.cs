@@ -7,15 +7,17 @@ public class MenuController : MonoBehaviour {
 
 	private StateMachine<MenuController> _stateMachine;
 
-	public PlayerController Player {
-		get{ return _player; }
-		private set{ _player = value; }
+	public PlayerController Player 
+	{
+		get;
+		private set;
 	}
 
 	/// <summary>
 	/// Initialize the menu
 	/// </summary>
-	void Init () {
+	void Init () 
+	{
 		Player = transform.parent.GetComponent<PlayerController>();
 		_stateMachine = new StateMachine<MenuController> ();
 
@@ -25,7 +27,8 @@ public class MenuController : MonoBehaviour {
 		_stateMachine.Set ("CraftingState");
 	}
 
-	void Update () {
+	void Update () 
+	{
 		_stateMachine.Handle ();
 	}
 

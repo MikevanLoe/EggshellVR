@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class NPCController : MonoBehaviour {
 	public string PersonalityName;
 	public bool RotatesOnX;
+	private Animation NPCAnim;
 
 	private Transform _center;
 	private Transform _neck;
@@ -31,7 +32,9 @@ public class NPCController : MonoBehaviour {
 		if (_center == null)
 			throw new UnityException ("NPC: " + name + " has no center attached");
 
-		_forward = transform.forward;
+		NPCAnim = GetComponent<Animation> ();
+
+		_forward = _center.transform.forward;
 		_stateMachine = new StateMachine<NPCController> ();
 
 		_stateMachine.Add (new TownState (this, 8));
@@ -68,6 +71,8 @@ public class NPCController : MonoBehaviour {
 
 	void LateUpdate () 
 	{
+		if (!NPCAnim.isPlaying)
+			NPCAnim.Play ();
 		_stateMachine.Handle ();
 		_personality.Update ();
 	}

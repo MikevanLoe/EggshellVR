@@ -15,8 +15,6 @@ public class PresentationController : MonoBehaviour {
 		public float MaxScore = 100;
 	}
 	public PresentationSettings pSettings = new PresentationSettings();
-	public bool PlayerIsClose;
-	public bool PresentationStarted;
 	public float Performance;
 	public Transform MarketStand;
 
@@ -31,8 +29,9 @@ public class PresentationController : MonoBehaviour {
 	private int _curId;
 	private int _curSequence;
 	private float _filler;
+	private bool _playerIsClose;
+	private bool _presentationStarted;
 
-	// Use this for initialization
 	void Start () 
 	{
 		//The line display is the text mesh that shows the text the player has to say
@@ -50,7 +49,9 @@ public class PresentationController : MonoBehaviour {
 		GetLinesFromJSON ();
 	}
 
-	//Gets all the presentation lines from the JSON file
+	/// <summary>
+	///Gets all the presentation lines from the JSON file
+	/// </summary>
 	void GetLinesFromJSON ()
 	{
 		//Get all the presentation lines
@@ -80,8 +81,16 @@ public class PresentationController : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Called when a sentence was finished	
+	/// </summary>
+	/// <param name="deviation">How much the accuracy deviated from the set time.</param>
 	public void SentenceSpoken (float deviation)
 	{
+		//If the player isn't standing in the area, ignore spoken sentences
+		if (!_playerIsClose)
+			return;
+
 		//Gets a number between 1 and -1 representing the distance from
 		//the accuracy to perfection and the maximum deviation.
 		float factor = 1 - 1 / pSettings.Accuracy * deviation;
@@ -118,8 +127,11 @@ public class PresentationController : MonoBehaviour {
 		}
 		_oldPerformance = Performance; //Store the performance for comparison later
 	}
-	
-	//Get the next sentence in sequence
+
+	/// <summary>
+	/// Get the next sentence in sequence
+	/// </summary>
+	/// <returns>The next sentence.</returns>
 	private Sentence GetNextSentence ()
 	{
 		//Try to get the next line in the sequence
@@ -158,6 +170,10 @@ public class PresentationController : MonoBehaviour {
 		return _lines [_curKey] [_curId] [_curSequence];
 	}
 
+	/// <summary>
+	/// Returns a random position in the crowd for an NPC to stand in
+	/// </summary>
+	/// <returns>The crowd position.</returns>
 	public Vector3 GetCrowdPosition()
 	{
 		//Random distance to stand
@@ -174,9 +190,12 @@ public class PresentationController : MonoBehaviour {
 		return point;
 	}
 
+	/// <summary>
+	/// Called when the player is inside of the presentation area.
+	/// </summary>
 	public void DetectOn()
 	{
-		PlayerIsClose = true;
+		_playerIsClose = true;
 		
 		//Show sentence
 		Sentence s = GetNextSentence();
@@ -185,9 +204,17 @@ public class PresentationController : MonoBehaviour {
 		
 		//Chain player to position
 	}
-	
+
+	//Called when player leaves the presentation area
 	public void DetectOff()
 	{
-		PlayerIsClose = false;
+		_playerIsClose = false;
+		//Tell all NPCs the show is over
+		var npcs = GameObject.FindGameObjectsWithTag("NPC"); //Get all NPCs
+		for(int i = 0; i < npcs.Length; i++)
+		{
+			if(npcs[i].GetComponent<NPCController>() != null)
+				npcs[i].SendMessage ("MarketCall", 0); //Send 0 as performance so every loses interest instantly
+		}
 	}
 }

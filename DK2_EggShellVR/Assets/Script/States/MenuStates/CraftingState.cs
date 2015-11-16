@@ -44,7 +44,7 @@ public class CraftingState : State<MenuController>
 	/// <summary>
 	/// Called when crafting state is entered
 	/// </summary>
-	public void Enter()
+	public override void Enter()
 	{
 		RefreshInventory ();
 	}
@@ -176,8 +176,10 @@ public class CraftingState : State<MenuController>
 			input.y = input.y / Mathf.Abs (input.y);
 
 		//Inventory page
-		if (selected >= 0) {
-			if (!heldX && input.x != 0) {
+		if (selected >= 0) 
+		{
+			if (!heldX && input.x != 0) 
+			{
 				//Inventory page x
 				int hold = selected;
 				selected += (int)input.x * InventorySlots.Count () / 2;
@@ -186,7 +188,8 @@ public class CraftingState : State<MenuController>
 				if (selected >= -3)
 					selected = (int)Mathf.Clamp (selected, -2, InventorySlots.Count () - 1);
 			}
-			if (!heldY && input.y != 0) {
+			if (!heldY && input.y != 0) 
+			{
 				//Inventory page y
 				if (!(selected == 3 && input.y > 0) && !(selected == 4 && input.y < 0))
 					selected += (int)input.y;
@@ -194,21 +197,26 @@ public class CraftingState : State<MenuController>
 			}
 		}
 		//Craft page
-		else if (selected > -4) {
+		else if (selected > -4) 
+		{
 			//craft page x
-			if (!heldX && input.x != 0) {
+			if (!heldX && input.x != 0) 
+			{
 				selected += (int)input.x * 2;
 				selected = (int)Mathf.Clamp (selected, -3, 1);
-				if (selected >= 0) {
+				if (selected >= 0) 
+				{
 					if (selected == 0)
 						selected = 2;
 					else
 						selected = 3;
 				}
 			}
-			if (!heldY && input.y != 0) {
+			if (!heldY && input.y != 0) 
+			{
 				//Crafting page y
-				if (selected == -2) {
+				if (selected == -2) 
+				{
 					if (input.y > 0)
 						selected = -1;
 					if (input.y < 0)
