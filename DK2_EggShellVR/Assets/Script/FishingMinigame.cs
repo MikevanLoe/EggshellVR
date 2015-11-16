@@ -6,6 +6,7 @@ public class FishingMinigame : MonoBehaviour
 	public bool isRodActive;
 	public bool isHookOut;
 	public Transform rod;
+	public Transform hook;
 
 	public float WanderRadius;
 	public float WanderDistance;
@@ -24,6 +25,9 @@ public class FishingMinigame : MonoBehaviour
 	{
 		if(Input.GetButtonDown("Fire2"))
 			ActivateRod ();
+
+		if(Input.GetButtonDown("Fire1"))
+			UseRod ();
 
 		MoveFish ();	
 	}
@@ -66,10 +70,17 @@ public class FishingMinigame : MonoBehaviour
 	{
 		isRodActive = !isRodActive;
 		rod.gameObject.SetActive (isRodActive);
+
+		if (!isRodActive)
+		{
+			isHookOut = false;
+			UseRod ();
+		}
 	}
 
 	public void UseRod ()
 	{
-
+		isHookOut = !isHookOut;
+		hook.gameObject.SetActive (isHookOut);
 	}
 }
