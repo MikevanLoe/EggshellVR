@@ -8,6 +8,8 @@ public class FishingMinigame : MonoBehaviour
 	public Transform rod;
 	public Transform hook;
 
+	public Transform spawnZone;
+
 	public float WanderRadius;
 	public float WanderDistance;
 	public float WanderJitter;
@@ -23,10 +25,12 @@ public class FishingMinigame : MonoBehaviour
 
 	public void Update ()
 	{
+		// Activate the rod when the right mouse button is pressed
 		if(Input.GetButtonDown("Fire2"))
 			ActivateRod ();
 
-		if(Input.GetButtonDown("Fire1"))
+		// Use the rod when the left mouse button is pressed
+		if(Input.GetButtonDown("Fire1") && isRodActive)
 			UseRod ();
 
 		MoveFish ();	
@@ -39,11 +43,12 @@ public class FishingMinigame : MonoBehaviour
 
 	public void SpawnFish ()
 	{
-
+		// random position in SpawnZone
 	}
 
 	public void MoveFish ()
 	{
+		// Code die gebruikt maakt van Wander()
 
 	}
 
@@ -73,7 +78,7 @@ public class FishingMinigame : MonoBehaviour
 
 		if (!isRodActive)
 		{
-			isHookOut = false;
+			isHookOut = true;
 			UseRod ();
 		}
 	}
