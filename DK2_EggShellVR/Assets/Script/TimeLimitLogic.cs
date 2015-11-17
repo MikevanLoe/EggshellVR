@@ -15,7 +15,7 @@ public class TimeLimitLogic : MonoBehaviour
 
 	void Start()
 	{
-		timeLimit = zin.time;
+		timeLimit = zin.Time;
 		startTime = Time.time;
 	}
 
