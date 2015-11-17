@@ -1,0 +1,65 @@
+{"lines": [
+	{
+		"key" : "start",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Komt dat zien! De verste vissen die je ooit gezien hebt!",
+		"time" : 3.5
+	},
+	{
+		"key" : "exordium",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Vissen zijn vet lekker, maar heb jij ze ooit gegeten?",
+		"time" : 3.4
+	},
+	{
+		"key" : "exordium",
+		"id" : 0,
+		"sequence" : 1,
+		"words" : "Ik tenminste niet! Maar vandaag kun jij ze voor de eerste keer proberen!",
+		"time" : 3.9
+	},
+	{
+		"key" : "narratio",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Ik ben hier vandaag om jou een echte eigen vis te verkopen.",
+		"time" : 4.6
+	},
+	{
+		"key" : "narratio",
+		"id" : 0,
+		"sequence" : 1,
+		"words" : "Deze vis heeft oneindig gebruikken! Je kunt hem opeten en nog veel meer!",
+		"time" : 5.62
+	},
+	{
+		"key" : "propositio",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Voor de lage prijs van 2 goudstukken kun jij nu ook de trotste eigenaar worden van een eigen vis!",
+		"time" : 5.8
+	},
+	{
+		"key" : "argumentatio",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Maar dat is niet alles! Als je nu een vis koopt, krijg je gratis een leuke speech er gratis bij!",
+		"time" : 6.6
+	},
+	{
+		"key" : "argumentatio",
+		"id" : 1,
+		"sequence" : 0,
+		"words" : "Eigenlijk wil ik hem niet weg doen maar omdat jullie zo'n aardige mensen zijn, geef ik jullie deze ongelofelijke aanbieding.",
+		"time" : 6.78
+	},
+	{
+		"key" : "peratio",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Dus waar wacht je op?! Koop nu deze vis of heb voor altijd spijt!",
+		"time" : 5.41
+	}
+]}
