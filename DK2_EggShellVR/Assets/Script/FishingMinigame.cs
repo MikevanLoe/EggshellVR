@@ -29,7 +29,7 @@ public class FishingMinigame : MonoBehaviour
 		if(Input.GetButtonDown("Fire2"))
 			ActivateRod ();
 
-		// Use the rod when the left mouse button is pressed
+		// Use the rod when the left mouse button is pressed and the rod is active
 		if(Input.GetButtonDown("Fire1") && isRodActive)
 			UseRod ();
 
