@@ -7,7 +7,6 @@ public class FishingMinigame : MonoBehaviour
 	public bool isHookOut;
 	public Transform rod;
 	public Transform hook;
-
 	public Transform spawnZone;
 
 	public float WanderRadius;
@@ -29,7 +28,7 @@ public class FishingMinigame : MonoBehaviour
 		if(Input.GetButtonDown("Fire2"))
 			ActivateRod ();
 
-		// Use the rod when the left mouse button is pressed and the rod is active
+		// Use the rod when the left mouse button is pressed and the rod is active	
 		if(Input.GetButtonDown("Fire1") && isRodActive)
 			UseRod ();
 
@@ -87,5 +86,10 @@ public class FishingMinigame : MonoBehaviour
 	{
 		isHookOut = !isHookOut;
 		hook.gameObject.SetActive (isHookOut);
+	}
+
+	void OnEnable()
+	{
+
 	}
 }
