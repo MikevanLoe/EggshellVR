@@ -8,6 +8,7 @@ public class FishingMinigame : MonoBehaviour
 	public Transform rod;
 	public Transform hook;
 	public Transform spawnZone;
+	public Animator anim;
 
 	public float WanderRadius;
 	public float WanderDistance;
