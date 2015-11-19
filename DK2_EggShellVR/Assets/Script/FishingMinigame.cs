@@ -86,11 +86,11 @@ public class FishingMinigame : MonoBehaviour
 	public void UseRod ()
 	{
 		isHookOut = !isHookOut;
-		hook.gameObject.SetActive (isHookOut);
-	}
+		anim.SetBool("isHookOut", isHookOut);
 
-	void OnEnable()
-	{
-
+		/*Component[] mesh = hook.gameObject.GetComponentsInChildren <MeshRenderer>();
+		foreach (MeshRenderer item in mesh) {
+			item.enabled = !isHookOut;
+		}*/
 	}
 }
