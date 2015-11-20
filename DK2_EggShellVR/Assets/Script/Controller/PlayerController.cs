@@ -43,14 +43,14 @@ public class PlayerController : MonoBehaviour {
 				if(!_invOpen)
 				{
 					//Open inventory
-					_fpsController.enabled = false;
+					_fpsController.LockedInput = true;
 					InventoryObject.gameObject.SetActive(true);
 					StartCoroutine(OpenAndCloseInventory(InventoryOpen));
 				}
 				else
 				{
 					//Close inventory
-					_fpsController.enabled = true;
+					_fpsController.LockedInput = false;
 					StartCoroutine(OpenAndCloseInventory(InventoryClosed));
 				}
 			}

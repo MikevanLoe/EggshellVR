@@ -112,6 +112,7 @@ public class PresentationController : MonoBehaviour {
 		else
 		{
 			_voiceSystem.SetSentence (s);
+			_voiceSystem.StartListening();
 			_lineDisplay.text = s.Words; //Display the text on the display area
 		}
 		
@@ -201,6 +202,7 @@ public class PresentationController : MonoBehaviour {
 		Sentence s = GetNextSentence();
 		_lineDisplay.text = s.Words;
 		_voiceSystem.SetSentence (s);
+		_voiceSystem.StartListening();
 		
 		//Chain player to position
 	}
