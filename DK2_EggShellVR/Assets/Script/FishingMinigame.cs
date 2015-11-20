@@ -20,7 +20,6 @@ public class FishingMinigame : MonoBehaviour
 
 	public void Start ()
 	{
-		LockMovement ();
 		SpawnFish ();
 	}
 
@@ -89,10 +88,5 @@ public class FishingMinigame : MonoBehaviour
 	{
 		isHookOut = !isHookOut;
 		anim.SetBool("isHookOut", isHookOut);
-
-		/*Component[] mesh = hook.gameObject.GetComponentsInChildren <MeshRenderer>();
-		foreach (MeshRenderer item in mesh) {
-			item.enabled = !isHookOut;
-		}*/
 	}
 }
