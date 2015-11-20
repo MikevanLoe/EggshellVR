@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class FishingMinigame : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class FishingMinigame : MonoBehaviour
 
 	public void LockMovement ()
 	{
-		// Code van Bas
+		//GameObject.FindGameObjectWithTag("Player").GetComponent<RigidbodyFirstPersonController>().LockedInput = !isRodActive;
 	}
 
 	public void SpawnFish ()
@@ -75,6 +76,7 @@ public class FishingMinigame : MonoBehaviour
 	{
 		isRodActive = !isRodActive;
 		rod.gameObject.SetActive (isRodActive);
+		LockMovement();
 
 		if (!isRodActive)
 		{
