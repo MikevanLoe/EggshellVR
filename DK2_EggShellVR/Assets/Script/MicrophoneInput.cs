@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
+
 public class MicrophoneInput
 {
 	private AudioClip _micClip;
 	private int _sampleRateMin;
+	private float[] samples;
 
 	public MicrophoneInput()
 	{
@@ -22,14 +24,14 @@ public class MicrophoneInput
 	public void Start(string device = "")
 	{
 		_micClip = Microphone.Start (device, true, 1, _sampleRateMin);
+		samples = new float[_micClip.samples * _micClip.channels];
 	}
 
 	//Returns the avg feed from the microphone over the last second
 	public float GetInputAvg()
 	{
 		//Store the audio clip in a float array
-		float[] samples = new float[_micClip.samples * _micClip.channels];
-		_micClip.GetData (samples, 0);
+		_micClip.GetData (samples, Microphone.GetPosition(""));
 		
 		//Get the avarage value of all samples in the current recording
 		int count = 0;
@@ -47,18 +49,25 @@ public class MicrophoneInput
 	public float GetInput()
 	{
 		//Store the audio clip in a float array
-		float[] samples = new float[_micClip.samples * _micClip.channels];
-		_micClip.GetData (samples, 0);
+		int offset = Microphone.GetPosition ("");
+		_micClip.GetData (samples, Microphone.GetPosition (""));
 		
 		//Get the avarage value of all samples in the current recording
 		int count = 0;
 		float avg = 0f;
-		for (int i = _micClip.samples / 10 * 9; i < _micClip.samples; i++) 
+		for (int i = offset - (int) (_micClip.samples * 0.1f); i <= offset; i++) 
 		{
+			int index = (i + _micClip.samples) % _micClip.samples;
 			count++;
 			//Add the absolute of the current value to the avarage calculation
-			avg = avg + (Math.Abs(samples[i]) - avg) / count;
+			avg = avg + (Math.Abs(samples[index]) - avg) / count;
 		}
 		return avg;
+	}
+
+	public void GetSamples(out float[] Samples)
+	{
+		Samples = new float[_micClip.samples * _micClip.channels];
+		_micClip.GetData (Samples, 0);
 	}
 }
