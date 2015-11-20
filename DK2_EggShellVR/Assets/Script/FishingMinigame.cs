@@ -38,7 +38,7 @@ public class FishingMinigame : MonoBehaviour
 
 	public void LockMovement ()
 	{
-		//GameObject.FindGameObjectWithTag("Player").GetComponent<RigidbodyFirstPersonController>().LockedInput = !isRodActive;
+		GameObject.FindGameObjectWithTag("Player").GetComponent<RigidbodyFirstPersonController>().LockedInput = isRodActive;
 	}
 
 	public void SpawnFish ()
