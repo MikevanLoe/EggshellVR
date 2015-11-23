@@ -44,14 +44,15 @@ public class FishingMinigame : MonoBehaviour
 	public void SpawnFish ()
 	{
 		// random position in SpawnZone
-		float minX = spawnZone.position.x - (spawnZone.localScale.x / 2);
-		float maxX = spawnZone.position.x + (spawnZone.localScale.x / 2);
+		float xMin = spawnZone.GetComponent<SpawnZone> ().xMin;
+		float xMax = spawnZone.GetComponent<SpawnZone> ().xMax;
+		float zMin = spawnZone.GetComponent<SpawnZone> ().zMin;
+		float zMax = spawnZone.GetComponent<SpawnZone> ().zMax;
 
-		float minZ = spawnZone.position.z - (spawnZone.localScale.z / 2);
-		float maxZ = spawnZone.position.z + (spawnZone.localScale.z / 2);
+		Vector3 randPos = new Vector3(UnityEngine.Random.Range (xMin, xMax), 0.3f,
+		                              UnityEngine.Random.Range (zMin, zMax));
 
-		Vector3 randPos = new Vector3(UnityEngine.Random.Range (minX, maxX), 0.3f,
-		                              UnityEngine.Random.Range (minZ, maxZ));
+
 	}
 
 	public void MoveFish ()
