@@ -60,10 +60,12 @@ public class VoiceResponse : MonoBehaviour
 			//Add the absolute of the current value to the avarage calculation
 			avg = avg + (sample - avg) / count;
 		}
-		if (input > avg * 2) {								//Detect a raise
+		if (input > avg * 2) 								//Detect a raise
+		{								
 			_highStart = Time.time; 						//record the moment of the raise
 		} 
-		else if (input < avg / 2) {							//Detect a fall
+		else if (input < avg / 2) 							//Detect a fall
+		{							
 			float duration = Time.time - _highStart;		//See how long the player was speaking
 			//If the speech was too short, assume it was noise and reset
 			if (duration < DurationMinimum)
@@ -75,8 +77,9 @@ public class VoiceResponse : MonoBehaviour
 			Listening = false;								//Stop listening when finished
 			_sampleAvg = new float[_samplesPerSecond];		//Reset the avarage
 			_alertListener(duration);						//Alert the listener
-		} else if (Time.time - _highStart > DurationMaximum) { 	//If the raise time is longer than the maximum
-			ErrorMessage.SetActive(true);						//Display an error
+		} else if (Time.time - _highStart > DurationMaximum) 
+		{ 													//If the raise time is longer than the maximum
+			ErrorMessage.SetActive(true);					//Display an error
 		}
 	}
 
