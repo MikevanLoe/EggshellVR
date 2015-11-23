@@ -5,7 +5,8 @@ public class MicrophoneInput
 {
 	private AudioClip _micClip;
 	private int _sampleRateMin;
-	private float[] samples;
+	private float[] _samples;
+	private string _device;
 
 	public MicrophoneInput()
 	{
@@ -23,15 +24,22 @@ public class MicrophoneInput
 	//Start reording from the default microphone
 	public void Start(string device = "")
 	{
-		_micClip = Microphone.Start (device, true, 1, _sampleRateMin);
-		samples = new float[_micClip.samples * _micClip.channels];
+		_device = device;
+		_micClip = Microphone.Start (_device, true, 1, _sampleRateMin);
+		_samples = new float[_micClip.samples * _micClip.channels];
+	}
+
+	//Stop the recording on quit
+	void OnApplicationQuit() 
+	{
+		Microphone.End (_device);
 	}
 
 	//Returns the avg feed from the microphone over the last second
 	public float GetInputAvg()
 	{
 		//Store the audio clip in a float array
-		_micClip.GetData (samples, Microphone.GetPosition(""));
+		_micClip.GetData (_samples, Microphone.GetPosition(""));
 		
 		//Get the avarage value of all samples in the current recording
 		int count = 0;
@@ -40,7 +48,7 @@ public class MicrophoneInput
 		{
 			count++;
 			//Add the absolute of the current value to the avarage calculation
-			avg = avg + (Math.Abs(samples[i]) - avg) / count;
+			avg = avg + (Math.Abs(_samples[i]) - avg) / count;
 		}
 		return avg;
 	}
@@ -50,7 +58,7 @@ public class MicrophoneInput
 	{
 		//Store the audio clip in a float array
 		int offset = Microphone.GetPosition ("");
-		_micClip.GetData (samples, Microphone.GetPosition (""));
+		_micClip.GetData (_samples, Microphone.GetPosition (""));
 		
 		//Get the avarage value of all samples in the current recording
 		int count = 0;
@@ -60,7 +68,7 @@ public class MicrophoneInput
 			int index = (i + _micClip.samples) % _micClip.samples;
 			count++;
 			//Add the absolute of the current value to the avarage calculation
-			avg = avg + (Math.Abs(samples[index]) - avg) / count;
+			avg = avg + (Math.Abs(_samples[index]) - avg) / count;
 		}
 		return avg;
 	}

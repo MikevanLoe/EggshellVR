@@ -45,7 +45,6 @@ public class PresentationController : MonoBehaviour {
 
 		//This factor is used to round the number later in code between 0 and -1
 		_filler = 1 / pSettings.Accuracy - 1;
-
 		GetLinesFromJSON ();
 	}
 
@@ -112,7 +111,7 @@ public class PresentationController : MonoBehaviour {
 		else
 		{
 			_voiceSystem.SetSentence (s);
-			_voiceSystem.StartListening();
+			_voiceSystem.StartListening(SentenceSpoken);
 			_lineDisplay.text = s.Words; //Display the text on the display area
 		}
 		
@@ -202,7 +201,7 @@ public class PresentationController : MonoBehaviour {
 		Sentence s = GetNextSentence();
 		_lineDisplay.text = s.Words;
 		_voiceSystem.SetSentence (s);
-		_voiceSystem.StartListening();
+		_voiceSystem.StartListening(SentenceSpoken);
 		
 		//Chain player to position
 	}
