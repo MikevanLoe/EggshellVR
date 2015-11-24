@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 
@@ -9,6 +11,7 @@ public class FishingMinigame : MonoBehaviour
 	public Transform rod;
 	public Transform hook;
 	public Transform spawnZone;
+	public List<Transform> fishList;
 	public Animator anim;
 
 	public float WanderRadius;
@@ -20,7 +23,11 @@ public class FishingMinigame : MonoBehaviour
 
 	public void Start ()
 	{
-		SpawnFish ();
+		fishList = spawnZone.GetComponent<SpawnZone> ().fishes;
+
+		for (int i = 0; i < fishList.Count; i++) {
+			SpawnFish (fishList[i]);
+		}
 	}
 
 	public void Update ()
@@ -32,7 +39,8 @@ public class FishingMinigame : MonoBehaviour
 		// Use the rod when the left mouse button is pressed and the rod is active	
 		if(Input.GetButtonDown("Fire1") && isRodActive)
 			UseRod ();
-		for (int i = 0; i < spawnZone.GetComponent<SpawnZone>().fishes.Count; i++)
+
+		for (int i = 0; i < fishList.Count; i++)
 		{
 			MoveFish ();
 		}
@@ -43,7 +51,7 @@ public class FishingMinigame : MonoBehaviour
 		GameObject.FindGameObjectWithTag("Player").GetComponent<RigidbodyFirstPersonController>().LockedInput = isRodActive;
 	}
 
-	public void SpawnFish ()
+	public void SpawnFish (Transform spawningFish)
 	{
 		// random position in SpawnZone
 		float xMin = spawnZone.GetComponent<SpawnZone> ().xMin;
@@ -54,7 +62,7 @@ public class FishingMinigame : MonoBehaviour
 		Vector3 randPos = new Vector3(UnityEngine.Random.Range (xMin, xMax), 0.3f,
 		                              UnityEngine.Random.Range (zMin, zMax));
 
-
+		spawningFish.position = randPos;
 	}
 
 	public void MoveFish ()
