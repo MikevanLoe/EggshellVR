@@ -32,8 +32,10 @@ public class FishingMinigame : MonoBehaviour
 		// Use the rod when the left mouse button is pressed and the rod is active	
 		if(Input.GetButtonDown("Fire1") && isRodActive)
 			UseRod ();
-
-		MoveFish ();	
+		for (int i = 0; i < spawnZone.GetComponent<SpawnZone>().fishes.Count; i++)
+		{
+			MoveFish ();
+		}
 	}
 
 	public void LockMovement ()
