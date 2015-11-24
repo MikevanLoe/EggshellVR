@@ -51,7 +51,8 @@ public class NPCController : MonoBehaviour {
 
 		_originalPosition = transform.position;
 
-		switch (PersonalityName) {
+		switch (PersonalityName) 
+		{
 		case "HappyFisher":
 			_personality = new HappyFisher(this);
 			break;
@@ -81,8 +82,10 @@ public class NPCController : MonoBehaviour {
 	{
 		var stateName = _stateMachine.GetCurState ().Name;
 		bool interested = _personality.MarketCall (performance);
-		if (stateName != "CrowdState" && stateName != "TravelState") {
-			if (interested) {
+		if (stateName != "CrowdState" && stateName != "TravelState") 
+		{
+			if (interested) 
+			{
 				_stateMachine.Set ("TravelState");
 				var travelState = (TravelState)_stateMachine.GetCurState ();
 				var obj = GameObject.FindGameObjectWithTag("PresentationController");
@@ -90,7 +93,9 @@ public class NPCController : MonoBehaviour {
 				travelState.Destination = presCont.GetCrowdPosition();
 				travelState.NextState = "CrowdState";
 			}
-		} else {
+		} 
+		else 
+		{
 			if(!interested)
 			{
 				TravelState travelState;

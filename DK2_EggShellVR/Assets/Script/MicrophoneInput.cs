@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class MicrophoneInput
 {
-	private AudioClip _micClip;
-	private int _sampleRateMin;
-	private float[] _samples;
-	private string _device;
+	private static AudioClip _micClip;
+	private static int _sampleRateMin;
+	private static float[] _samples;
+	private static string _device;
 
-	public MicrophoneInput()
+	//Initialize a microphone device
+	public static void Init(string device = "")
 	{
 		//Get the microphone sample rate
 		int max;
@@ -19,14 +20,22 @@ public class MicrophoneInput
 		{
 			_sampleRateMin = 44100;
 		}
+		
+		_device = device;
 	}
 	
-	//Start reording from the default microphone
-	public void Start(string device = "")
+	//Start reording from the set microphone
+	public static void Start()
 	{
-		_device = device;
+		if (Microphone.IsRecording (_device))
+			throw new UnityException ("Microphone already recording somewhere else!");
 		_micClip = Microphone.Start (_device, true, 1, _sampleRateMin);
 		_samples = new float[_micClip.samples * _micClip.channels];
+	}
+
+	public static void Stop()
+	{
+		Microphone.End (_device);
 	}
 
 	//Stop the recording on quit
@@ -36,7 +45,7 @@ public class MicrophoneInput
 	}
 
 	//Returns the avg feed from the microphone over the last second
-	public float GetInputAvg()
+	public static float GetInputAvg()
 	{
 		//Store the audio clip in a float array
 		_micClip.GetData (_samples, Microphone.GetPosition(""));
@@ -54,7 +63,7 @@ public class MicrophoneInput
 	}
 	
 	//Returns the avg feed from the microphone over the last tenth of a second
-	public float GetInput()
+	public static float GetInput()
 	{
 		//Store the audio clip in a float array
 		int offset = Microphone.GetPosition ("");
@@ -73,7 +82,7 @@ public class MicrophoneInput
 		return avg;
 	}
 
-	public void GetSamples(out float[] Samples)
+	public static void GetSamples(out float[] Samples)
 	{
 		Samples = new float[_micClip.samples * _micClip.channels];
 		_micClip.GetData (Samples, 0);

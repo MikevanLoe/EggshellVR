@@ -12,8 +12,6 @@ public class VoiceResponse : MonoBehaviour
 	public PresentationController presentation;
 	public GameObject ErrorMessage;
 
-	private MicrophoneInput micInput;
-
 	private int _samplesPerSecond;
 	private float[] _sampleAvg;
 	private int _offset;
@@ -30,18 +28,17 @@ public class VoiceResponse : MonoBehaviour
 
 	void Start()
 	{
-		micInput = new MicrophoneInput();
-		micInput.Start ();
 		//The avarage array has to fit a sample every fixed update.
 		_samplesPerSecond = (int) Mathf.Ceil (1 / Time.fixedDeltaTime);
 		_sampleAvg = new float[_samplesPerSecond];
+		MicrophoneInput.Init ();
 	}
 
 	void FixedUpdate()
 	{
 		if (!Listening)
 			return;
-		float input = micInput.GetInputAvg ();
+		float input = MicrophoneInput.GetInputAvg ();
 		_sampleAvg [_offset] = input;
 		_offset++;
 		if(_offset >= _samplesPerSecond)
@@ -73,11 +70,17 @@ public class VoiceResponse : MonoBehaviour
 				_highStart = Time.time;
 				return;
 			}
-
-			Listening = false;								//Stop listening when finished
+			
+			MicrophoneInput.Stop ();						//Stop listening when finished
+			Listening = false;					
 			_sampleAvg = new float[_samplesPerSecond];		//Reset the avarage
-			_alertListener(duration);						//Alert the listener
-		} else if (Time.time - _highStart > DurationMaximum) 
+			_offset = 0;
+			Action<float> a = _alertListener;
+			_alertListener = null;
+			a(duration);
+			//_alertListener(duration);						//Alert the listener
+		} 
+		else if (Time.time - _highStart > DurationMaximum) 
 		{ 													//If the raise time is longer than the maximum
 			ErrorMessage.SetActive(true);					//Display an error
 		}
@@ -86,16 +89,18 @@ public class VoiceResponse : MonoBehaviour
 	public void StartListening(Action<float> method)
 	{
 		if (Listening)
-			throw new UnityException ("StartListening called when mic listener already occupied!");
+			throw new UnityException ("StartListening called when already listening!");
 		_highStart = Time.time;
-		Listening = true;
+		MicrophoneInput.Start ();
 		_alertListener = method;
+		Listening = true;
 	}
 
-	//TODO: Will I ever even need this? If I read this one distant future day and the answer is no I'll know what to do.
-	public bool IsSpeaking()
+	public void StopListening()
 	{
-		return false;
+		MicrophoneInput.Stop ();
+		Listening = false;
+		_alertListener = null;
 	}
 
 	public void SetSentence(Sentence s)

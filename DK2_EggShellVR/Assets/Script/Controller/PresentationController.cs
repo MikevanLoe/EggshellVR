@@ -37,7 +37,7 @@ public class PresentationController : MonoBehaviour {
 		//The line display is the text mesh that shows the text the player has to say
 		_lineDisplay = GetComponentInChildren<TextMesh> ();
 		//The voice response object is used to determine when the player is talking
-		_voiceSystem = GetComponent<VoiceResponse> ();
+		_voiceSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<VoiceResponse> ();
 		if (_lineDisplay == null)
 			throw new UnityException ("Presentation Controller found no TextMesh in children!");
 		if (_voiceSystem == null)

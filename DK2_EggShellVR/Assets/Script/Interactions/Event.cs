@@ -9,7 +9,7 @@ public abstract class Event : Interaction
 		case "UnlockPlayer" :
 			return new UnlockPlayer(time);
 		default:
-			return null;
+			throw new System.Exception("JSON format error! Script key not found.");
 		}
 	}
 }

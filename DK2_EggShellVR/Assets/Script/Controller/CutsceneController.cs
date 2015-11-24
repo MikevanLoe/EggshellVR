@@ -6,30 +6,49 @@ using SimpleJSON;
 
 public class CutsceneController : MonoBehaviour
 {
-	private Dictionary<string, List<Interaction>> cutscenes;
-	private List<Interaction> curScene;
-	private float interactionDelay;
-	private int curInteraction;
+	private Dictionary<string, SceneModel> _cutscenes;
+	private List<Interaction> _curScene;
+	private float _interactionDelay;
+	private int _curInteraction;
+	private Transform _player;
+	private Vector3 _sceneStartPos;
+	private float _sceneRange;
 
 	void Start()
 	{
 		SerializeJson ();
+		_player = GameObject.FindGameObjectWithTag ("Player").transform;
 	}
 
 	void Update()
 	{
-		if (curScene == null)
+		if (_curScene == null)
 			return;
-		if (interactionDelay > Time.time)
-			return;
-		curScene [curInteraction].Execute ();
-		interactionDelay = Time.time + curScene [curInteraction].Duration;
-		curInteraction++;
-		if (curScene.Count <= curInteraction) 
-		{	
+
+		//Cancel scene when out of range;
+		if(Vector3.SqrMagnitude(_sceneStartPos - _player.position) > _sceneRange)
+		{
+			_curScene [_curInteraction].Cancel();
 			//By setting curscene to null next update no scene will be played
-			curScene = null;
-			curInteraction = 0;
+			_curScene = null;
+			_curInteraction = 0;
+			return;
+		}
+
+		if (_interactionDelay > Time.time)
+			return;
+
+		//Go to next interaction
+		_curInteraction++;
+		_curScene [_curInteraction].Execute ();
+		if (_curScene [_curInteraction] is PlayerLine)
+			_interactionDelay = Mathf.Infinity;			//Player lines don't end until they're spoken
+		else
+			_interactionDelay = Time.time + _curScene [_curInteraction].Duration;
+		if (_curScene.Count <= _curInteraction) 
+		{	
+			_curScene = null;
+			_curInteraction = 0;
 		}
 	}
 
@@ -40,12 +59,13 @@ public class CutsceneController : MonoBehaviour
 		string json = DataReader.GetAllText ("Assets/"+ scene +"cs.json");
 		//Convert the lines data to a managable format
 		JSONNode data = JSON.Parse (json);
-		var cuts = data ["scenes"];
-		cutscenes = new Dictionary<string, List<Interaction>> ();
+
+		var cutsjs = data ["scenes"];
+		_cutscenes = new Dictionary<string, SceneModel> ();
 		//Loop trough all sentences and place them in the _lines member
-		for (int i = 0; i < cuts.Count; i++) 
+		for (int i = 0; i < cutsjs.Count; i++) 
 		{
-			var cutscenejs = cuts [i];
+			var cutscenejs = cutsjs [i];
 
 			string key = cutscenejs["SceneName"];
 			var cutscene = new List<Interaction>();
@@ -57,7 +77,6 @@ public class CutsceneController : MonoBehaviour
 				var interaction = interactions[j];
 				//Check what kind of interaction it is
 				Interaction part = null;
-
 				switch (interaction["Type"])
 				{
 				case "Event":
@@ -67,22 +86,31 @@ public class CutsceneController : MonoBehaviour
 					part = new NPCLine(interaction["NpcName"], interaction["VoiceKey"], interaction["Duration"].AsFloat);
 					break;
 				case "PlayerLine":
+					part = new PlayerLine(interaction["Hint"], interaction["Duration"].AsFloat, GoToNextPart);
 					break;
 				}
-//				if(part == null)
-//					throw new Exception("JSON format exception in cutscene controller. Unknown type used.");
+				if(part == null)
+					throw new Exception("JSON format exception in cutscene controller. Unknown type used. Input: " + interaction["Type"]);
 				if(part != null)
 					cutscene.Add(part);
 			}
-			cutscenes.Add(key, cutscene);
+			_cutscenes.Add(key, new SceneModel(cutscenejs["Range"].AsFloat ,cutscene));
 		}
 	}
 
 	public void PlayCutscene(string key)
 	{
-		if(!cutscenes.ContainsKey(key))
+		if (_curScene != null || !_cutscenes.ContainsKey(key))
 			return;
+		_sceneStartPos = _player.position;
+		_curScene = _cutscenes [key].Interactions;
+		_sceneRange = _cutscenes [key].Range;
+		_interactionDelay = Time.time + _curScene [_curInteraction].Duration;
+		_curScene [_curInteraction].Execute ();
+	}
 
-		curScene = cutscenes [key];
+	public void GoToNextPart()
+	{
+		_interactionDelay = 0;
 	}
 }

@@ -8,6 +8,10 @@ public class NPCLine : Interaction
 
 	public NPCLine (string name, string key, float dur)
 	{
+		if (name == null)
+			throw new UnityException ("JSON format error! No NPC name");
+		if (key == null)
+			throw new UnityException ("JSON format error! No voice key given");
 		_NPCName = name;
 		_voiceKey = key;
 		Duration = dur;
