@@ -41,7 +41,8 @@ public class FishingMinigame : MonoBehaviour
 	public void SpawnFish (Transform spawningFish)
 	{
 		// random position in SpawnZone
-		float xMin = spawnZone.GetComponent<SpawnZone> ().xMin;
+		SpawnZone x = spawnZone.GetComponent<SpawnZone> ();
+		float xMin = x.xMin;
 		float xMax = spawnZone.GetComponent<SpawnZone> ().xMax;
 		float zMin = spawnZone.GetComponent<SpawnZone> ().zMin;
 		float zMax = spawnZone.GetComponent<SpawnZone> ().zMax;

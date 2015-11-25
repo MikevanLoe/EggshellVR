@@ -104,7 +104,7 @@ public class Mover3D : MonoBehaviour {
 			//the agent being examined is close enough
 			if(neighbors[a] != gameObject)
 			{
-				Vector3 neighborHeading = neighbors[a].GetComponent<Mover>().Heading;
+				Vector3 neighborHeading = neighbors[a].GetComponent<Mover3D>().Heading;
 				AverageHeading += neighborHeading;
 				++NeighborCount;
 			}

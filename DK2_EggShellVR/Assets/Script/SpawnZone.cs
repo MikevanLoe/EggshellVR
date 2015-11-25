@@ -12,7 +12,7 @@ public class SpawnZone :MonoBehaviour {
 	public float zMax;
 
 
-	void Start ()
+	void OnEnable ()
 	{
 		xMin = area.position.x - (area.localScale.x / 2);
 		xMax = area.position.x + (area.localScale.x / 2);
