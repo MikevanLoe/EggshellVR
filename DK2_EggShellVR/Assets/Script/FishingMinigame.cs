@@ -17,17 +17,16 @@ public class FishingMinigame : MonoBehaviour
 	public float WanderRadius;
 	public float WanderDistance;
 	public float WanderJitter;
-	public Vector2 Heading;
+	public Vector3 Heading;
 	
-	private Vector2 WanderTarget;
+	private Vector3 WanderTarget;
 
 	public void Start ()
 	{
 		fishList = spawnZone.GetComponent<SpawnZone> ().fishes;
 
-		for (int i = 0; i < fishList.Count; i++) {
+		for (int i = 0; i < fishList.Count; i++)
 			SpawnFish (fishList[i]);
-		}
 	}
 
 	public void Update ()
@@ -41,9 +40,7 @@ public class FishingMinigame : MonoBehaviour
 			UseRod ();
 
 		for (int i = 0; i < fishList.Count; i++)
-		{
-			MoveFish ();
-		}
+			MoveFish (fishList[i]);
 	}
 
 	public void LockMovement ()
@@ -65,17 +62,20 @@ public class FishingMinigame : MonoBehaviour
 		spawningFish.position = randPos;
 	}
 
-	public void MoveFish ()
+	public void MoveFish (Transform movingFish)
 	{
 		// Code die gebruikt maakt van Wander()
 
 	}
 
-	public Vector2 Wander()
+	public Vector3 Wander()
 	{
 		//first, add a small random vector to the target’s position (RandomClamped
 		//returns a value between -1 and 1)
-		WanderTarget += new Vector2 (UnityEngine.Random.Range(-1, 2) * WanderJitter,
+		if (WanderTarget == null)
+			WanderTarget = new Vector3 (0, 0.3, 0);
+
+		WanderTarget += new Vector3 (UnityEngine.Random.Range(-1, 2) * WanderJitter, 0,
 		                             UnityEngine.Random.Range(-1, 2) * WanderJitter);
 		
 		//reproject this new vector back onto a unit circle
@@ -86,7 +86,7 @@ public class FishingMinigame : MonoBehaviour
 		WanderTarget *= WanderRadius;
 		
 		//move the target into a position WanderDist in front of the agent
-		Vector2 WanderForce = Heading + WanderTarget;
+		Vector3 WanderForce = Heading + WanderTarget;
 		return WanderForce;
 	}
 
