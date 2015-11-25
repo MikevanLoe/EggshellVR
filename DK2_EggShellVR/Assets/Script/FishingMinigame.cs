@@ -14,13 +14,6 @@ public class FishingMinigame : MonoBehaviour
 	public List<Transform> fishList;
 	public Animator anim;
 
-	public float WanderRadius;
-	public float WanderDistance;
-	public float WanderJitter;
-	public Vector2 Heading;
-	
-	private Vector2 WanderTarget;
-
 	public void Start ()
 	{
 		fishList = spawnZone.GetComponent<SpawnZone> ().fishes;
@@ -38,13 +31,6 @@ public class FishingMinigame : MonoBehaviour
 		// Use the rod when the left mouse button is pressed and the rod is active	
 		if(Input.GetButtonDown("Fire1") && isRodActive)
 			UseRod ();
-
-		for (int i = 0; i < fishList.Count; i++)
-		{
-			Vector2 vec2Wander = Wander();
-			Vector3 vec3Wander = new Vector3(vec2Wander.x, 0.3f, vec2Wander.y);
-			fishList [i].position += vec3Wander;
-		}
 	}
 
 	public void LockMovement ()
@@ -64,25 +50,6 @@ public class FishingMinigame : MonoBehaviour
 		                              UnityEngine.Random.Range (zMin, zMax));
 
 		spawningFish.position = randPos;
-	}
-
-	public Vector2 Wander()
-	{
-		//first, add a small random vector to the target’s position (RandomClamped
-		//returns a value between -1 and 1)
-		WanderTarget += new Vector2 (UnityEngine.Random.Range(-1, 2) * WanderJitter,
-		                             UnityEngine.Random.Range(-1, 2) * WanderJitter);
-		
-		//reproject this new vector back onto a unit circle
-		WanderTarget.Normalize ();
-		
-		//increase the length of the vector to the same as the radius
-		//of the wander circle
-		WanderTarget *= WanderRadius;
-		
-		//move the target into a position WanderDist in front of the agent
-		Vector2 WanderForce = Heading + WanderTarget;
-		return WanderForce;
 	}
 
 	public void ActivateRod ()
