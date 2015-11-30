@@ -41,11 +41,11 @@ public class FishingMinigame : MonoBehaviour
 	public void SpawnFish (Transform spawningFish)
 	{
 		// random position in SpawnZone
-		SpawnZone x = spawnZone.GetComponent<SpawnZone> ();
-		float xMin = x.xMin;
-		float xMax = spawnZone.GetComponent<SpawnZone> ().xMax;
-		float zMin = spawnZone.GetComponent<SpawnZone> ().zMin;
-		float zMax = spawnZone.GetComponent<SpawnZone> ().zMax;
+		SpawnZone zone = spawnZone.GetComponent<SpawnZone> ();
+		float xMin = zone.xMin;
+		float xMax = zone.xMax;
+		float zMin = zone.zMin;
+		float zMax = zone.zMax;
 
 		Vector3 randPos = new Vector3(UnityEngine.Random.Range (xMin, xMax), 0.3f,
 		                              UnityEngine.Random.Range (zMin, zMax));
@@ -61,7 +61,7 @@ public class FishingMinigame : MonoBehaviour
 
 		if (!isRodActive)
 		{
-			isHookOut = true;
+			isHookOut = true; 
 			UseRod ();
 		}
 	}
@@ -70,5 +70,7 @@ public class FishingMinigame : MonoBehaviour
 	{
 		isHookOut = !isHookOut;
 		anim.SetBool("isHookOut", isHookOut);
+
+		// Stuff for reeling in
 	}
 }
