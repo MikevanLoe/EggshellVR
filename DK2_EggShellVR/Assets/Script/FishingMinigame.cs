@@ -70,7 +70,5 @@ public class FishingMinigame : MonoBehaviour
 	{
 		isHookOut = !isHookOut;
 		anim.SetBool("isHookOut", isHookOut);
-
-		// Stuff for reeling in
 	}
 }
