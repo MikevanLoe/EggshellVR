@@ -21,17 +21,14 @@ public class PresentationController : MonoBehaviour {
 	public PresentationState presState;
 	public TextMesh LineDisplay;
 	public TextMesh ScoreDisplay;
-
-	[HideInInspector]
-	public List<GameObject> Audience;
-
+	
+	private List<GameObject> Audience;
 	private float _oldPerformance = -1;
 	private VoiceResponse _voiceSystem;
 	private Dictionary<string, List<List<Sentence>>> _lines;
 	private string _curKey;
 	private int _curId;
 	private int _curSequence;
-	private float _filler;
 	private bool _playerIsClose;
 	private bool _presentationStarted;
 	private float _timerStart;
@@ -49,8 +46,6 @@ public class PresentationController : MonoBehaviour {
 		if (_voiceSystem == null)
 			throw new UnityException ("Game Controller has no VoiceResponse script attached to it!");
 
-		//This factor is used to round the number later in code between 0 and -1
-		_filler = 1 / pSettings.Accuracy - 1;
 		GetLinesFromJSON ();
 		_NPCs = new List<GameObject> ();
 	}
@@ -89,15 +84,15 @@ public class PresentationController : MonoBehaviour {
 
 	void Update()
 	{
-		ScoreDisplay.text = ((int)_talkTime).ToString ();
+		//Display the current talk time in the display for debug
+		ScoreDisplay.text = (Mathf.Round(_talkTime * 10) / 10).ToString ();
 		if (_voiceSystem.IsSpeaking ()) {
 			//Score is the amount of time the player was talking during the pitch phase
 			_talkTime += Time.deltaTime;
-			//TODO: Decrease this score by heartrate stress?
 			//Ask all NPCs if they want to come watch
 			for (int i = 0; i < _NPCs.Count; i++) 
 			{
-				_NPCs [i].SendMessage ("MarketCall", 9999999, 
+				_NPCs [i].SendMessage ("MarketCall", _talkTime, 
 				                       SendMessageOptions.DontRequireReceiver);
 			}
 		}
@@ -111,31 +106,29 @@ public class PresentationController : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Handles the pitch state
+	/// </summary>
 	void PitchState ()
 	{
-		if (_timerStart + _partDuration > Time.time) {
-		}
-		else {
+		if (_timerStart + _partDuration <= Time.time) {
 			//End the attraction state
 			//Add any points the player was still going to get.
 			_voiceSystem.ForceStop ();
-			//Ask all NPCs if they want to come watch
-			for (int i = 0; i < _NPCs.Count; i++) 
-			{
-				_NPCs [i].SendMessage ("MarketCall", _talkTime, SendMessageOptions.DontRequireReceiver);
-			}
+
 			presState = PresentationState.Active;
 			//Show sentence
-			Sentence s = GetNextSentence();
+			Sentence s = GetNextSentence ();
 			LineDisplay.text = s.Words;
 			_partDuration = s.Time;
-			
 			_timerStart = Time.time;
-			
-			_voiceSystem.StartListening(PitchSpoken);
+			_voiceSystem.StartListening (PitchSpoken);
 		}
 	}
 
+	/// <summary>
+	/// Handles the Active presentation state
+	/// </summary>
 	void ActiveState ()
 	{
 		//Part finished
@@ -285,7 +278,9 @@ public class PresentationController : MonoBehaviour {
 
 	}
 
-	//Called when player leaves the presentation area
+	/// <summary>
+	/// Called when player leaves the presentation area
+	/// </summary>
 	public void DetectOff()
 	{
 		LineDisplay.text = "Detect OFF!";
