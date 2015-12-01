@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class MicrophoneInput
 {
-	private AudioClip _micClip;
-	private int _sampleRateMin;
-	private float[] samples;
+	private static AudioClip _micClip;
+	private static int _sampleRateMin;
+	private static float[] _samples;
+	private static string _device;
 
-	public MicrophoneInput()
+	//Initialize a microphone device
+	public static void Init(string device = "")
 	{
 		//Get the microphone sample rate
 		int max;
@@ -18,39 +20,57 @@ public class MicrophoneInput
 		{
 			_sampleRateMin = 44100;
 		}
+		
+		_device = device;
 	}
 	
-	//Start reording from the default microphone
-	public void Start(string device = "")
+	//Start reording from the set microphone
+	public static void Start()
 	{
-		_micClip = Microphone.Start (device, true, 1, _sampleRateMin);
-		samples = new float[_micClip.samples * _micClip.channels];
+		if (Microphone.IsRecording (_device))
+			throw new UnityException ("Microphone already recording somewhere else!");
+		_micClip = Microphone.Start (_device, true, 1, _sampleRateMin);
+		_samples = new float[_micClip.samples * _micClip.channels];
+	}
+
+	public static void Stop()
+	{
+		Microphone.End (_device);
+	}
+
+	//Stop the recording on quit
+	void OnApplicationQuit() 
+	{
+		Microphone.End (_device);
 	}
 
 	//Returns the avg feed from the microphone over the last second
-	public float GetInputAvg()
+	public static float GetInputAvg()
 	{
 		//Store the audio clip in a float array
-		_micClip.GetData (samples, Microphone.GetPosition(""));
+		_micClip.GetData (_samples, Microphone.GetPosition(""));
 		
 		//Get the avarage value of all samples in the current recording
 		int count = 0;
 		float avg = 0f;
-		for (int i = 0; i < _micClip.samples; i++) 
+		for (int i = Microphone.GetPosition(""); count < _micClip.samples; i++) 
 		{
+			i %= _micClip.samples;
 			count++;
+			if(_samples[i] == 0)
+				break;
 			//Add the absolute of the current value to the avarage calculation
-			avg = avg + (Math.Abs(samples[i]) - avg) / count;
+			avg = avg + (Math.Abs(_samples[i]) - avg) / count;
 		}
 		return avg;
 	}
 	
 	//Returns the avg feed from the microphone over the last tenth of a second
-	public float GetInput()
+	public static float GetInput()
 	{
 		//Store the audio clip in a float array
 		int offset = Microphone.GetPosition ("");
-		_micClip.GetData (samples, Microphone.GetPosition (""));
+		_micClip.GetData (_samples, Microphone.GetPosition (""));
 		
 		//Get the avarage value of all samples in the current recording
 		int count = 0;
@@ -60,12 +80,12 @@ public class MicrophoneInput
 			int index = (i + _micClip.samples) % _micClip.samples;
 			count++;
 			//Add the absolute of the current value to the avarage calculation
-			avg = avg + (Math.Abs(samples[index]) - avg) / count;
+			avg = avg + (Math.Abs(_samples[index]) - avg) / count;
 		}
 		return avg;
 	}
 
-	public void GetSamples(out float[] Samples)
+	public static void GetSamples(out float[] Samples)
 	{
 		Samples = new float[_micClip.samples * _micClip.channels];
 		_micClip.GetData (Samples, 0);

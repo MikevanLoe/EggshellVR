@@ -5,17 +5,19 @@ using System.Collections.Generic;
 public class NPCController : MonoBehaviour {
 	public string PersonalityName;
 	public bool RotatesOnX;
-	private Animation NPCAnim;
+	public float MaxRot = 2f;
+
 
 	private Transform _center;
 	private Transform _neck;
 	private StateMachine<NPCController> _stateMachine;
-	private float _curX;
+	private float _curAngle;
 	private Vector3 _forward;
 	private Dictionary<string, bool> Switches;
 	private Dictionary<string, float> Variables;
 	private Personality _personality;
 	private Vector3 _originalPosition;
+	private Animation _NPCAnim;
 
 	public StateMachine<NPCController> NPCStateMachine {
 		get { return _stateMachine; }
@@ -32,7 +34,7 @@ public class NPCController : MonoBehaviour {
 		if (_center == null)
 			throw new UnityException ("NPC: " + name + " has no center attached");
 
-		NPCAnim = GetComponent<Animation> ();
+		_NPCAnim = GetComponent<Animation> ();
 
 		_forward = _center.transform.forward;
 		_stateMachine = new StateMachine<NPCController> ();
@@ -51,7 +53,8 @@ public class NPCController : MonoBehaviour {
 
 		_originalPosition = transform.position;
 
-		switch (PersonalityName) {
+		switch (PersonalityName) 
+		{
 		case "HappyFisher":
 			_personality = new HappyFisher(this);
 			break;
@@ -71,8 +74,8 @@ public class NPCController : MonoBehaviour {
 
 	void LateUpdate () 
 	{
-		if (!NPCAnim.isPlaying)
-			NPCAnim.Play ();
+		if (!_NPCAnim.isPlaying)
+			_NPCAnim.Play ();
 		_stateMachine.Handle ();
 		_personality.Update ();
 	}
@@ -81,8 +84,10 @@ public class NPCController : MonoBehaviour {
 	{
 		var stateName = _stateMachine.GetCurState ().Name;
 		bool interested = _personality.MarketCall (performance);
-		if (stateName != "CrowdState" && stateName != "TravelState") {
-			if (interested) {
+		if (stateName != "CrowdState" && stateName != "TravelState") 
+		{
+			if (interested) 
+			{
 				_stateMachine.Set ("TravelState");
 				var travelState = (TravelState)_stateMachine.GetCurState ();
 				var obj = GameObject.FindGameObjectWithTag("PresentationController");
@@ -90,7 +95,9 @@ public class NPCController : MonoBehaviour {
 				travelState.Destination = presCont.GetCrowdPosition();
 				travelState.NextState = "CrowdState";
 			}
-		} else {
+		} 
+		else 
+		{
 			if(!interested)
 			{
 				TravelState travelState;
@@ -126,14 +133,16 @@ public class NPCController : MonoBehaviour {
 		}
 		
 		//Turn the neck by the difference with current angle
-		if (Mathf.Round (b) != Mathf.Round (_curX)) 
+		if (Mathf.Round (b) != Mathf.Round (_curAngle)) 
 		{
+			if(Mathf.Abs(b - _curAngle) > 1)
+				b = _curAngle + Mathf.Clamp(b - _curAngle, -MaxRot, MaxRot);
 			if(RotatesOnX)
-				_neck.Rotate (new Vector3 (b - _curX, 0, 0));
+				_neck.Rotate (new Vector3 (b - _curAngle, 0, 0));
 			else
-				_neck.Rotate (new Vector3 (0, b - _curX, 0));
+				_neck.Rotate (new Vector3 (0, b - _curAngle, 0));
 			//Remember current angle
-			_curX = b;
+			_curAngle = b;
 		}
 	}
 	

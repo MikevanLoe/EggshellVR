@@ -4,11 +4,11 @@ using System.Collections;
 using ANT__Heartrate_Scanner;
 
 public class HeartrateReader : MonoBehaviour {
-	const float HRMIN = 60;
-	const float HRMAX = 200;
+	const int HRMIN = 60;
+	const int HRMAX = 200;
 
 	public bool DummyHR = true;
-	public float HRLow;
+	public int Heartrate;
 	public float HRRaise = 0.1f;
 	public float HRHighGap = 10;
 	public Transform Bar;
@@ -19,10 +19,9 @@ public class HeartrateReader : MonoBehaviour {
 	private float _yPosFull;
 	private bool _HRFound;
 	private float _filler = 1;
+	private float _HRLow;
 
 	//Heartrate is shown in inspector for debug
-	[SerializeField]
-	private float Heartrate;
 
 	// Use this for initialization
 	void Start () 
@@ -34,32 +33,32 @@ public class HeartrateReader : MonoBehaviour {
 			StartCoroutine ("HeartStart");
 		else
 			StartCoroutine ("HeartrateSweep");
-		_filler = 1 / CalculateMeterScale (HRMAX - HRMIN);
+		//Set  the heartrate to the distance between maximum and minumum
+		Heartrate = HRMAX - HRMIN;
+		//The filler ensures that the meter is filled at max. See Technical Documentation.
+		_filler = 1 / CalculateMeterScale ();
 	}
 
 	//Stop the ANT device on application quit
-	void OnApplicationQuit() 
+	void OnApplicationQuit()
 	{
 		HeartrateReciever.Stop();
 	}
-	
-	// Update is called once per frame
-	void Update () 
+
+	void Update ()
 	{
 		//If the HR reciever isn't yet ready, don't update
 		if (!_HRFound)
 			return;
 
-		float BPM = HeartrateReciever.Heartrate; 	//Get the heartrate from the ANT
-		Heartrate = BPM; 							//Save the heartrate to a member so it can be viewed in debug
+		Heartrate = HeartrateReciever.Heartrate; 	//Get the heartrate from the ANT
 
-		HRLow = Mathf.Min (HRLow, BPM); 			//Decrease the HRLow if it's lower than bpm
-		HRLow = Mathf.Max (HRLow, HRMIN);			//Don't let HRLow drop below minimum
+		_HRLow = Mathf.Min (_HRLow, Heartrate); 	//Decrease the HRLow if it's higher than bpm
+		_HRLow = Mathf.Max (_HRLow, HRMIN);			//Don't let HRLow drop below minimum
 
-		//Slowly raise HRLow in case of low peak
-		HRLow += HRRaise * Time.deltaTime;
+		_HRLow += HRRaise * Time.deltaTime;			//Slowly raise HRLow in case of low peak
 
-		var factor = CalculateMeterScale (BPM);
+		var factor = CalculateMeterScale ();
 
 		//Transform the Bar
 		//Change the color from green to yellow to red depending on heart rate
@@ -70,23 +69,23 @@ public class HeartrateReader : MonoBehaviour {
 
 		//Make the heart rate bar only expand and retract upwards
 		//Further explained in Technical Document
-		float YNewScale = _yScaleFull * factor;
-		float dev = _yScaleFull * ((1 - 	factor));
-		var newPos = Bar.localPosition;
-		newPos.y = _yPosFull - dev;
-		var newScale = Bar.localScale;
-		newScale.y = YNewScale;
-		Bar.localPosition = newPos;
-		Bar.localScale = newScale;
+//		float YNewScale = _yScaleFull * factor;
+//		float dev = _yScaleFull * ((1 - factor));
+//		var newPos = Bar.localPosition;
+//		newPos.y = _yPosFull - dev;
+//		var newScale = Bar.localScale;
+//		newScale.y = YNewScale;
+//		Bar.localPosition = newPos;
+//		Bar.localScale = newScale;
 	}
 
-	float CalculateMeterScale (float BPM)
+	public float CalculateMeterScale ()
 	{
 		//Make the bar raise faster at lower levels
 		//Refer to the Technical Design document for explanation
-		float HRHigh = BPM + HRHighGap;
-		float mid = (HRHigh - HRLow) / 2;
-		float cur = BPM - HRLow;
+		float HRHigh = Heartrate + HRHighGap;
+		float mid = (HRHigh - _HRLow) / 2;
+		float cur = Heartrate - _HRLow;
 		float x = cur - mid;
 		float factor = 1 / mid * x;
 		factor = Mathf.Clamp01 (factor);
@@ -109,7 +108,7 @@ public class HeartrateReader : MonoBehaviour {
 			                 ex.Message);
 		}
 		//Since HRLow tracks the minimum, its initial value has to be above the minimum
-		HRLow = HeartrateReciever.Heartrate;
+		_HRLow = HeartrateReciever.Heartrate;
 		_HRFound = true;
 		yield return new WaitForSeconds(0.1f);
 	}

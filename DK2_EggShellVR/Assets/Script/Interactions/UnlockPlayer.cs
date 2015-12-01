@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 
-public class UnlockPlayer : Event
+public class UnlockPlayer : SceneEvent
 {
 	public UnlockPlayer (float time = 0)
 	{
