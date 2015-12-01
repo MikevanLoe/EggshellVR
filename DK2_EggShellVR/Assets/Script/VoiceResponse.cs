@@ -8,10 +8,7 @@ public class VoiceResponse : MonoBehaviour
 	const float DurationMinimum = 0.4f;
 	const float DurationMaximum = 20;
 
-	public GameObject ErrorMessage;
-
 	private int _samplesPerSecond;
-	private float[] _sampleAvg;
 	private int _offset;
 	private bool _speaking;
 	private float _low = 0;
@@ -32,7 +29,6 @@ public class VoiceResponse : MonoBehaviour
 	{
 		//The avarage array has to fit a sample every fixed update.
 		_samplesPerSecond = (int) Mathf.Ceil (1 / Time.fixedDeltaTime);
-		_sampleAvg = new float[_samplesPerSecond];
 		MicrophoneInput.Init ();
 	}
 
@@ -102,13 +98,6 @@ public class VoiceResponse : MonoBehaviour
 			_alertListener = null;
 			action(duration);
 		}
-
-		//I think I fixed it so that this never ever happens.
-		//You know unless you don't have a mic...
-//		else if (Time.time - _highStart > DurationMaximum) 
-//		{ 													//If the raise time is longer than the maximum
-//			ErrorMessage.SetActive(true);					//Display an error
-//		}
 	}
 
 	public void ForceStop()

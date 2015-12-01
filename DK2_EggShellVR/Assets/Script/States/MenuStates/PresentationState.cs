@@ -20,6 +20,7 @@ public class PresentationState : State<MenuController>
 
 	public PresentationState (MenuController c) : base(c)
 	{
+		//Obtain all external objects
 		_presController = GameObject.FindGameObjectWithTag ("PresentationController")
 			.GetComponent<PresentationController> ();
 		var gc = GameObject.FindGameObjectWithTag ("GameController");
@@ -28,14 +29,16 @@ public class PresentationState : State<MenuController>
 		_heartBar = _client.transform.FindChild ("PresentationMenu/Left/HeartBar/HeartFill");
 		_convoBar = _client.transform.FindChild ("PresentationMenu/Left/ConvoBar/ConvoFill");
 		_lookBar = _client.transform.FindChild ("PresentationMenu/Left/LookBar/LookFill");
+
+		if(_heartBar == null || _convoBar == null || _lookBar == null)
+			throw new UnityException("Could not find bars. Make sure bars exist inside of ItemMenu at the correct path.");
+
 		var gradeObj = _client.transform.FindChild ("PresentationMenu/Left/Grade");
 		if (gradeObj == null)
 			throw new UnityException ("Could not find Grade object.");
 		_gradeText = gradeObj.GetComponent<TextMesh> ();
 
-		if(_heartBar == null || _convoBar == null || _lookBar == null)
-			throw new UnityException("Could not find bars. Make sure bars exist inside of ItemMenu at the correct path.");
-		
+		//Set all original scales and positions
 		_heartScale = _heartBar.localScale.x;
 		_heartPos = _heartBar.localPosition.x;
 		_convoScale = _convoBar.localScale.x;
@@ -46,6 +49,7 @@ public class PresentationState : State<MenuController>
 	
 	public override bool Handle()
 	{
+		//Get and set the score
 		float heartScore = _hrReader.CalculateMeterScale ();
 		ResizeBar (_heartBar, _heartScale, _heartPos, heartScore);
 
@@ -55,9 +59,12 @@ public class PresentationState : State<MenuController>
 		float lookScore = _presController.GetLookScore ();
 		ResizeBar (_lookBar, _lookScale, _lookPos, lookScore);
 
+		//The grade is the avarage of all
+		//TODO: This of course is stupid lol, you get more points for having a higher heartrate
 		float grade = (heartScore + convScore + lookScore) / 3 * 10;
-
-		if (Input.GetKeyDown (KeyCode.E)) {
+	
+		//Since there is no real end yet, calculate score on the press of a button
+		if (Input.GetKeyDown (KeyCode.R)) {
 			grade = Mathf.Max (grade, 1);
 			grade = Mathf.Round (grade * 10) / 10; 		//Round to one decimal place
 
@@ -66,6 +73,13 @@ public class PresentationState : State<MenuController>
 		return true;
 	}
 
+	/// <summary>
+	/// Resizes the different bars.
+	/// </summary>
+	/// <param name="bar">The bar transform.</param>
+	/// <param name="orScale">Original scale.</param>
+	/// <param name="orPos">Original position.</param>
+	/// <param name="factor">Factor of the new size.</param>
 	private void ResizeBar(Transform bar, float orScale, float orPos, float factor)
 	{
 		factor = Mathf.Max (factor, 0.05f);
