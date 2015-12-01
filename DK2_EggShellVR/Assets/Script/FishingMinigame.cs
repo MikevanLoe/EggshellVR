@@ -47,7 +47,7 @@ public class FishingMinigame : MonoBehaviour
 		float zMin = zone.zMin;
 		float zMax = zone.zMax;
 
-		Vector3 randPos = new Vector3(UnityEngine.Random.Range (xMin, xMax), 0.3f,
+		Vector3 randPos = new Vector3(UnityEngine.Random.Range (xMin, xMax), 9.3f,
 		                              UnityEngine.Random.Range (zMin, zMax));
 
 		spawningFish.position = randPos;
