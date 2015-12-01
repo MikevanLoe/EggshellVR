@@ -23,14 +23,23 @@ public class FishAI : MonoBehaviour {
 			if(hookedTime <= 0f)
 				hookedTime = Time.time;
 
-			if (hookedTime <= hookedTime+delay) {
-				if (Input.GetButtonDown ("Fire1")) {
+			if (Time.time-hookedTime < delay)
+			{
+				Debug.Log(Time.time-hookedTime);
+				this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+				this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+				if (Input.GetButtonDown ("Fire1"))
+				{
 					GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vis",1));
 					Destroy(this.gameObject);
+					hookedTime = 0f;
 				}
 			}
 			else
+			{
 				isHooked = !isHooked;
+				hookedTime = 0f;
+			}
 		}
 	}
 }
