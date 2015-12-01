@@ -4,7 +4,10 @@ using System.Collections;
 public class FishAI : MonoBehaviour {
 	public Mover3D mover;
 	public bool isHooked;
-	
+
+	private float delay = 2.5f;
+	private float hookedTime;
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -16,13 +19,18 @@ public class FishAI : MonoBehaviour {
 		}
 		else
 		{
-			// Haak beweegt op en neer 5x
-			
-			if (Input.GetButtonDown ("Fire1")) {
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vis",1));
-				Destroy(this.gameObject);
+			//this.GetComponent<Rigidbody>().
+			if(hookedTime <= 0f)
+				hookedTime = Time.time;
+
+			if (hookedTime <= hookedTime+delay) {
+				if (Input.GetButtonDown ("Fire1")) {
+					GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vis",1));
+					Destroy(this.gameObject);
+				}
 			}
-			// Na 5x Vis zwemt weg
+			else
+				isHooked = !isHooked;
 		}
 	}
 }
