@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 
-public class LockPlayer : Event
+public class LockPlayer : SceneEvent
 {
 	public LockPlayer (float time)
 	{

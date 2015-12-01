@@ -80,7 +80,7 @@ public class CutsceneController : MonoBehaviour
 				switch (interaction["Type"])
 				{
 				case "Event":
-					part = Event.GetScript(interaction["ScriptKey"], interaction["Duration"].AsFloat);
+					part = SceneEvent.GetScript(interaction["ScriptKey"], interaction["Duration"].AsFloat);
 					break;
 				case "NPCLine":
 					part = new NPCLine(interaction["NpcName"], interaction["VoiceKey"], interaction["Duration"].AsFloat);

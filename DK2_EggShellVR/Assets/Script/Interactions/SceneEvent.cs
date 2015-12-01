@@ -1,7 +1,7 @@
 
-public abstract class Event : Interaction
+public abstract class SceneEvent : Interaction
 {
-	public static Event GetScript(string key, float time)
+	public static SceneEvent GetScript(string key, float time)
 	{
 		switch (key) {
 		case "LockPlayer" :

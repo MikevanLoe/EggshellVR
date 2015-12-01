@@ -53,9 +53,12 @@ public class MicrophoneInput
 		//Get the avarage value of all samples in the current recording
 		int count = 0;
 		float avg = 0f;
-		for (int i = 0; i < _micClip.samples; i++) 
+		for (int i = Microphone.GetPosition(""); count < _micClip.samples; i++) 
 		{
+			i %= _micClip.samples;
 			count++;
+			if(_samples[i] == 0)
+				break;
 			//Add the absolute of the current value to the avarage calculation
 			avg = avg + (Math.Abs(_samples[i]) - avg) / count;
 		}
