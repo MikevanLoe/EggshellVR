@@ -45,14 +45,16 @@ public class VoiceResponse : MonoBehaviour
 		if (input < 0.0001f)
 			return;
 		//Microphone input calibration to detect the difference between silence and speech
-		if (_init) {
+		if (_init) 
+		{
 			//Initial max and min are the very first recorded input
 			_high = input;
 			_low = input;
 			_init = false;
 		}
 		//But high and low can't be the same, else the code will break...
-		if (_high == _low) {
+		if (_high == _low) 
+		{
 			_high += _low / 10;
 		}
 

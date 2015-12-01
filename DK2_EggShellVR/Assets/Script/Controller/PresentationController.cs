@@ -86,7 +86,8 @@ public class PresentationController : MonoBehaviour {
 	{
 		//Display the current talk time in the display for debug
 		ScoreDisplay.text = (Mathf.Round(_talkTime * 10) / 10).ToString ();
-		if (_voiceSystem.IsSpeaking ()) {
+		if (_voiceSystem.IsSpeaking ()) 
+		{
 			//Score is the amount of time the player was talking during the pitch phase
 			_talkTime += Time.deltaTime;
 			//Ask all NPCs if they want to come watch
@@ -111,7 +112,8 @@ public class PresentationController : MonoBehaviour {
 	/// </summary>
 	void PitchState ()
 	{
-		if (_timerStart + _partDuration <= Time.time) {
+		if (_timerStart + _partDuration <= Time.time) 
+		{
 			//End the attraction state
 			//Add any points the player was still going to get.
 			_voiceSystem.ForceStop ();
@@ -137,11 +139,13 @@ public class PresentationController : MonoBehaviour {
 			//Show sentence
 			Sentence s = GetNextSentence ();
 			//TODO: End the presentation when there is no next line
-			if (s != null) {
+			if (s != null) 
+			{
 				LineDisplay.text = s.Words;
 				_partDuration = s.Time;
 			}
-			else {
+			else 
+			{
 				GameObject.FindGameObjectWithTag ("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController> ().LockedInput = false;
 				//TODO: Display end score and whatever
 			}

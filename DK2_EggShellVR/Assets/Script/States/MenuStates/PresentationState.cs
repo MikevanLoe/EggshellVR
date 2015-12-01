@@ -64,7 +64,8 @@ public class PresentationState : State<MenuController>
 		float grade = (heartScore + convScore + lookScore) / 3 * 10;
 	
 		//Since there is no real end yet, calculate score on the press of a button
-		if (Input.GetKeyDown (KeyCode.R)) {
+		if (Input.GetKeyDown (KeyCode.R)) 
+		{
 			grade = Mathf.Max (grade, 1);
 			grade = Mathf.Round (grade * 10) / 10; 		//Round to one decimal place
 
