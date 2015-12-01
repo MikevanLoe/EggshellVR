@@ -7,7 +7,7 @@ public class CrowdState : State<NPCController>
 	private const float StareScoreLeast = 55;
 	private const float Speed = 8f;
 	private const float PositiveFactor = 4;
-	private const float MaxAngle = 20;
+	private const float MaxAngle = 40;
 	private const float DistractionMax = 100; 
 	
 	private float _stareScore;
@@ -17,6 +17,7 @@ public class CrowdState : State<NPCController>
 	private TextMesh _angleIndicator;
 	private PlayerController _playerController;
 	private Transform _player;
+	private PresentationController _presCont;
 
 	public CrowdState (NPCController c) : base(c) 
 	{
@@ -28,6 +29,9 @@ public class CrowdState : State<NPCController>
 		//Debug indicators for tracking NPC status
 		_debugIndicator = _client.transform.GetComponentInChildren<SpriteRenderer> ();
 		_angleIndicator = _client.transform.GetComponentInChildren<TextMesh> ();
+
+		//The presentation controller is used to report interest to.
+		_presCont = GameObject.FindGameObjectWithTag ("PresentationController").GetComponent<PresentationController>();
 
 		//Sprites that show how the NPC should be feeling (when we actually get emotes later)
 		_debugSprites = new List<Sprite> ();
@@ -43,15 +47,17 @@ public class CrowdState : State<NPCController>
 
 	public override void Enter()
 	{
+		//TODO: This but then not shitty...
 		//Turn towards the player
 		_client.transform.LookAt (_player, Vector3.up);
+		_presCont.JoinAudience (_client.gameObject);
 	}
 	
 	public override bool Handle()
 	{
 		//When in the crowd, stare at the player at all times
 		//At least for now. When we don't have extensive NPC reactions yet.
-		_client.LookAt(_player.transform);	
+		_client.LookAt(_player.transform);
 
 		//Get the angle at which the player is looking at this NPC.
 		float angle = _playerController.GetAngle (_client.GetCenterTransform().position);
@@ -74,7 +80,9 @@ public class CrowdState : State<NPCController>
 		else
 			_distraction += Time.deltaTime * Speed;
 		_distraction = Mathf.Clamp (_distraction, 0, DistractionMax);
-	
+
+		_presCont.UpdateDistraction (_distraction);
+
 		DrawDebug (angle);
 		
 		return true;

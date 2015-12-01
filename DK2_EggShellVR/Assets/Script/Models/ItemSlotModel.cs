@@ -18,12 +18,12 @@ public class ItemSlotModel
 	public void ResetMaterials()
 	{
 		//Write the inventory in the book
-		var renderer = Object.GetComponent<MeshRenderer>();
+		var renderer = Object.GetComponent<Decal>();
 
 		//Make a new texture
-		_material = new Material(Shader.Find("Transparent/Diffuse"));
+		_material = new Material(Shader.Find("Decal/DecalShader"));
 		_material.mainTexture = Resources.Load ("border") as Texture;
-		renderer.material = _material;
+		renderer.m_Material = _material;
 	}
 
 	public void SetTexture(Texture tex = null)

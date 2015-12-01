@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Start () 
 	{
-		_view = FindTransform (transform, "CenterEyeAnchor");
+		_view = GameObject.FindGameObjectWithTag("MainCamera").transform;
 		if (_view == null)
 			_view = transform;
 		Inventory = new List<ItemModel> ();
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		_invTweening = true;
 		//Calculate progress to move per frame
-		float progPerFrame = 1 * Time.deltaTime / TweenTime;
+		float progPerFrame = 1 * 0.01f / TweenTime;
 		Vector3 startPos = InventoryObject.localPosition;
 		Quaternion startRot = InventoryObject.localRotation;
 		for (float prog = 0; prog <= 1f; prog += progPerFrame)
@@ -102,8 +102,10 @@ public class PlayerController : MonoBehaviour {
 			//Tween local transform
 			InventoryObject.localPosition = Vector3.Lerp(startPos, destination.localPosition, prog);
 			InventoryObject.localRotation = Quaternion.Slerp(startRot, destination.localRotation, prog);
-			yield return new WaitForSeconds(Time.deltaTime);
+			yield return new WaitForSeconds(0.01f);
 		}
+		InventoryObject.localPosition = destination.localPosition;
+		InventoryObject.localRotation = destination.localRotation;
 		_invOpen = !_invOpen;
 		if(!_invOpen)
 			InventoryObject.gameObject.SetActive(false);

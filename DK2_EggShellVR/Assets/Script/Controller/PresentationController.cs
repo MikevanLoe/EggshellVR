@@ -4,51 +4,52 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PresentationController : MonoBehaviour {
-	
+	public enum PresentationState { Idle, Attracting, Active };
+
 	[System.Serializable]
 	public class PresentationSettings
 	{
-		public float CrowdRadius;
-		public float CrowdAngle;
-		public float Accuracy;
-		public float ScorePerLine;
+		public float CrowdRadius = 3;
+		public float CrowdAngle = 15;
+		public float Accuracy = 0.2f;
+		public float ScorePerLine = 10;
 		public float MaxScore = 100;
 	}
 	public PresentationSettings pSettings = new PresentationSettings();
 	public float Performance;
 	public Transform MarketStand;
-
-	[HideInInspector]
-	public List<GameObject> Audience;
-
+	public PresentationState presState;
+	public TextMesh LineDisplay;
+	public TextMesh ScoreDisplay;
+	
+	private List<GameObject> Audience;
 	private float _oldPerformance = -1;
-	private TextMesh _lineDisplay;
 	private VoiceResponse _voiceSystem;
 	private Dictionary<string, List<List<Sentence>>> _lines;
 	private string _curKey;
 	private int _curId;
 	private int _curSequence;
-	private float _filler;
 	private bool _playerIsClose;
 	private bool _presentationStarted;
+	private float _timerStart;
+	private float _presentationStart;
+	private float _talkTime;
+	private float _lookScore;
+	private float _stressScore;
+	private List<GameObject> _NPCs;
+	private float _partDuration;
 
 	void Start () 
 	{
-		//The line display is the text mesh that shows the text the player has to say
-		_lineDisplay = GetComponentInChildren<TextMesh> ();
 		//The voice response object is used to determine when the player is talking
-		_voiceSystem = GetComponent<VoiceResponse> ();
-		if (_lineDisplay == null)
-			throw new UnityException ("Presentation Controller found no TextMesh in children!");
+		_voiceSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<VoiceResponse> ();
 		if (_voiceSystem == null)
-			throw new UnityException ("Presentation Controller has no VoiceResponse script attachd to it!");
-
-		//This factor is used to round the number later in code between 0 and -1
-		_filler = 1 / pSettings.Accuracy - 1;
+			throw new UnityException ("Game Controller has no VoiceResponse script attached to it!");
 
 		GetLinesFromJSON ();
+		_NPCs = new List<GameObject> ();
 	}
-
+	
 	/// <summary>
 	///Gets all the presentation lines from the JSON file
 	/// </summary>
@@ -81,52 +82,72 @@ public class PresentationController : MonoBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// Called when a sentence was finished	
-	/// </summary>
-	/// <param name="deviation">How much the accuracy deviated from the set time.</param>
-	public void SentenceSpoken (float deviation)
+	void Update()
 	{
-		//If the player isn't standing in the area, ignore spoken sentences
-		if (!_playerIsClose)
-			return;
-
-		//Gets a number between 1 and -1 representing the distance from
-		//the accuracy to perfection and the maximum deviation.
-		float factor = 1 - 1 / pSettings.Accuracy * deviation;
-		//If the factor is negative, divide it by a factor to round it to -1 at max
-		if (factor < 0)
-			factor /= _filler;
-		float score = pSettings.ScorePerLine * factor;
-		Performance = Mathf.Clamp(Performance + score, 0, pSettings.MaxScore);
-		
-		//Get the next sentence and send it to the voice controller
-		Sentence s = GetNextSentence ();
-
-		//TODO: End the presentation when there is no next line
-		if (s == null) 
-		{
-			_lineDisplay.text = "";
-			Performance = 0;
-		}
-		else
-		{
-			_voiceSystem.SetSentence (s);
-			_voiceSystem.StartListening();
-			_lineDisplay.text = s.Words; //Display the text on the display area
-		}
-		
-		//Bring in audience
-		if (_oldPerformance != Performance) //If the performance score changed
-		{
-			var npcs = GameObject.FindGameObjectsWithTag("NPC"); //Get all NPCs
-			for(int i = 0; i < npcs.Length; i++)
+		//Display the current talk time in the display for debug
+		ScoreDisplay.text = (Mathf.Round(_talkTime * 10) / 10).ToString ();
+		if (_voiceSystem.IsSpeaking ()) {
+			//Score is the amount of time the player was talking during the pitch phase
+			_talkTime += Time.deltaTime;
+			//Ask all NPCs if they want to come watch
+			for (int i = 0; i < _NPCs.Count; i++) 
 			{
-				if(npcs[i].GetComponent<NPCController>() != null)
-					npcs[i].SendMessage ("MarketCall", Performance); //Ask NPC if they want to/can watch
+				_NPCs [i].SendMessage ("MarketCall", _talkTime, 
+				                       SendMessageOptions.DontRequireReceiver);
 			}
 		}
-		_oldPerformance = Performance; //Store the performance for comparison later
+		if (presState == PresentationState.Attracting) 
+		{
+			PitchState ();
+		}
+		else if (presState == PresentationState.Active)
+		{
+			ActiveState ();
+		}
+	}
+
+	/// <summary>
+	/// Handles the pitch state
+	/// </summary>
+	void PitchState ()
+	{
+		if (_timerStart + _partDuration <= Time.time) {
+			//End the attraction state
+			//Add any points the player was still going to get.
+			_voiceSystem.ForceStop ();
+
+			presState = PresentationState.Active;
+			//Show sentence
+			Sentence s = GetNextSentence ();
+			LineDisplay.text = s.Words;
+			_partDuration = s.Time;
+			_timerStart = Time.time;
+			_voiceSystem.StartListening (PitchSpoken);
+		}
+	}
+
+	/// <summary>
+	/// Handles the Active presentation state
+	/// </summary>
+	void ActiveState ()
+	{
+		//Part finished
+		if (_timerStart + _partDuration < Time.time) {
+			_voiceSystem.ForceStop ();
+			//Show sentence
+			Sentence s = GetNextSentence ();
+			//TODO: End the presentation when there is no next line
+			if (s != null) {
+				LineDisplay.text = s.Words;
+				_partDuration = s.Time;
+			}
+			else {
+				GameObject.FindGameObjectWithTag ("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController> ().LockedInput = false;
+				//TODO: Display end score and whatever
+			}
+			_timerStart = Time.time;
+			_voiceSystem.StartListening (PitchSpoken);
+		}
 	}
 
 	/// <summary>
@@ -144,9 +165,6 @@ public class PresentationController : MonoBehaviour {
 		//If there is no line next in sequence, continue to the next part of the presentation
 		switch (_curKey) {
 		case null:
-			_curKey = "start";
-			break;
-		case "start":
 			_curKey = "exordium";
 			break;
 		case "exordium":
@@ -159,13 +177,18 @@ public class PresentationController : MonoBehaviour {
 			_curKey = "argumentatio";
 			break;
 		case "argumentatio":
-			_curKey = "peratio";
+			_curKey = "peroratio";
 			break;
 		default:
 			return null;
 		}
 		//Get random id from possible id's
-		_curId = Random.Range (0, _lines [_curKey].Count - 1);
+		if (_lines.ContainsKey (_curKey))
+			_curId = Random.Range (0, _lines [_curKey].Count - 1);
+		else 
+		{
+			throw new UnityException("Lines did not contain part: " + _curKey);
+		}
 		//Sequence always starts at 0
 		_curSequence = 0;
 		return _lines [_curKey] [_curId] [_curSequence];
@@ -191,32 +214,82 @@ public class PresentationController : MonoBehaviour {
 		return point;
 	}
 
+	public void PitchSpoken(float duration)
+	{
+		if(_timerStart + _partDuration > Time.time)
+			_voiceSystem.StartListening (PitchSpoken);
+	}
+
+	/// <summary>
+	/// Change the look score based on the NPCs distraction
+	/// </summary>
+	/// <param name="distraction">Distraction.</param>
+	public void UpdateDistraction(float distraction)
+	{
+		//Score approaches distraction, based on crowd size
+		_lookScore += (distraction - _lookScore) / Audience.Count;
+	}
+
+	public void JoinAudience(GameObject NPC)
+	{
+		if (!Audience.Contains (NPC))
+			Audience.Add (NPC);
+	}
+
+	public float GetConvScore()
+	{
+		float totalTime = Time.time - _presentationStart;
+		if (totalTime <= 0)
+			return 1;
+		float score = 1 / totalTime * _talkTime;
+		score *= 2;
+		score = Mathf.Clamp01 (score);
+		return score;
+	}
+
+	public float GetLookScore()
+	{
+		return (100 - _lookScore) / 100;
+	}
+
 	/// <summary>
 	/// Called when the player is inside of the presentation area.
 	/// </summary>
 	public void DetectOn()
 	{
+		LineDisplay.text = "Detect ON!";
 		_playerIsClose = true;
-		
+
+		presState = PresentationState.Attracting;
 		//Show sentence
 		Sentence s = GetNextSentence();
-		_lineDisplay.text = s.Words;
-		_voiceSystem.SetSentence (s);
-		_voiceSystem.StartListening();
-		
-		//Chain player to position
+		LineDisplay.text = s.Words;
+		_partDuration = s.Time;
+
+		_timerStart = Time.time;
+		_presentationStart = Time.time;
+
+		_voiceSystem.StartListening(PitchSpoken);
+		_NPCs = new List<GameObject>( GameObject.FindGameObjectsWithTag("NPC") ); //Get all NPCs
+//		
+//		GameObject.FindGameObjectWithTag ("Player")
+//			.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController> ()
+//				.LockedInput = true;
+
 	}
 
-	//Called when player leaves the presentation area
+	/// <summary>
+	/// Called when player leaves the presentation area
+	/// </summary>
 	public void DetectOff()
 	{
+		LineDisplay.text = "Detect OFF!";
 		_playerIsClose = false;
 		//Tell all NPCs the show is over
-		var npcs = GameObject.FindGameObjectsWithTag("NPC"); //Get all NPCs
-		for(int i = 0; i < npcs.Length; i++)
+		for(int i = 0; i < _NPCs.Count; i++)
 		{
-			if(npcs[i].GetComponent<NPCController>() != null)
-				npcs[i].SendMessage ("MarketCall", 0); //Send 0 as performance so every loses interest instantly
+			if(_NPCs[i].GetComponent<NPCController>() != null)
+				_NPCs[i].SendMessage ("MarketCall", 0f, SendMessageOptions.DontRequireReceiver); //Send 0 as performance so everyone loses interest instantly
 		}
 	}
 }
