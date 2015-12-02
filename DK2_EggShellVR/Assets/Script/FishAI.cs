@@ -5,7 +5,7 @@ public class FishAI : MonoBehaviour {
 	public Mover3D mover;
 	public bool isHooked;
 
-	private float delay = 2.5f;
+	private float delay = 1.5f;
 	private float hookedTime;
 
 	// Update is called once per frame
@@ -25,7 +25,6 @@ public class FishAI : MonoBehaviour {
 
 			if (Time.time-hookedTime < delay)
 			{
-				Debug.Log(Time.time-hookedTime);
 				this.GetComponent<Rigidbody>().velocity = Vector3.zero;
 				this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 				if (Input.GetButtonDown ("Fire1"))
