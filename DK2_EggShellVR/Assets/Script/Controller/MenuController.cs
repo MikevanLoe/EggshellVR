@@ -2,6 +2,10 @@
 using System.Collections;
 
 public class MenuController : MonoBehaviour {
+	/// <summary>
+	/// The crafting menu state has a lot of things we want
+	/// to edit in the Unity Editor. Thats why its public.
+	/// </summary>
 	public CraftingState craftingState;
 	private PlayerController _player;
 
@@ -16,15 +20,17 @@ public class MenuController : MonoBehaviour {
 	/// <summary>
 	/// Initialize the menu
 	/// </summary>
-	void Init () 
+	void Start () 
 	{
 		Player = transform.parent.GetComponent<PlayerController>();
 		_stateMachine = new StateMachine<MenuController> ();
 
 		craftingState.Start ();
+		var presentationState = new PresentationState (this);
 
 		_stateMachine.Add (craftingState);
-		_stateMachine.Set ("CraftingState");
+		_stateMachine.Add (presentationState);
+		_stateMachine.Set ("PresentationState");
 	}
 
 	void Update () 
@@ -35,10 +41,9 @@ public class MenuController : MonoBehaviour {
 	//Refresh the inventory every time the menu is opened
 	public void OnEnable()
 	{
-		//Becuase OnEnable is called before start, we have to initialize on the first
-		//time OnEnable is called instead.
+		//Becuase OnEnable is called before start, we ignore it until start was called
 		if (Player == null)
-			Init ();
+			return;
 		_stateMachine.GetCurState().Enter();
 	}
 }

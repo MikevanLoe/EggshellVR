@@ -11,4 +11,10 @@ public class Bland : Personality
 		
 		_demand = Random.Range(1, 10);
 	}
+	
+	public override void LookedAt()
+	{
+		var cutscenecont = GameObject.FindGameObjectWithTag ("GameController").GetComponent<CutsceneController> ();
+		cutscenecont.PlayCutscene ("MedusaIntro");
+	}
 }

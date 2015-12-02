@@ -171,9 +171,9 @@ public class CraftingState : State<MenuController>
 
 		//Convert float to -1 or 1
 		if (input.x != 0)
-			input.x = input.x / Mathf.Abs (input.x);
+			input.x /= Mathf.Abs (input.x);
 		if (input.y != 0)
-			input.y = input.y / Mathf.Abs (input.y);
+			input.y /= Mathf.Abs (input.y);
 
 		//Inventory page
 		if (selected >= 0) 
