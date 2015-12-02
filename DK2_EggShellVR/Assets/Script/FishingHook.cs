@@ -5,6 +5,6 @@ public class FishingHook : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		other.gameObject.GetComponent<FishAI> ().isHooked = true;
+		other.gameObject.GetComponent<FishAI> ().Hooked();
 	}
 }

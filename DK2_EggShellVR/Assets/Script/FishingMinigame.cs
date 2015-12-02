@@ -10,7 +10,7 @@ public class FishingMinigame : MonoBehaviour
 	public bool isHookOut;
 	public Transform rod;
 	public Transform hook;
-	public Transform spawnZone;
+	public SpawnZone spawnZone;
 	public List<Transform> fishList;
 	public Animator anim;
 
@@ -40,12 +40,10 @@ public class FishingMinigame : MonoBehaviour
 
 	public void SpawnFish (Transform spawningFish)
 	{
-		// random position in SpawnZone
-		SpawnZone zone = spawnZone.GetComponent<SpawnZone> ();
-		float xMin = zone.xMin;
-		float xMax = zone.xMax;
-		float zMin = zone.zMin;
-		float zMax = zone.zMax;
+		float xMin = spawnZone.xMin;
+		float xMax = spawnZone.xMax;
+		float zMin = spawnZone.zMin;
+		float zMax = spawnZone.zMax;
 
 		Vector3 randPos = new Vector3(UnityEngine.Random.Range (xMin, xMax), 9.3f,
 		                              UnityEngine.Random.Range (zMin, zMax));

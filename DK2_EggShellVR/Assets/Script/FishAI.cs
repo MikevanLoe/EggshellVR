@@ -19,10 +19,6 @@ public class FishAI : MonoBehaviour {
 		}
 		else
 		{
-			//this.GetComponent<Rigidbody>().
-			if(hookedTime <= 0f)
-				hookedTime = Time.time;
-
 			if (Time.time-hookedTime < delay)
 			{
 				this.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -40,5 +36,11 @@ public class FishAI : MonoBehaviour {
 				hookedTime = 0f;
 			}
 		}
+	}
+
+	public void Hooked()
+	{
+		hookedTime = Time.time;
+		isHooked = true;
 	}
 }
