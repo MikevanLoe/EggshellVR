@@ -9,8 +9,10 @@ public class Mover3D : MonoBehaviour {
 	public float WanderRadius = 2;
 	public float WanderDistance = 5;
 	public float WanderJitter = 2;
+	public LayerMask Walls;
 
-	private Vector3 WanderTarget;
+	[HideInInspector]
+	public Vector3 WanderTarget;
 	public Vector3 Heading;
 
 	public bool SeekOn, AlignmentOn, CohesionOn, SeperationOn, FleeOn;
@@ -162,6 +164,29 @@ public class Mover3D : MonoBehaviour {
 
 		//move the target into a position WanderDist in front of the agent
 		Vector3 WanderForce = Heading * WanderDistance + WanderTarget;
+		Debug.DrawLine (transform.position, transform.position + WanderForce, Color.yellow, Time.deltaTime);
+		Debug.DrawLine (transform.position + WanderForce, transform.position + (Heading * WanderDistance), Color.white, Time.fixedDeltaTime);
 		return WanderForce;
+	}
+
+	public Vector3 WallAvoidance()
+	{
+		RaycastHit WallData;
+		float testDistance = 2;
+
+		if (Physics.Raycast (transform.position, Heading, out WallData, testDistance, Walls)) {
+			Debug.DrawLine (transform.position, transform.position + (Heading * testDistance), Color.green, 0.1f);
+			Debug.DrawLine (WallData.point, WallData.point + WallData.normal, Color.blue, 0.3f);
+			WanderTarget = WallData.normal;
+			return WallData.normal * (testDistance - WallData.distance) * 8;
+		}else
+			Debug.DrawLine (transform.position, transform.position + (Heading * testDistance), Color.red, 0.1f);
+		return Vector3.zero;
+	}
+
+	public void FaceHeading()
+	{
+		transform.rotation = Quaternion.LookRotation (Heading);
+		transform.Rotate (90, 0, 0);
 	}
 }

@@ -8,6 +8,7 @@
 */Library/
 sysinfo.txt
 /*.stackdump
+/*.mat
 /*.meta
 /*.unityproj
 

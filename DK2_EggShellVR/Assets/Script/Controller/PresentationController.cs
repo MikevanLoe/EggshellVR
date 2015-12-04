@@ -48,6 +48,8 @@ public class PresentationController : MonoBehaviour {
 
 		GetLinesFromJSON ();
 		_NPCs = new List<GameObject> ();
+		
+		Audience = new List<GameObject> ();
 	}
 	
 	/// <summary>

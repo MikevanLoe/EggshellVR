@@ -9,13 +9,16 @@ public class FishAI : MonoBehaviour {
 	private float hookedTime;
 
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
 	{
 		if (!isHooked)
 		{
-			Vector3 Force = mover.Wander ();
+			Vector3 Force;
+			Force = mover.WallAvoidance();
+			Force += mover.Wander ();
 			Force.y = 0;
 			mover.Accelerate (Force);
+			mover.FaceHeading();
 		}
 		else
 		{
