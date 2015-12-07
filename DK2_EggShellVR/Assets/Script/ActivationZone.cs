@@ -2,17 +2,15 @@
 using System.Collections;
 
 public class ActivationZone : MonoBehaviour {
-	public Transform fishingGame;
-
+	public Transform startText;
+	
 	void OnTriggerEnter()
 	{
-		// Word melding enter ipv game
-		fishingGame.gameObject.SetActive (true);
+		startText.gameObject.SetActive(true);
 	}
 
 	void OnTriggerExit()
 	{
-		// Word melding exit aan ipv game uit
-		fishingGame.gameObject.SetActive (false);
+		startText.gameObject.SetActive(false);
 	}
 }
