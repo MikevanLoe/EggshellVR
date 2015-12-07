@@ -7,6 +7,7 @@ public class EndText : MonoBehaviour {
 	void Update()
 	{
 		if (Input.GetButtonDown ("Fire2")) {
+			fishGame.GetComponent<FishingMinigame>().ActivateRod();
 			fishGame.gameObject.SetActive (false);
 			this.gameObject.SetActive(false);
 		}
