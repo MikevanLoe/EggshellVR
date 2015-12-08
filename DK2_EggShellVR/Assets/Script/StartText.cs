@@ -7,7 +7,8 @@ public class StartText : MonoBehaviour {
 
 	void Update()
 	{
-		if (Input.GetButtonDown ("Fire2")) {
+		if (Input.GetButtonDown ("Fire2"))
+		{
 			fishGame.gameObject.SetActive (true);
 			fishGame.GetComponent<FishingMinigame>().ActivateRod();
 			endText.gameObject.SetActive(true);
