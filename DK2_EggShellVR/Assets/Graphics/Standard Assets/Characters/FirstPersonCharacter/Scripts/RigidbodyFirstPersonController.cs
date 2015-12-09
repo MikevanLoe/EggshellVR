@@ -87,10 +87,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 				m_RigidBody.velocity = Vector3.zero;
 			}
 		}
-<<<<<<< HEAD
-=======
 		public bool MouseLocked = true;
->>>>>>> 3b382d1443b574707b272435f13745642b273514
 
 		private bool m_LockedInput;
         private Rigidbody m_RigidBody;
@@ -134,25 +131,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_RigidBody = GetComponent<Rigidbody>();
             m_Capsule = GetComponent<CapsuleCollider>();
             mouseLook.Init (transform, cam.transform);
-<<<<<<< HEAD
-=======
-			LockedInput = true;
->>>>>>> 3b382d1443b574707b272435f13745642b273514
+			LockedInput = false;
         }
 
 
         private void Update()
         {
-<<<<<<< HEAD
-            RotateView();
 
-            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
-=======
 			if(!MouseLocked)
             	RotateView();
 
             if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump && !LockedInput)
->>>>>>> 3b382d1443b574707b272435f13745642b273514
             {
                 m_Jump = true;
             }
