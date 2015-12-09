@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class MenuController : MonoBehaviour {
@@ -27,13 +28,16 @@ public class MenuController : MonoBehaviour {
 		Player = transform.parent.GetComponent<PlayerController>();
 		_stateMachine = new StateMachine<MenuController> ();
 		Animator = GetComponent<Animator> ();
+		_stateMachine.Add (craftingState);
 
 		craftingState.Start ();
-		var presentationState = new PresentationState (this);
+		try{
+			var presentationState = new PresentationState (this);
+			_stateMachine.Add (presentationState);
+		}
+		catch(NullReferenceException){}
 
-		_stateMachine.Add (craftingState);
-		_stateMachine.Add (presentationState);
-		_stateMachine.Set ("PresentationState");
+		_stateMachine.Set ("CraftingState");
 	}
 
 	void Update () 

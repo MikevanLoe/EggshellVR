@@ -24,8 +24,13 @@ public class PresentationState : MenuState
 		Menu = c.transform.FindChild ("Presentation Menu").gameObject;
 
 		//Obtain all external objects
-		_presController = GameObject.FindGameObjectWithTag ("PresentationController")
-			.GetComponent<PresentationController> ();
+		var pres = GameObject.FindGameObjectWithTag ("PresentationController");
+		if(_presController == null)
+		{
+			Debug.LogWarning("No object with PresentationController tag found.");
+			throw NullReferenceException("NullReference not caught by inventory!!");
+		}
+		_presController = pres.GetComponent<PresentationController> ();
 		var gc = GameObject.FindGameObjectWithTag ("GameController");
 		_hrReader = gc.GetComponent<HeartrateReader> ();
 		
