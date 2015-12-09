@@ -10,8 +10,10 @@ public class ItemSlotModel
 	private Material _material;
 
 	//ItemSlotModels are filled through the unity editor so don't need a constructor
-	public ItemSlotModel ()
+	public ItemSlotModel (GameObject o, ItemModel i = null)
 	{
+		this.Object = o;
+		Item = i;
 	}
 
 	//Reset the material so it can be edited in code

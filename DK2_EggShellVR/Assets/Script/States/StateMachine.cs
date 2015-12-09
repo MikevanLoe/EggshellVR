@@ -29,6 +29,7 @@ public class StateMachine<T>
 		{
 			if(s.Name == name)
 			{
+				_curState.Exit();
 				_curState = s;
 				_curState.Enter();
 				return true;
@@ -36,6 +37,46 @@ public class StateMachine<T>
 		}
 		Debug.Log ("State named \"" + name + "\" not found.");
 		return false;
+	}
+
+	public int TryNext()
+	{
+		int s = _states.FindIndex (st => st == _curState);
+		s++;
+		if (s < _states.Count) {
+			return s;
+		}
+		return -1;
+	}
+
+	public bool Next()
+	{
+		int s = TryNext ();
+		if(s >= 0){
+			Set (_states [s].Name);
+			return true;
+		}
+		return false;
+	}
+
+	public int TryPrevious()
+	{
+		int s = _states.FindIndex (st => st == _curState);
+		s--;
+		if (s < _states.Count && s >= 0) {
+			return s;
+		}
+		return -1;
+	}
+
+	public bool Previous()
+	{
+		int s = TryPrevious ();
+		if(s >= 0){
+			Set (_states [s].Name);
+			return true;
+		}
+		return true;
 	}
 
 	public State<T> GetCurState()

@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-public class PresentationState : State<MenuController>
+public class PresentationState : MenuState
 {	
 	private PresentationController _presController;
 	private HeartrateReader _hrReader;
@@ -20,20 +20,23 @@ public class PresentationState : State<MenuController>
 
 	public PresentationState (MenuController c) : base(c)
 	{
+		//Get Menu
+		Menu = c.transform.FindChild ("Presentation Menu").gameObject;
+
 		//Obtain all external objects
 		_presController = GameObject.FindGameObjectWithTag ("PresentationController")
 			.GetComponent<PresentationController> ();
 		var gc = GameObject.FindGameObjectWithTag ("GameController");
 		_hrReader = gc.GetComponent<HeartrateReader> ();
 		
-		_heartBar = _client.transform.FindChild ("PresentationMenu/Left/HeartBar/HeartFill");
-		_convoBar = _client.transform.FindChild ("PresentationMenu/Left/ConvoBar/ConvoFill");
-		_lookBar = _client.transform.FindChild ("PresentationMenu/Left/LookBar/LookFill");
+		_heartBar = _client.transform.FindChild ("Presentation Menu/Left/HeartBar/HeartFill");
+		_convoBar = _client.transform.FindChild ("Presentation Menu/Left/ConvoBar/ConvoFill");
+		_lookBar = _client.transform.FindChild ("Presentation Menu/Left/LookBar/LookFill");
 
 		if(_heartBar == null || _convoBar == null || _lookBar == null)
 			throw new UnityException("Could not find bars. Make sure bars exist inside of ItemMenu at the correct path.");
 
-		var gradeObj = _client.transform.FindChild ("PresentationMenu/Left/Grade");
+		var gradeObj = _client.transform.FindChild ("Presentation Menu/Left/Grade");
 		if (gradeObj == null)
 			throw new UnityException ("Could not find Grade object.");
 		_gradeText = gradeObj.GetComponent<TextMesh> ();
@@ -45,6 +48,16 @@ public class PresentationState : State<MenuController>
 		_convoPos = _convoBar.localPosition.x;
 		_lookScale = _lookBar.localScale.x;
 		_lookPos = _lookBar.localPosition.x;
+	}
+
+	public override void Enter()
+	{
+		Menu.SetActive (true);
+	}
+	
+	public override void Exit()
+	{
+		Menu.SetActive (false);
 	}
 	
 	public override bool Handle()
