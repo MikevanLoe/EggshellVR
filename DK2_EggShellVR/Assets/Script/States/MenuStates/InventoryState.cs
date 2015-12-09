@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Linq;
 
-public class InventoryState : State<MenuController>
+public class InventoryState : MenuState
 {	
 	public InventoryState (MenuController c) : base(c)
 	{
-
+		
 	}
 
 	public override bool Handle()

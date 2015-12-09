@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 
 [Serializable]
-public class CraftingState : State<MenuController>
+public class CraftingState : MenuState
 {
 	const int CraftingSlots = 3;
 	const int CraftResultSlot = -4;
 
 	public List<RecipeModel> Recipes;
-	public ItemSlotModel[] Slots;
-	public ItemSlotModel[] InventorySlots;
 	public int InventoryRows = 2;
 	public Transform SelectionHighlight;
-
+	
+	private List<ItemSlotModel> Slots;
+	private List<ItemSlotModel> InventorySlots;
 	private int selected = 0;
 	private bool heldX, heldY;
 
@@ -28,6 +28,29 @@ public class CraftingState : State<MenuController>
 	/// </summary>
 	public void Start()
 	{
+		//Find Crafting menu
+		Menu = _client.transform.FindChild ("Crafting Menu").gameObject;
+		SelectionHighlight = _client.transform.FindChild ("Crafting Menu/Highlight");
+		int i = 1;
+		Slots = new List<ItemSlotModel> ();
+		while (true) {
+			Transform slotT = _client.transform.FindChild ("Crafting Menu/Left/Slot " + i);
+			if(slotT == null)
+				break;
+			Slots.Add(new ItemSlotModel(slotT.gameObject));
+			i++;
+		}
+
+		i = 1;
+		InventorySlots = new List<ItemSlotModel> ();
+		while (true) {
+			Transform slotT = _client.transform.FindChild ("Crafting Menu/Right/Slot " + i);
+			if(slotT == null)
+				break;
+			InventorySlots.Add(new ItemSlotModel(slotT.gameObject));
+			i++;
+		}
+
 		//Intiailize the crafting menu and inventory screen
 		foreach (var slot in Slots) 
 		{
@@ -40,13 +63,16 @@ public class CraftingState : State<MenuController>
 			slot.Item = null;
 		}
 	}
-
-	/// <summary>
-	/// Called when crafting state is entered
-	/// </summary>
+	
 	public override void Enter()
 	{
 		RefreshInventory ();
+		Menu.SetActive (true);
+	}
+
+	public override void Exit()
+	{
+		Menu.SetActive (false);
 	}
 
 	/// <summary>

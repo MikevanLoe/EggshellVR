@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour {
 		CheckLookAt ();
 
 		//Open and close Inventory
-		if (Input.GetKeyDown (KeyCode.E))
+		if (Input.GetButtonDown ("Inventory"))
 		{
 			if(!_invTweening)
 			{
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour {
 			{
 				ItemObject item = obj.GetComponentInParent<ItemObject> ();
 				//If the player wants to pick it up, do that
-				if (Input.GetMouseButtonDown (0)) 
+				if (Input.GetButtonDown ("Fire1")) 
 				{
 					AddItem (new ItemModel (item.ItemName, item.Quantity));
 					obj.SendMessageUpwards ("PickUp");

@@ -7,9 +7,11 @@ public class MenuController : MonoBehaviour {
 	/// to edit in the Unity Editor. Thats why its public.
 	/// </summary>
 	public CraftingState craftingState;
+	public Animator Animator;
 	private PlayerController _player;
 
 	private StateMachine<MenuController> _stateMachine;
+	private bool running;
 
 	public PlayerController Player 
 	{
@@ -24,6 +26,7 @@ public class MenuController : MonoBehaviour {
 	{
 		Player = transform.parent.GetComponent<PlayerController>();
 		_stateMachine = new StateMachine<MenuController> ();
+		Animator = GetComponent<Animator> ();
 
 		craftingState.Start ();
 		var presentationState = new PresentationState (this);
@@ -36,6 +39,45 @@ public class MenuController : MonoBehaviour {
 	void Update () 
 	{
 		_stateMachine.Handle ();
+
+		if (Input.GetButtonDown ("MenuLeft")) 
+		{
+			StartCoroutine ("Flip", false);
+		}
+		else if(Input.GetButtonDown("MenuRight"))
+		{
+			if (_stateMachine.TryNext () >= 0 && !running)
+				StartCoroutine ("Flip", true);
+		}
+	}
+
+	IEnumerator Flip(bool next)
+	{
+		//Check if we can flip right now
+		if (running)
+			yield break;
+		if (next) 
+		{
+			if (_stateMachine.TryNext () < 0)
+				yield break;
+		}
+		else
+			if (_stateMachine.TryPrevious () < 0)
+				yield break;
+
+		running = true;
+		if(next)
+			Animator.SetTrigger("flip2");
+		else
+			Animator.SetTrigger("flip");
+
+		yield return new WaitForSeconds(0.3f);
+		if(next)
+			_stateMachine.Next();
+		else
+			_stateMachine.Previous();
+		yield return new WaitForSeconds(0.3f);
+		running = false;
 	}
 
 	//Refresh the inventory every time the menu is opened
