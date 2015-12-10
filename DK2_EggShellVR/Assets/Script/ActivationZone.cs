@@ -7,10 +7,11 @@ public class ActivationZone : MonoBehaviour {
 	void OnTriggerEnter()
 	{
 		startText.gameObject.SetActive(true);
+		startText.GetComponent<StartText>().inZone = true;
 	}
 
 	void OnTriggerExit()
 	{
-		startText.gameObject.SetActive(false);
+		startText.GetComponent<StartText>().inZone = false;
 	}
 }

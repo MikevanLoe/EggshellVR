@@ -10,7 +10,6 @@ public class EndText : MonoBehaviour {
 		{
 			fishGame.GetComponent<FishingMinigame>().ActivateRod();
 			fishGame.gameObject.SetActive (false);
-			this.gameObject.SetActive(false);
 		}
 	}
 }
