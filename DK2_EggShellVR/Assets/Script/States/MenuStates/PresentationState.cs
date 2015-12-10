@@ -25,10 +25,10 @@ public class PresentationState : MenuState
 
 		//Obtain all external objects
 		var pres = GameObject.FindGameObjectWithTag ("PresentationController");
-		if(_presController == null)
+		if(pres == null)
 		{
 			Debug.LogWarning("No object with PresentationController tag found.");
-			throw NullReferenceException("NullReference not caught by inventory!!");
+			throw new NullReferenceException("NullReference not caught by menu controller!!");
 		}
 		_presController = pres.GetComponent<PresentationController> ();
 		var gc = GameObject.FindGameObjectWithTag ("GameController");

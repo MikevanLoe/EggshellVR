@@ -15,6 +15,7 @@ public class Bland : Personality
 	public override void LookedAt()
 	{
 		var cutscenecont = GameObject.FindGameObjectWithTag ("GameController").GetComponent<CutsceneController> ();
-		cutscenecont.PlayCutscene ("MedusaIntro");
+		if(_client.NPCStateMachine.GetCurState().Name == "TownState")
+			cutscenecont.PlayCutscene ("MedusaIntro");
 	}
 }

@@ -15,8 +15,6 @@ public class HeartrateReader : MonoBehaviour {
 	public float MinSize = 0.1f;
 	public Material IndicatorMat;
 
-	private float _yScaleFull;
-	private float _yPosFull;
 	private bool _HRFound;
 	private float _filler = 1;
 	private float _HRLow;
@@ -26,8 +24,6 @@ public class HeartrateReader : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		_yScaleFull = Bar.localScale.y;
-		_yPosFull = Bar.localPosition.y;
 		//Choose between getting live heart rate data or dummy test data
 		if(!DummyHR)
 			StartCoroutine ("HeartStart");
@@ -66,17 +62,6 @@ public class HeartrateReader : MonoBehaviour {
 			IndicatorMat.color = Color.Lerp (Color.green, Color.yellow, factor * 2);
 		else
 			IndicatorMat.color = Color.Lerp (Color.yellow, Color.red, (factor - 0.5f) * 2);
-
-		//Make the heart rate bar only expand and retract upwards
-		//Further explained in Technical Document
-//		float YNewScale = _yScaleFull * factor;
-//		float dev = _yScaleFull * ((1 - factor));
-//		var newPos = Bar.localPosition;
-//		newPos.y = _yPosFull - dev;
-//		var newScale = Bar.localScale;
-//		newScale.y = YNewScale;
-//		Bar.localPosition = newPos;
-//		Bar.localScale = newScale;
 	}
 
 	public float CalculateMeterScale ()

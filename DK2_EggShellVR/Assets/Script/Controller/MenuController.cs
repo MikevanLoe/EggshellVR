@@ -36,7 +36,9 @@ public class MenuController : MonoBehaviour {
 			_stateMachine.Add (presentationState);
 		}
 		catch(NullReferenceException){}
-
+		
+		var inventoryState = new InventoryState (this);
+		_stateMachine.Add (inventoryState);
 		_stateMachine.Set ("CraftingState");
 	}
 

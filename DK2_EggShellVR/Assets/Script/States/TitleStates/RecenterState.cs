@@ -10,6 +10,11 @@ public class RecenterState : State<TitleController>
 	{
 		RecenterText = r;
 	}
+
+	public override void Enter ()
+	{
+		RecenterText.SetActive (true);
+	}
 	
 	public override bool Handle()
 	{

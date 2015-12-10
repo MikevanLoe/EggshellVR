@@ -28,7 +28,7 @@ public class FishAI : MonoBehaviour {
 				this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 				if (Input.GetButtonDown ("Fire1"))
 				{
-					GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vis",1));
+					GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vis",1, "Dit is een verse haring. Hij is \ngevangen in de Njord zee. Hij is\n 35 cm lang en weegt 1 kilo."));
 					Destroy(this.gameObject);
 					hookedTime = 0f;
 				}

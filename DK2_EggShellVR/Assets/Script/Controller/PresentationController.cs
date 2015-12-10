@@ -23,13 +23,11 @@ public class PresentationController : MonoBehaviour {
 	public TextMesh ScoreDisplay;
 	
 	private List<GameObject> Audience;
-	private float _oldPerformance = -1;
 	private VoiceResponse _voiceSystem;
 	private Dictionary<string, List<List<Sentence>>> _lines;
 	private string _curKey;
 	private int _curId;
 	private int _curSequence;
-	private bool _playerIsClose;
 	private bool _presentationStarted;
 	private float _timerStart;
 	private float _presentationStart;
@@ -264,7 +262,6 @@ public class PresentationController : MonoBehaviour {
 	public void DetectOn()
 	{
 		LineDisplay.text = "Detect ON!";
-		_playerIsClose = true;
 
 		presState = PresentationState.Attracting;
 		//Show sentence
@@ -277,10 +274,10 @@ public class PresentationController : MonoBehaviour {
 
 		_voiceSystem.StartListening(PitchSpoken);
 		_NPCs = new List<GameObject>( GameObject.FindGameObjectsWithTag("NPC") ); //Get all NPCs
-//		
-//		GameObject.FindGameObjectWithTag ("Player")
-//			.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController> ()
-//				.LockedInput = true;
+		
+		GameObject.FindGameObjectWithTag ("Player")
+			.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController> ()
+				.LockedInput = true;
 
 	}
 
@@ -290,7 +287,6 @@ public class PresentationController : MonoBehaviour {
 	public void DetectOff()
 	{
 		LineDisplay.text = "Detect OFF!";
-		_playerIsClose = false;
 		//Tell all NPCs the show is over
 		for(int i = 0; i < _NPCs.Count; i++)
 		{

@@ -2,16 +2,16 @@
 using System.Collections;
 
 public class ItemObject : MonoBehaviour {
-	public string ItemName;
-	public float Quantity;
+	public ItemModel Item;
 	public GameObject PickupText;
 	public GameObject ItemMesh;
 	public GameObject NameText;
 
 	void Start()
 	{
-		NameText.GetComponent<TextMesh> ().text = ItemName;
-		PickupText.GetComponent<TextMesh> ().text = "+" + Quantity + " " + ItemName;
+		NameText.GetComponent<TextMesh> ().text = Item.Name;
+		PickupText.GetComponent<TextMesh> ().text = "+" + Item.Quantity + " " + Item.Name;
+		Item.Description = Item.Description.Replace("\\n", "\n");
 	}
 
 	//Called when the object is clicked on

@@ -7,10 +7,11 @@ public class ItemModel
 	public float Quantity;
 	public string Description;
 	
-	public ItemModel (string n, float q)
+	public ItemModel (string n, float q, string d)
 	{
 		Name = n;
 		Quantity = q;
+		Description = d;
 	}
 	
 	public ItemModel (ItemModel copy)

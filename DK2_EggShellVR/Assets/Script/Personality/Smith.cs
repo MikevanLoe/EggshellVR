@@ -28,7 +28,7 @@ public class Smith : Personality
 		//If we're making the hook, give the player the hook
 		if (clip == _voiceClips [1]) {
 			_client.SetSwitch ("Fixed", true);
-			_playerController.AddItem(new ItemModel("Vishaak", 1));
+			_playerController.AddItem(new ItemModel("Vishaak", 1, "Dit is een vishaak gemaakt van ijzer. \nDe vishaak is van uitzonderlijk goede kwaliteit\n en lijkt nooit eerder gebruikt te zijn."));
 			_playerController.RemoveItem("Kapotte Vishaak");
 		}
 		_audioSource.clip = clip;
