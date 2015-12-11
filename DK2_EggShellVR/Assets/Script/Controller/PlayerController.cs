@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour {
 				//If the player wants to pick it up, do that
 				if (Input.GetButtonDown ("Fire1")) 
 				{
-					AddItem (new ItemModel (item.ItemName, item.Quantity));
+					AddItem (item.Item);
 					obj.SendMessageUpwards ("PickUp");
 				}
 			}

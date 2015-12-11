@@ -8,7 +8,6 @@ public class VoiceResponse : MonoBehaviour
 	const float DurationMinimum = 0.4f;
 	const float DurationMaximum = 20;
 
-	private int _samplesPerSecond;
 	private int _offset;
 	private bool _speaking;
 	private float _low = 0;
@@ -27,8 +26,6 @@ public class VoiceResponse : MonoBehaviour
 
 	void Start()
 	{
-		//The avarage array has to fit a sample every fixed update.
-		_samplesPerSecond = (int) Mathf.Ceil (1 / Time.fixedDeltaTime);
 		MicrophoneInput.Init ();
 	}
 

@@ -11,7 +11,7 @@ public class CraftingState : MenuState
 	const int CraftResultSlot = -4;
 
 	public List<RecipeModel> Recipes;
-	public int InventoryRows = 2;
+	public int InventoryColumns = 2;
 	public Transform SelectionHighlight;
 	
 	private List<ItemSlotModel> Slots;
@@ -33,7 +33,8 @@ public class CraftingState : MenuState
 		SelectionHighlight = _client.transform.FindChild ("Crafting Menu/Highlight");
 		int i = 1;
 		Slots = new List<ItemSlotModel> ();
-		while (true) {
+		while (true) 
+		{
 			Transform slotT = _client.transform.FindChild ("Crafting Menu/Left/Slot " + i);
 			if(slotT == null)
 				break;
@@ -195,31 +196,36 @@ public class CraftingState : MenuState
 		if (heldY && input.y == 0)
 			heldY = false;
 
+		//If there is no input
+		if (input.x == 0 && input.y == 0)
+			return;
+
 		//Convert float to -1 or 1
-		if (input.x != 0)
-			input.x /= Mathf.Abs (input.x);
-		if (input.y != 0)
-			input.y /= Mathf.Abs (input.y);
+		if(input.x != 0)
+			input.x = Mathf.Sign (input.x);
+		if(input.y != 0)
+			input.y = Mathf.Sign (input.y);
 
 		//Inventory page
 		if (selected >= 0) 
 		{
+			int slotsCount = InventorySlots.Count ();
 			if (!heldX && input.x != 0) 
 			{
 				//Inventory page x
 				int hold = selected;
-				selected += (int)input.x * InventorySlots.Count () / 2;
+				selected += (int)input.x * slotsCount / 2;
 				if (selected >= InventorySlots.Count ())
 					selected = hold;
 				if (selected >= -3)
-					selected = (int)Mathf.Clamp (selected, -2, InventorySlots.Count () - 1);
+					selected = (int)Mathf.Clamp (selected, -2, slotsCount - 1);
 			}
 			if (!heldY && input.y != 0) 
 			{
 				//Inventory page y
-				if (!(selected == 3 && input.y > 0) && !(selected == 4 && input.y < 0))
+				if (!(selected == slotsCount / 2 - 1 && input.y > 0) && !(selected == slotsCount / 2 && input.y < 0))
 					selected += (int)input.y;
-				selected = (int)Mathf.Clamp (selected, 0, InventorySlots.Count () - 1);
+				selected = (int)Mathf.Clamp (selected, 0, slotsCount - 1);
 			}
 		}
 		//Craft page
@@ -233,9 +239,9 @@ public class CraftingState : MenuState
 				if (selected >= 0) 
 				{
 					if (selected == 0)
-						selected = 2;
+						selected = 1;
 					else
-						selected = 3;
+						selected = 2;
 				}
 			}
 			if (!heldY && input.y != 0) 

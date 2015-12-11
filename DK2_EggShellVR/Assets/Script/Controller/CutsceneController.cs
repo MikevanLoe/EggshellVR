@@ -38,13 +38,14 @@ public class CutsceneController : MonoBehaviour
 		if (_interactionDelay > Time.time)
 			return;
 
-		//Go to next interaction
-		_curInteraction++;
 		_curScene [_curInteraction].Execute ();
 		if (_curScene [_curInteraction] is PlayerLine)
 			_interactionDelay = Mathf.Infinity;			//Player lines don't end until they're spoken
 		else
 			_interactionDelay = Time.time + _curScene [_curInteraction].Duration;
+
+		//Go to next interaction
+		_curInteraction++;
 		if (_curScene.Count <= _curInteraction) 
 		{	
 			_curScene = null;

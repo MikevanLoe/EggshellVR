@@ -113,7 +113,7 @@ public class NPCController : MonoBehaviour {
 	public void LookAt(Transform obj)
 	{
 		//Find the direction of the object relative to NPC
-		Vector3 dir = _neck.position - obj.position;
+		Vector3 dir = (_neck.position - obj.position).normalized;
 		
 		//Find the angle between the forward line and the direction to the player
 		float b = Vector2.Angle(new Vector2(dir.x, dir.z), new Vector2(_forward.x, _forward.z));
@@ -126,9 +126,9 @@ public class NPCController : MonoBehaviour {
 			//If the head turns over 90 degrees, start turning in the other direction
 			if(b >= 90)
 				b = 90 - (b - 90);
-			//If the player is to the left of the NPC, make the angle negative so the NPC
+			//If the obj is to the left of the NPC, make the angle negative so the NPC
 			//still turns in his direction
-			if(dir.x < 0)
+			if(Vector2.Distance(dir, -_center.right) > Vector2.Distance(dir, _center.right))
 				b *= -1;
 		}
 		

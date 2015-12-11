@@ -17,7 +17,6 @@ public class Mover3D : MonoBehaviour {
 
 	public bool SeekOn, AlignmentOn, CohesionOn, SeperationOn, FleeOn;
 
-	private Vector3 _side;
 	private Rigidbody rb;
 
 	// Use this for initialization
@@ -69,7 +68,6 @@ public class Mover3D : MonoBehaviour {
 		if (Mathf.Abs (rb.velocity.magnitude) > float.Epsilon) {
 			Heading = rb.velocity;
 			Heading.Normalize();
-			_side = transform.right;
 		}
 	}
 
