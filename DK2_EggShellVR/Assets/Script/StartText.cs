@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class StartText : MonoBehaviour {
 	public Transform fishGame;
+	public Transform hookText;
 	public Transform endText;
 	public bool inZone;
 
@@ -12,6 +13,7 @@ public class StartText : MonoBehaviour {
 		{
 			fishGame.gameObject.SetActive (true);
 			fishGame.GetComponent<FishingMinigame>().ActivateRod();
+			hookText.gameObject.SetActive(true);
 			endText.gameObject.SetActive(true);
 		}
 	}
