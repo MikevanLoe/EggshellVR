@@ -15,7 +15,7 @@ public class TransitionState : State<TitleController>
 	public TransitionState (TitleController c) : base(c) 
 	{
 		_target = GameObject.FindGameObjectWithTag("Player").transform;
-		_mover = _client.transform.FindChild ("Camera");
+		_mover = _client.transform.FindChild ("CameraObject");
 	}
 
 	public override void Enter()
@@ -47,6 +47,11 @@ public class TransitionState : State<TitleController>
 			//Damping is used for smooth movement, basically, it moves a set 
 			//amount of the distance every second.
 			Vector3 dir = (_target.position - _mover.position) / _damping;
+			Debug.Log("target: " + _target.position.ToString());
+			Debug.Log("mover: " + _mover.position.ToString());
+			Debug.Log("damping: " + _damping);
+			Debug.Log("Dir: " + dir.ToString());
+			Debug.Log("Power: " + ((dir + dir.normalized * 2) * Time.deltaTime).ToString());
 			//Because near the end it would move very slow, a fixed amount is added
 			_mover.position = _mover.position + (dir + dir.normalized * 2) * Time.deltaTime;
 			//Smoothly rotate the camera to be looking at the same direction as the target
@@ -54,10 +59,7 @@ public class TransitionState : State<TitleController>
 
 			return true;
 		}
-
-		//Turn off the title objects
-		_mover.gameObject.SetActive (false);
-		_client.gameObject.SetActive (false);
+		Debug.Log("Reached Player");
 
 		//Unlock the player controller and turn on the camera
 		var rfpc = _target.GetComponent<RigidbodyFirstPersonController> ();
@@ -65,6 +67,11 @@ public class TransitionState : State<TitleController>
 		rfpc.LockedInput = false;
 		_target.GetComponent<PlayerController> ().enabled = true;
 		_target.transform.FindChild ("MainCamera").gameObject.SetActive (true);
+		Camera.SetupCurrent (_target.transform.FindChild ("MainCamera").GetComponent<Camera> ());
+		
+		//Turn off the title objects
+		_mover.gameObject.SetActive (false);
+		_client.gameObject.SetActive (false);
 
 		return true;
 	}

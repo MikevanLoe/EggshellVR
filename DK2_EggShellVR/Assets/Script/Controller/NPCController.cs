@@ -7,7 +7,6 @@ public class NPCController : MonoBehaviour {
 	public bool RotatesOnX;
 	public float MaxRot = 2f;
 
-
 	private Transform _center;
 	private Transform _neck;
 	private StateMachine<NPCController> _stateMachine;

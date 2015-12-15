@@ -38,7 +38,6 @@ public class PlayerLine : Interaction
 		//if the speech length is shorter than minimum
 		if (length < Duration) 
 		{
-			//TODO: Make the NPC be like "Uhh wat lol?"
 			Execute (); //Start again
 			return;
 		}

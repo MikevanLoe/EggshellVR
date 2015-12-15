@@ -90,18 +90,18 @@ public class CrowdState : State<NPCController>
 
 	void DrawDebug (float angle)
 	{
+		if(_debugIndicator == null)
+			return;
 		//Only show debug indicators when debug is active
 		if (Debug.isDebugBuild) 
 		{
-			if(_debugIndicator == null)
-				return;
 			_angleIndicator.text = Mathf.Round (_stareScore).ToString () + " - " + Mathf.Round (_distraction).ToString () + " - " + Mathf.Round (angle).ToString ();
-			if (_distraction <= 0)
-				_debugIndicator.sprite = _debugSprites [0];
-			else if (_distraction < 55)
-				_debugIndicator.sprite = _debugSprites [1];
-			else
-				_debugIndicator.sprite = _debugSprites [2];
 		}
+		if (_distraction <= 0)
+			_debugIndicator.sprite = _debugSprites [0];
+		else if (_distraction < 55)
+			_debugIndicator.sprite = _debugSprites [1];
+		else
+			_debugIndicator.sprite = _debugSprites [2];
 	}
 }

@@ -2,9 +2,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class PresentationController : MonoBehaviour {
 	public enum PresentationState { Idle, Attracting, Active };
+	public PresentationState presState;
 
 	[System.Serializable]
 	public class PresentationSettings
@@ -16,13 +18,13 @@ public class PresentationController : MonoBehaviour {
 		public float MaxScore = 100;
 	}
 	public PresentationSettings pSettings = new PresentationSettings();
-	public float Performance;
-	public Transform MarketStand;
-	public PresentationState presState;
-	public TextMesh LineDisplay;
-	public TextMesh ScoreDisplay;
 	
-	private List<GameObject> Audience;
+	public Transform MarketStand;
+	public GameObject PresMenuObject;
+	
+	private TextMesh _lineDisplay;
+	private TextMesh _scoreDisplay;
+	private List<GameObject> _audience;
 	private VoiceResponse _voiceSystem;
 	private Dictionary<string, List<List<Sentence>>> _lines;
 	private string _curKey;
@@ -30,12 +32,11 @@ public class PresentationController : MonoBehaviour {
 	private int _curSequence;
 	private bool _presentationStarted;
 	private float _timerStart;
+	private float _partDuration;
 	private float _presentationStart;
 	private float _talkTime;
 	private float _lookScore;
-	private float _stressScore;
 	private List<GameObject> _NPCs;
-	private float _partDuration;
 
 	void Start () 
 	{
@@ -47,7 +48,10 @@ public class PresentationController : MonoBehaviour {
 		GetLinesFromJSON ();
 		_NPCs = new List<GameObject> ();
 		
-		Audience = new List<GameObject> ();
+		_audience = new List<GameObject> ();
+
+		_lineDisplay = PresMenuObject.transform.GetChild (1).GetComponent<TextMesh> ();
+		_scoreDisplay = PresMenuObject.transform.GetChild (2).GetComponent<TextMesh> ();
 	}
 	
 	/// <summary>
@@ -56,7 +60,7 @@ public class PresentationController : MonoBehaviour {
 	void GetLinesFromJSON ()
 	{
 		//Get all the presentation lines
-		string json = DataReader.GetAllText ("Assets/lines.json");
+		string json = DataReader.GetAllText ("Merchanted_Data/lines.json");
 		//Convert the lines data to a managable format
 		JSONNode data = JSON.Parse (json);
 		var sentences = data ["lines"];
@@ -75,8 +79,7 @@ public class PresentationController : MonoBehaviour {
 			int id = sentence ["id"].AsInt;
 			if (_lines [key].Count >= id) 
 			{
-				_lines [key].Add (new List<Sentence> ());
-			}
+				_lines [key].Add (new List<Sentence> ());			}
 			//Add the line to the id
 			_lines [key] [id].Add (new Sentence (sentence ["words"], sentence ["time"].AsFloat));
 		}
@@ -84,17 +87,20 @@ public class PresentationController : MonoBehaviour {
 
 	void Update()
 	{
-		//Display the current talk time in the display for debug
-		ScoreDisplay.text = (Mathf.Round(_talkTime * 10) / 10).ToString ();
 		if (_voiceSystem.IsSpeaking ()) 
 		{
-			//Score is the amount of time the player was talking during the pitch phase
+			//Keep track of the time the player has been talking
 			_talkTime += Time.deltaTime;
 			//Ask all NPCs if they want to come watch
-			for (int i = 0; i < _NPCs.Count; i++) 
+			for (int i = 0; i < _NPCs.Count; i++)
 			{
 				_NPCs [i].SendMessage ("MarketCall", _talkTime, 
 				                       SendMessageOptions.DontRequireReceiver);
+			}
+			if(Debug.isDebugBuild)
+			{
+				//Display the current talk time in the display for debug
+				_scoreDisplay.text = (Mathf.Round(_talkTime * 10) / 10).ToString ();
 			}
 		}
 		if (presState == PresentationState.Attracting) 
@@ -121,7 +127,7 @@ public class PresentationController : MonoBehaviour {
 			presState = PresentationState.Active;
 			//Show sentence
 			Sentence s = GetNextSentence ();
-			LineDisplay.text = s.Words;
+			_lineDisplay.text = s.Words;
 			_partDuration = s.Time;
 			_timerStart = Time.time;
 			_voiceSystem.StartListening (PitchSpoken);
@@ -141,13 +147,16 @@ public class PresentationController : MonoBehaviour {
 			//TODO: End the presentation when there is no next line
 			if (s != null) 
 			{
-				LineDisplay.text = s.Words;
+				_lineDisplay.text = s.Words;
 				_partDuration = s.Time;
 			}
 			else 
 			{
-				GameObject.FindGameObjectWithTag ("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController> ().LockedInput = false;
+				GameObject.FindGameObjectWithTag ("Player").GetComponent<RigidbodyFirstPersonController> ().LockedInput = false;
+				GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().IgnoreLook = false;
 				//TODO: Display end score and whatever
+
+				presState = PresentationState.Idle;
 			}
 			_timerStart = Time.time;
 			_voiceSystem.StartListening (PitchSpoken);
@@ -231,13 +240,13 @@ public class PresentationController : MonoBehaviour {
 	public void UpdateDistraction(float distraction)
 	{
 		//Score approaches distraction, based on crowd size
-		_lookScore += (distraction - _lookScore) / Audience.Count;
+		_lookScore += (distraction - _lookScore) / _audience.Count;
 	}
 
 	public void JoinAudience(GameObject NPC)
 	{
-		if (!Audience.Contains (NPC))
-			Audience.Add (NPC);
+		if (!_audience.Contains (NPC))
+			_audience.Add (NPC);
 	}
 
 	public float GetConvScore()
@@ -250,10 +259,15 @@ public class PresentationController : MonoBehaviour {
 		score = Mathf.Clamp01 (score);
 		return score;
 	}
-
+	
 	public float GetLookScore()
 	{
 		return (100 - _lookScore) / 100;
+	}
+	
+	public float GetTimerFactor()
+	{
+		return Mathf.Clamp01( 1 / _partDuration * (Time.time - _timerStart) );
 	}
 
 	/// <summary>
@@ -261,12 +275,12 @@ public class PresentationController : MonoBehaviour {
 	/// </summary>
 	public void DetectOn()
 	{
-		LineDisplay.text = "Detect ON!";
+		_lineDisplay.text = "Detect ON!";
 
 		presState = PresentationState.Attracting;
 		//Show sentence
 		Sentence s = GetNextSentence();
-		LineDisplay.text = s.Words;
+		_lineDisplay.text = s.Words;
 		_partDuration = s.Time;
 
 		_timerStart = Time.time;
@@ -275,9 +289,10 @@ public class PresentationController : MonoBehaviour {
 		_voiceSystem.StartListening(PitchSpoken);
 		_NPCs = new List<GameObject>( GameObject.FindGameObjectsWithTag("NPC") ); //Get all NPCs
 		
-		GameObject.FindGameObjectWithTag ("Player")
-			.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController> ()
-				.LockedInput = true;
+		var player = GameObject.FindGameObjectWithTag ("Player");
+		player.GetComponent<RigidbodyFirstPersonController> ().LockedInput = true;
+		GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().IgnoreLook = true;
+		player.transform.FindChild ("Menu").GetComponent<MenuController>().LockMenu(PresMenuObject);
 
 	}
 
@@ -286,12 +301,13 @@ public class PresentationController : MonoBehaviour {
 	/// </summary>
 	public void DetectOff()
 	{
-		LineDisplay.text = "Detect OFF!";
+		_lineDisplay.text = "Detect OFF!";
 		//Tell all NPCs the show is over
 		for(int i = 0; i < _NPCs.Count; i++)
 		{
 			if(_NPCs[i].GetComponent<NPCController>() != null)
 				_NPCs[i].SendMessage ("MarketCall", 0f, SendMessageOptions.DontRequireReceiver); //Send 0 as performance so everyone loses interest instantly
 		}
+		GameObject.Find ("Menu").GetComponent<MenuController>().UnlockMenu();
 	}
 }

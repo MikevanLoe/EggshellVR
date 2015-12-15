@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour {
 	public Transform InventoryClosed;
 	public Transform InventoryOpen;
 	public float TweenTime;
+	public bool InvLock;
+	public bool IgnoreLook;
 	
 	private Transform _view;
 	private float _inventoryProgress;
@@ -38,7 +40,7 @@ public class PlayerController : MonoBehaviour {
 		//Open and close Inventory
 		if (Input.GetButtonDown ("Inventory"))
 		{
-			if(!_invTweening)
+			if(!_invTweening && !InvLock)
 			{
 				if(!_invOpen)
 				{
@@ -57,16 +59,36 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	public void ForceOpenInv(bool inputLock, bool iLock)
+	{
+		if(inputLock)
+			_fpsController.LockedInput = true;
+		if (iLock)
+			InvLock = true;
+		InventoryObject.gameObject.SetActive(true);
+		StartCoroutine(OpenAndCloseInventory(InventoryOpen));
+	}
+	
+	public void ForceCloseInv()
+	{
+		InvLock = false;
+		_fpsController.LockedInput = false;
+		StartCoroutine(OpenAndCloseInventory(InventoryClosed));
+	}
+	
 	//Raycasts forward to find what the player is looking at
 	void CheckLookAt ()
 	{
+		if (IgnoreLook)
+			return;
 		RaycastHit hitData;
 		if (Physics.Raycast (AimObject.position, AimObject.forward, out hitData, InteractRange)) 
 		{
 			GameObject obj = hitData.transform.gameObject;
-			if (obj != prevLookedAt && prevLookedAt != null)
+			if (obj != prevLookedAt)
 			{
-				prevLookedAt.SendMessageUpwards ("LookedAway", SendMessageOptions.DontRequireReceiver);
+				if(prevLookedAt != null)
+					prevLookedAt.SendMessageUpwards ("LookedAway", SendMessageOptions.DontRequireReceiver);
 				obj.SendMessageUpwards ("LookedAt", SendMessageOptions.DontRequireReceiver);
 			}
 			//If it's an item and the player just clicked, pick it up
