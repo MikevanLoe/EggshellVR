@@ -6,12 +6,15 @@ public class ActivationZone : MonoBehaviour {
 	
 	void OnTriggerEnter()
 	{
-		startText.gameObject.SetActive(true);
-		startText.GetComponent<StartText>().inZone = true;
+		if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().HasItem("Hengel")) {
+			startText.gameObject.SetActive(true);
+			startText.GetComponent<StartText>().inZone = true;
+		}
 	}
 
 	void OnTriggerExit()
 	{
-		startText.GetComponent<StartText>().inZone = false;
+		if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().HasItem("Hengel"))
+			startText.GetComponent<StartText>().inZone = false;
 	}
 }
