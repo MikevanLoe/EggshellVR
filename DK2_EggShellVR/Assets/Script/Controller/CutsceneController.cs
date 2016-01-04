@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using SimpleJSON;
 
 public class CutsceneController : MonoBehaviour
@@ -9,7 +8,7 @@ public class CutsceneController : MonoBehaviour
 	private Dictionary<string, SceneModel> _cutscenes;
 	private List<Interaction> _curScene;
 	private float _interactionDelay;
-	private int _curInteraction;
+	private int _curInteraction = -1;
 	private Transform _player;
 	private Vector3 _sceneStartPos;
 	private float _sceneRange;
@@ -28,36 +27,44 @@ public class CutsceneController : MonoBehaviour
 		//Cancel scene when out of range;
 		if(Vector3.SqrMagnitude(_sceneStartPos - _player.position) > _sceneRange)
 		{
-			_curScene [_curInteraction].Cancel();
+			if(_curInteraction > 0)
+				_curScene [_curInteraction-1].Finish ();
+			if(_curInteraction >= 0)
+				_curScene [_curInteraction].Cancel();
 			//By setting curscene to null next update no scene will be played
 			_curScene = null;
-			_curInteraction = 0;
+			_curInteraction = -1;
 			return;
 		}
 
 		if (_interactionDelay > Time.time)
 			return;
 
-		_curScene [_curInteraction].Execute ();
-		if (_curScene [_curInteraction] is PlayerLine)
-			_interactionDelay = Mathf.Infinity;			//Player lines don't end until they're spoken
-		else
-			_interactionDelay = Time.time + _curScene [_curInteraction].Duration;
+		if(_curInteraction >= 0)
+			_curScene [_curInteraction].Finish ();
 
 		//Go to next interaction
 		_curInteraction++;
 		if (_curScene.Count <= _curInteraction) 
 		{	
 			_curScene = null;
-			_curInteraction = 0;
+			_curInteraction = -1;
+			return;
 		}
+		
+		_curScene [_curInteraction].Execute ();
+
+		if (_curScene [_curInteraction] is PlayerLine)
+			_interactionDelay = Mathf.Infinity;			//Player lines don't end until they're spoken
+		else
+			_interactionDelay = Time.time + _curScene [_curInteraction].Duration;
 	}
 
 	void SerializeJson()
 	{
 		//Get all the presentation lines fitting with the current scene
 		string scene = Application.loadedLevelName;
-		string json = DataReader.GetAllText ("Assets/"+ scene +"cs.json");
+		string json = DataReader.GetAllText ("Merchanted_Data/"+ scene +"cs.json");
 		//Convert the lines data to a managable format
 		JSONNode data = JSON.Parse (json);
 
@@ -84,7 +91,7 @@ public class CutsceneController : MonoBehaviour
 					part = SceneEvent.GetScript(interaction["ScriptKey"], interaction["Duration"].AsFloat);
 					break;
 				case "NPCLine":
-					part = new NPCLine(interaction["NpcName"], interaction["VoiceKey"], interaction["Duration"].AsFloat);
+					part = new NPCLine(interaction["NpcName"], interaction["VoiceKey"], interaction["Subtitles"], interaction["Duration"].AsFloat);
 					break;
 				case "PlayerLine":
 					part = new PlayerLine(interaction["Hint"], interaction["Duration"].AsFloat, GoToNextPart);
@@ -106,8 +113,7 @@ public class CutsceneController : MonoBehaviour
 		_sceneStartPos = _player.position;
 		_curScene = _cutscenes [key].Interactions;
 		_sceneRange = _cutscenes [key].Range;
-		_interactionDelay = Time.time + _curScene [_curInteraction].Duration;
-		_curScene [_curInteraction].Execute ();
+		_interactionDelay = 0;
 	}
 
 	public void GoToNextPart()

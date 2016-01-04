@@ -9,8 +9,9 @@ public class MenuController : MonoBehaviour {
 	/// </summary>
 	public CraftingState craftingState;
 	public Animator Animator;
-	private PlayerController _player;
+	public GameObject LockedMenuObject;
 
+	private State<MenuController> _preLockState;
 	private StateMachine<MenuController> _stateMachine;
 	private bool running;
 
@@ -31,19 +32,31 @@ public class MenuController : MonoBehaviour {
 		_stateMachine.Add (craftingState);
 
 		craftingState.Start ();
-		try{
-			var presentationState = new PresentationState (this);
-			_stateMachine.Add (presentationState);
-		}
-		catch(NullReferenceException){}
 		
 		var inventoryState = new InventoryState (this);
 		_stateMachine.Add (inventoryState);
 		_stateMachine.Set ("CraftingState");
+
+		//Disable menu after initializing
+		gameObject.SetActive (false);
+	}
+	
+	//Refresh the inventory every time the menu is opened
+	public void OnEnable()
+	{
+		//Becuase OnEnable is called before start, we ignore it until start was called
+		if (Player == null)
+			return;
+		var state = _stateMachine.GetCurState ();
+		if(state != null)
+			state.Enter();
 	}
 
-	void Update () 
+	void Update ()
 	{
+		if (_stateMachine.GetCurState () == null)
+			return;
+
 		_stateMachine.Handle ();
 
 		if (Input.GetButtonDown ("MenuLeft")) 
@@ -86,12 +99,31 @@ public class MenuController : MonoBehaviour {
 		running = false;
 	}
 
-	//Refresh the inventory every time the menu is opened
-	public void OnEnable()
+	/// <summary>
+	/// Force the menu to only show a certain object and nothing else
+	/// </summary>
+	/// <param name="menuObject">Menu object.</param>
+	public void LockMenu(GameObject menuObject)
 	{
-		//Becuase OnEnable is called before start, we ignore it until start was called
-		if (Player == null)
+		menuObject.SetActive (true);
+		LockedMenuObject = menuObject;
+		_preLockState = _stateMachine.GetCurState ();
+		_stateMachine.Set ("");
+		Player.ForceOpenInv (false, true);
+	}
+
+	/// <summary>
+	/// Unlocks the menu and hides the lock object. Does nothing if the menu wasn't locked
+	/// </summary>
+	public void UnlockMenu()
+	{
+		//Check if we are actually locked
+		if (LockedMenuObject == null)
 			return;
-		_stateMachine.GetCurState().Enter();
+
+		LockedMenuObject.SetActive (false);
+		LockedMenuObject = null;
+		_stateMachine.Set (_preLockState);
+		Player.ForceCloseInv ();
 	}
 }

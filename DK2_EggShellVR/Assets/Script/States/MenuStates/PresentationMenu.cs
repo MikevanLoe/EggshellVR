@@ -75,8 +75,8 @@ public class PresentationMenu : MonoBehaviour
 			float lookScore = _presController.GetLookScore ();
 			ResizeBar (_lookBar, _lookScale, _lookPos, lookScore);
 			
-			//float timerFactor = _presController.GetTimerFactor ();
-			//ResizeBar (_timerBar, _timerScale, _timerPos, timerFactor);
+			float timerFactor = _presController.GetTimerFactor ();
+			ResizeBar (_timerBar, _timerScale, _timerPos, timerFactor);
 		} else {
 			if(!_started)
 				return;

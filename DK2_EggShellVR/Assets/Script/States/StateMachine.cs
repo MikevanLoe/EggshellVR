@@ -25,11 +25,18 @@ public class StateMachine<T>
 
 	public bool Set(string name)
 	{
+		if (String.IsNullOrEmpty (name)) {
+			if(_curState != null)
+				_curState.Exit();
+			_curState = null;
+			return true;
+		}
 		foreach (var s in _states) 
 		{
 			if(s.Name == name)
 			{
-				_curState.Exit();
+				if(_curState != null)
+					_curState.Exit();
 				_curState = s;
 				_curState.Enter();
 				return true;
@@ -37,6 +44,15 @@ public class StateMachine<T>
 		}
 		Debug.Log ("State named \"" + name + "\" not found.");
 		return false;
+	}
+
+	public void Set(State<T> state)
+	{
+		//The new state doesn't have to be contained in the list of states, as long as its a valid state.
+		if(_curState != null)
+			_curState.Exit();
+		_curState = state;
+		_curState.Enter();
 	}
 
 	public int TryNext()

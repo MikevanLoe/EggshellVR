@@ -24,7 +24,7 @@ public class ItemSlotModel
 
 		//Make a new texture
 		_material = new Material(Shader.Find("Decal/DecalShader"));
-		_material.mainTexture = Resources.Load ("border") as Texture;
+		_material.mainTexture = Resources.Load ("item slot") as Texture;
 		renderer.m_Material = _material;
 	}
 
@@ -33,7 +33,7 @@ public class ItemSlotModel
 		if (tex == null) 
 		{
 			if(Item == null || Item.Name == "")
-				tex = Resources.Load ("border") as Texture;
+				tex = Resources.Load ("item slot") as Texture;
 			else
 				tex = Resources.Load (Item.Name) as Texture;
 		}

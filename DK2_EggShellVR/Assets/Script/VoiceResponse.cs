@@ -34,7 +34,7 @@ public class VoiceResponse : MonoBehaviour
 		if (!Listening)
 			return;
 		float input = MicrophoneInput.GetInputAvg ();
-		if (Input.GetKey (KeyCode.Z))
+		if (Input.GetKey (KeyCode.C))
 			input = 1;
 
 		if (_recordDelay > Time.time)
@@ -101,6 +101,9 @@ public class VoiceResponse : MonoBehaviour
 
 	public void ForceStop()
 	{
+		//Check if we are currently listening
+		if (_alertListener == null)
+			return;
 		float duration = Time.time - _highStart;	//See how long the player was speaking
 		if (!_speaking)
 			duration = 0;
