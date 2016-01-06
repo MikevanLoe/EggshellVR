@@ -44,14 +44,15 @@ public class TransitionState : State<TitleController>
 		float dist = Vector3.Distance (_mover.position, _target.position);
 		if (dist > 0.2f) 
 		{
+			
+			if(Debug.isDebugBuild)
+			{
+				//Be INSTANT
+				_damping = Time.deltaTime;
+			}
 			//Damping is used for smooth movement, basically, it moves a set 
 			//amount of the distance every second.
 			Vector3 dir = (_target.position - _mover.position) / _damping;
-			Debug.Log("target: " + _target.position.ToString());
-			Debug.Log("mover: " + _mover.position.ToString());
-			Debug.Log("damping: " + _damping);
-			Debug.Log("Dir: " + dir.ToString());
-			Debug.Log("Power: " + ((dir + dir.normalized * 2) * Time.deltaTime).ToString());
 			//Because near the end it would move very slow, a fixed amount is added
 			_mover.position = _mover.position + (dir + dir.normalized * 2) * Time.deltaTime;
 			//Smoothly rotate the camera to be looking at the same direction as the target
@@ -59,7 +60,6 @@ public class TransitionState : State<TitleController>
 
 			return true;
 		}
-		Debug.Log("Reached Player");
 
 		//Unlock the player controller and turn on the camera
 		var rfpc = _target.GetComponent<RigidbodyFirstPersonController> ();

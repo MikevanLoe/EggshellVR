@@ -4,19 +4,17 @@ using System.Collections.Generic;
 
 public class NPCController : MonoBehaviour {
 	public string PersonalityName;
-	public bool RotatesOnX;
+	public Vector3 RotOffset;
 	public float MaxRot = 2f;
 
 	private Transform _center;
 	private Transform _neck;
 	private StateMachine<NPCController> _stateMachine;
 	private float _curAngle;
-	private Vector3 _forward;
 	private Dictionary<string, bool> Switches;
 	private Dictionary<string, float> Variables;
 	private Personality _personality;
 	private Vector3 _originalPosition;
-	private Animation _NPCAnim;
 
 	public StateMachine<NPCController> NPCStateMachine {
 		get { return _stateMachine; }
@@ -33,9 +31,6 @@ public class NPCController : MonoBehaviour {
 		if (_center == null)
 			throw new UnityException ("NPC: " + name + " has no center attached");
 
-		_NPCAnim = GetComponent<Animation> ();
-
-		_forward = _center.transform.forward;
 		_stateMachine = new StateMachine<NPCController> ();
 
 		_stateMachine.Add (new TownState (this, 8));
@@ -54,18 +49,23 @@ public class NPCController : MonoBehaviour {
 
 		switch (PersonalityName) 
 		{
-		case "HappyFisher":
-			_personality = new HappyFisher(this);
-			break;
-		case "Smith":
-			_personality = new Smith(this);
-			break;
-		case "Guard":
-			_personality = new Guard(this);
-			break;
 		case "Bland":
 			_personality = new Bland(this);
 			break;
+		case "Islander":
+			_personality = new Islander(this);
+			break;
+		case "ShopOwner":
+			_personality = new ShopOwner(this);
+			break;
+		case "Couple":
+			_personality = new Couple(this);
+			break;
+			break;
+		case "Rude":
+			_personality = new Rude(this);
+			break;
+
 		default:
 			throw new UnityException("Chosen personality for NPC: \"" + name + "\" not found");
 		}
@@ -73,8 +73,6 @@ public class NPCController : MonoBehaviour {
 
 	void LateUpdate () 
 	{
-		if (!_NPCAnim.isPlaying)
-			_NPCAnim.Play ();
 		_stateMachine.Handle ();
 		_personality.Update ();
 	}
@@ -111,38 +109,21 @@ public class NPCController : MonoBehaviour {
 
 	public void LookAt(Transform obj)
 	{
-		//Find the direction of the object relative to NPC
-		Vector3 dir = (_neck.position - obj.position).normalized;
-		
-		//Find the angle between the forward line and the direction to the player
-		float b = Vector2.Angle(new Vector2(dir.x, dir.z), new Vector2(_forward.x, _forward.z));
-		
-		//Turn it by 90 because 0 degrees isn't forward. If our 3D modellers make this too I will shank them.
-		if (RotatesOnX)
-			b -= 90;
-		else 
+		//Create a dummy that looks directly at the target
+		Transform target = new GameObject().transform;
+		target.position = _neck.position;
+		target.rotation = _neck.rotation;
+		target.LookAt(obj.position);
+
+		float a = Mathf.Abs(target.rotation.eulerAngles.y - _center.rotation.eulerAngles.y);
+		if (a >= 70)
 		{
-			//If the head turns over 90 degrees, start turning in the other direction
-			if(b >= 90)
-				b = 90 - (b - 90);
-			//If the obj is to the left of the NPC, make the angle negative so the NPC
-			//still turns in his direction
-			if(Vector2.Distance(dir, -_center.right) > Vector2.Distance(dir, _center.right))
-				b *= -1;
+			target.position = _center.position;
+			target.rotation = _center.rotation;
 		}
-		
-		//Turn the neck by the difference with current angle
-		if (Mathf.Round (b) != Mathf.Round (_curAngle)) 
-		{
-			if(Mathf.Abs(b - _curAngle) > 1)
-				b = _curAngle + Mathf.Clamp(b - _curAngle, -MaxRot, MaxRot);
-			if(RotatesOnX)
-				_neck.Rotate (new Vector3 (b - _curAngle, 0, 0));
-			else
-				_neck.Rotate (new Vector3 (0, b - _curAngle, 0));
-			//Remember current angle
-			_curAngle = b;
-		}
+		target.Rotate (RotOffset);
+		_neck.rotation = Quaternion.RotateTowards(_neck.rotation, target.rotation, MaxRot);
+		return;
 	}
 	
 	public Transform GetNeckTransform()

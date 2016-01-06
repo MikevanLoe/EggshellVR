@@ -21,7 +21,7 @@ public class TownState : State<NPCController>
 	{
 		//Check if the player is within range
 		if (Vector3.Distance (_client.transform.position, _player.transform.position) < _faceRange)
-			_client.LookAt(_player.transform);
+			_client.LookAt(Camera.main.transform);
 
 		return true;
 	}

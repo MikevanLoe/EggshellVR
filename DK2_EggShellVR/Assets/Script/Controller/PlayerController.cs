@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour {
 	void Start () 
 	{
 		_view = GameObject.FindGameObjectWithTag("MainCamera").transform;
+		//Attach the text container to the camera
+		transform.FindChild ("TextContainer").SetParent (_view.transform);
 		if (_view == null)
 			_view = transform;
 		Inventory = new List<ItemModel> ();

@@ -9,6 +9,7 @@ public class PresentationMenu : MonoBehaviour
 	private Transform _heartBar;
 	private Transform _convoBar;
 	private Transform _lookBar;
+	private Transform _partcBar;
 	private Transform _timerBar;
 	private TextMesh _gradeText;
 
@@ -19,6 +20,8 @@ public class PresentationMenu : MonoBehaviour
 	private float _convoPos;
 	private float _lookScale;
 	private float _lookPos;
+	private float _partcScale;
+	private float _partcPos;
 	private float _timerScale;
 	private float _timerPos;
 
@@ -39,6 +42,7 @@ public class PresentationMenu : MonoBehaviour
 		_heartBar = transform.FindChild ("Left/HeartBar/HeartFill");
 		_convoBar = transform.FindChild ("Left/ConvoBar/ConvoFill");
 		_lookBar = transform.FindChild ("Left/LookBar/LookFill");
+		_partcBar = transform.FindChild ("PartConvoBar/PartConvoFill");
 		_timerBar = transform.FindChild ("TimerBar/TimerFill");
 		if(_heartBar == null || _convoBar == null || _lookBar == null)
 			throw new UnityException("Could not find bars. Make sure bars exist inside of ItemMenu at the correct path.");
@@ -55,6 +59,8 @@ public class PresentationMenu : MonoBehaviour
 		_convoPos = _convoBar.localPosition.x;
 		_lookScale = _lookBar.localScale.x;
 		_lookPos = _lookBar.localPosition.x;
+		_partcScale = _partcBar.localScale.x;
+		_partcPos = _partcBar.localPosition.x;
 		_timerScale = _timerBar.localScale.x;
 		_timerPos = _timerBar.localPosition.x;
 	}
@@ -75,6 +81,9 @@ public class PresentationMenu : MonoBehaviour
 			float lookScore = _presController.GetLookScore ();
 			ResizeBar (_lookBar, _lookScale, _lookPos, lookScore);
 			
+			float partCScore = _presController.GetPartConvScore ();
+			ResizeBar (_partcBar, _partcScale, _partcPos, partCScore);
+			
 			float timerFactor = _presController.GetTimerFactor ();
 			ResizeBar (_timerBar, _timerScale, _timerPos, timerFactor);
 		} else {
@@ -90,6 +99,9 @@ public class PresentationMenu : MonoBehaviour
 			
 			float lookScore = _presController.GetLookScore ();
 			ResizeBar (_lookBar, _lookScale, _lookPos, lookScore);
+			
+			float partCScore = _presController.GetPartConvScore ();
+			ResizeBar (_partcBar, _partcScale, _partcPos, partCScore);
 			
 			float timerFactor = 0;
 			ResizeBar (_timerBar, _timerScale, _timerPos, timerFactor);

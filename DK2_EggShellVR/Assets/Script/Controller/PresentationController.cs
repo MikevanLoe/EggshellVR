@@ -35,6 +35,7 @@ public class PresentationController : MonoBehaviour {
 	private float _partDuration;
 	private float _presentationStart;
 	private float _talkTime;
+	private float _partTalkTime;
 	private float _lookScore;
 	private List<GameObject> _NPCs;
 
@@ -87,10 +88,11 @@ public class PresentationController : MonoBehaviour {
 
 	void Update()
 	{
-		if (_voiceSystem.IsSpeaking ()) 
+		if (_voiceSystem.IsSpeaking () && presState != PresentationState.Idle) 
 		{
 			//Keep track of the time the player has been talking
 			_talkTime += Time.deltaTime;
+			_partTalkTime += Time.deltaTime;
 			//Ask all NPCs if they want to come watch
 			for (int i = 0; i < _NPCs.Count; i++)
 			{
@@ -129,6 +131,7 @@ public class PresentationController : MonoBehaviour {
 			Sentence s = GetNextSentence ();
 			_lineDisplay.text = s.Words;
 			_partDuration = s.Time;
+			_partTalkTime = 0;
 			_timerStart = Time.time;
 			_voiceSystem.StartListening (PitchSpoken);
 		}
@@ -149,6 +152,7 @@ public class PresentationController : MonoBehaviour {
 			{
 				_lineDisplay.text = s.Words;
 				_partDuration = s.Time;
+				_partTalkTime = 0;
 			}
 			else 
 			{
@@ -248,13 +252,24 @@ public class PresentationController : MonoBehaviour {
 		if (!_audience.Contains (NPC))
 			_audience.Add (NPC);
 	}
-
+	
 	public float GetConvScore()
 	{
 		float totalTime = Time.time - _presentationStart;
 		if (totalTime <= 0)
 			return 1;
 		float score = 1 / totalTime * _talkTime;
+		score *= 2;
+		score = Mathf.Clamp01 (score);
+		return score;
+	}
+	
+	public float GetPartConvScore()
+	{
+		float totalTime = Time.time - _presentationStart;
+		if (totalTime <= 0)
+			return 1;
+		float score = 1 / _partDuration * _talkTime;
 		score *= 2;
 		score = Mathf.Clamp01 (score);
 		return score;
@@ -275,6 +290,11 @@ public class PresentationController : MonoBehaviour {
 	/// </summary>
 	public void DetectOn()
 	{
+		var player = GameObject.FindGameObjectWithTag ("Player");
+		if (!player.GetComponent<PlayerController> ().HasItem ("Vis", 3)) {
+			return;
+		}
+
 		_lineDisplay.text = "Detect ON!";
 
 		presState = PresentationState.Attracting;
@@ -282,16 +302,16 @@ public class PresentationController : MonoBehaviour {
 		Sentence s = GetNextSentence();
 		_lineDisplay.text = s.Words;
 		_partDuration = s.Time;
+		_partTalkTime = 0;
 
 		_timerStart = Time.time;
 		_presentationStart = Time.time;
 
 		_voiceSystem.StartListening(PitchSpoken);
 		_NPCs = new List<GameObject>( GameObject.FindGameObjectsWithTag("NPC") ); //Get all NPCs
-		
-		var player = GameObject.FindGameObjectWithTag ("Player");
+
 		player.GetComponent<RigidbodyFirstPersonController> ().LockedInput = true;
-		GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().IgnoreLook = true;
+		player.GetComponent<PlayerController> ().IgnoreLook = true;
 		player.transform.FindChild ("Menu").GetComponent<MenuController>().LockMenu(PresMenuObject);
 
 	}
@@ -301,6 +321,11 @@ public class PresentationController : MonoBehaviour {
 	/// </summary>
 	public void DetectOff()
 	{
+		var player = GameObject.FindGameObjectWithTag ("Player");
+		if (!player.GetComponent<PlayerController> ().HasItem ("Vis", 3)) {
+			return;
+		}
+
 		_lineDisplay.text = "Detect OFF!";
 		//Tell all NPCs the show is over
 		for(int i = 0; i < _NPCs.Count; i++)

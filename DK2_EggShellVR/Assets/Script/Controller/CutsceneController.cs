@@ -88,7 +88,7 @@ public class CutsceneController : MonoBehaviour
 				switch (interaction["Type"])
 				{
 				case "Event":
-					part = SceneEvent.GetScript(interaction["ScriptKey"], interaction["Duration"].AsFloat);
+					part = SceneEvent.GetScript(interaction["ScriptKey"], interaction["Subject"], interaction["Duration"].AsFloat);
 					break;
 				case "NPCLine":
 					part = new NPCLine(interaction["NpcName"], interaction["VoiceKey"], interaction["Subtitles"], interaction["Duration"].AsFloat);
@@ -119,5 +119,11 @@ public class CutsceneController : MonoBehaviour
 	public void GoToNextPart()
 	{
 		_interactionDelay = 0;
+	}
+
+	public bool IsPlaying()
+	{
+		//If the scene is NOT null, scene IS playing
+		return _curScene != null;
 	}
 }

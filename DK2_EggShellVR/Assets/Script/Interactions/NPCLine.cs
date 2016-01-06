@@ -10,10 +10,8 @@ public class NPCLine : Interaction
 
 	public NPCLine (string name, string key, string sub, float dur)
 	{
-		if (name == null)
-			throw new UnityException ("JSON format error! No NPC name");
-		if (key == null)
-			throw new UnityException ("JSON format error! No voice key given");
+		if (name == null || key == null)
+			Debug.LogWarning ("NPC line had no valid voice info attached.");
 		_NPCName = name;
 		_voiceKey = key;
 		_subtitlesText = sub;
@@ -30,27 +28,32 @@ public class NPCLine : Interaction
 		if(aSource == null)
 			throw new Exception("Cutscene NPC has no audio source attached");
 
-		//Get the Game Controller and the required audio clip
-		var GC = GameObject.FindGameObjectWithTag ("GameController");
-		if(GC == null)
-			throw new Exception("Cutscene requires game controller in scene");
-		var cont = GC.GetComponent<GameController> ();
-		if(cont == null)
-			throw new Exception("Game Controller has no GameController component attached");
-		AudioClip clip = cont.GetClip (_voiceKey);
+		if (_NPCName != null && _voiceKey != null) {
+			//Get the Game Controller and the required audio clip
+			var GC = GameObject.FindGameObjectWithTag ("GameController");
+			if (GC == null)
+				throw new Exception ("Cutscene requires game controller in scene");
+			var cont = GC.GetComponent<GameController> ();
+			if (cont == null)
+				throw new Exception ("Game Controller has no GameController component attached");
+			AudioClip clip = cont.GetClip (_voiceKey);
+			//Play the clip from the NPC's audio source
+			aSource.PlayOneShot (clip);
+		}
 
-		_subtitlesMesh = GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<TextMesh>();
+		_subtitlesMesh = GameObject.Find("HintText").GetComponent<TextMesh>();
+		_subtitlesMesh.color = Color.white;
 		_subtitlesMesh.text = _subtitlesText;
-		_subtitlesMesh.color = Color.green;
-
-		//Play the clip from the NPC's audio source
-		aSource.PlayOneShot (clip);
+	}
+	
+	public override void Cancel()
+	{
+		Finish ();
 	}
 
 	public override void Finish()
 	{
 		_subtitlesMesh = GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<TextMesh>();
 		_subtitlesMesh.text = "";
-		_subtitlesMesh.color = Color.blue;
 	}
 }

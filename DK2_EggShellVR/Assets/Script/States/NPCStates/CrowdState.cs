@@ -57,7 +57,7 @@ public class CrowdState : State<NPCController>
 	{
 		//When in the crowd, stare at the player at all times
 		//At least for now. When we don't have extensive NPC reactions yet.
-		_client.LookAt(_player.transform);
+		_client.LookAt(Camera.main.transform);
 
 		//Get the angle at which the player is looking at this NPC.
 		float angle = _playerController.GetAngle (_client.GetCenterTransform().position);

@@ -3,9 +3,8 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class UnlockPlayer : SceneEvent
 {
-	public UnlockPlayer (float time = 0)
+	public UnlockPlayer ()
 	{
-		Duration = time;
 	}
 	
 	public override void Execute()

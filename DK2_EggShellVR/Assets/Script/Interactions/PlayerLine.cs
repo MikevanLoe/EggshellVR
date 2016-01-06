@@ -5,6 +5,7 @@ public class PlayerLine : Interaction
 {
 	private VoiceResponse _voiceResponse;
 	private TextMesh _hintMesh;
+	private GameObject _talkIcon;
 	private string _hintText;
 	private Action _finished;
 	
@@ -16,8 +17,8 @@ public class PlayerLine : Interaction
 		Duration = dur;
 		_finished = finished;
 
-		_hintMesh = GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<TextMesh>();
-
+		_hintMesh = GameObject.Find ("HintText").GetComponent<TextMesh>();
+		_talkIcon = GameObject.Find ("TalkIcon");
 		_voiceResponse = GameObject.FindGameObjectWithTag ("GameController").GetComponent<VoiceResponse> ();
 	}
 
@@ -25,11 +26,14 @@ public class PlayerLine : Interaction
 	{
 		_voiceResponse.StartListening (InputFinished);
 		_hintMesh.text = _hintText;
+		_hintMesh.color = new Color (0.68f, 0.73f, 1.0f);
+		_talkIcon.SetActive(true);
 	}
 	
 	public override void Cancel()
 	{
 		_hintMesh.text = "";
+		_talkIcon.SetActive (false);
 		_voiceResponse.StopListening ();
 	}
 	
@@ -42,6 +46,7 @@ public class PlayerLine : Interaction
 			return;
 		}
 		_hintMesh.text = "";
+		_talkIcon.SetActive (false);
 		_finished ();
 	}
 }

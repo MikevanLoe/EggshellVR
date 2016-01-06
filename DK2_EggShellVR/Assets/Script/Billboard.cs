@@ -7,8 +7,6 @@ public class Billboard : MonoBehaviour {
 
 	public Axis axis = Axis.up;
 
-	private Camera Cam;
-
 	// return a direction based upon chosen axis
 	public Vector3 GetAxis (Axis refAxis)
 	{
@@ -31,12 +29,8 @@ public class Billboard : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Cam == null)
-			Cam = Camera.main;
-		else {
-			Vector3 targetPos = transform.position + Cam.transform.rotation * Vector3.back;
-			Vector3 targetOrientation = Cam.transform.rotation * GetAxis(axis);
-			transform.LookAt (targetPos, targetOrientation);
-		}
+		Vector3 targetPos = transform.position + Camera.main.transform.rotation * Vector3.forward;
+		Vector3 targetOrientation = Camera.main.transform.rotation * GetAxis(axis);
+		transform.LookAt (targetPos, targetOrientation);
 	}
 }
