@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour {
 	private GameObject prevLookedAt;
 	private RigidbodyFirstPersonController _fpsController;
 
-	void Start () 
+	void Start ()
 	{
 		_view = GameObject.FindGameObjectWithTag("MainCamera").transform;
 		//Attach the text container to the camera
@@ -68,11 +68,15 @@ public class PlayerController : MonoBehaviour {
 		if (iLock)
 			InvLock = true;
 		InventoryObject.gameObject.SetActive(true);
+		if(_invOpen)
+			return;
 		StartCoroutine(OpenAndCloseInventory(InventoryOpen));
 	}
 	
 	public void ForceCloseInv()
 	{
+		if(!_invOpen)
+			return;
 		InvLock = false;
 		_fpsController.LockedInput = false;
 		StartCoroutine(OpenAndCloseInventory(InventoryClosed));

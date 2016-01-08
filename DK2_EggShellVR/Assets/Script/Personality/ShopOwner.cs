@@ -13,9 +13,10 @@ public class ShopOwner : Personality
 			return;
 		if (_client.NPCStateMachine.GetCurState ().Name == "TownState") {
 			var cutscenecont = GameObject.FindGameObjectWithTag ("GameController").GetComponent<CutsceneController> ();
+			if (cutscenecont.IsPlaying ())
+				return;
 			cutscenecont.PlayCutscene ("ShopOwnerIntro");
-			if(!cutscenecont.IsPlaying())
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vishaak", 1, "Dit is een vishaak gemaakt van ijzer.  De vishaak is \nvan uitzonderlijk goede kwaliteit en lijkt nooit \neerder gebruikt te zijn."));
+			GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vishaak", 1, "Dit is een vishaak gemaakt van ijzer.  De vishaak is \nvan uitzonderlijk goede kwaliteit en lijkt nooit \neerder gebruikt te zijn."));
 		}
 	}
 }

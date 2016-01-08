@@ -1,24 +1,23 @@
 using System;
 using UnityEngine;
 
-public class NPCLine : Interaction
+public class Monologue : Interaction
 {
 	private TextMesh _subtitlesMesh;
 	private string _subtitlesText;
-	private string _NPCName;
 	private string _voiceKey;
 	private AudioClip _clip;
 
-	public NPCLine (string name, string key, string sub, float dur)
+	public Monologue (string key, string sub, float dur)
 	{
-		if (name == null || key == null)
-			Debug.LogWarning ("NPC line had no valid voice info attached.");
-		_NPCName = name;
+		if (key == null)
+			Debug.LogWarning ("Monologue had no valid voice info attached.");
 		_voiceKey = key;
 		_subtitlesText = sub;
 		Duration = dur;
 		
-		if (_NPCName != null && _voiceKey != null) {
+		if (_voiceKey != null) 
+		{
 			//Get the Game Controller and the required audio clip
 			var GC = GameObject.FindGameObjectWithTag ("GameController");
 			if (GC == null)
@@ -34,16 +33,15 @@ public class NPCLine : Interaction
 
 	public override void Execute()
 	{
-		//Get the NPC and its Audio Source
-		var npc = GameObject.Find (_NPCName);
-		if(npc == null)
-			throw new Exception("Cutscene NPC name not found in scene");
-		var aSource = npc.GetComponent<AudioSource> ();
-		if(aSource == null)
-			throw new Exception("Cutscene NPC has no audio source attached");
+		//Get the monologue audio source and its Audio Source
+		var asObj = GameObject.FindGameObjectWithTag ("Player").transform.FindChild("Monologue");
+		if(asObj == null)
+			throw new Exception("Player has no audio source attached");
+		var aSource = asObj.GetComponent<AudioSource> ();
+
 		//Play the clip from the NPC's audio source
 		aSource.PlayOneShot (_clip);
-
+		
 		_subtitlesMesh = GameObject.Find("HintText").GetComponent<TextMesh>();
 		_subtitlesMesh.color = Color.white;
 		_subtitlesMesh.text = _subtitlesText;
