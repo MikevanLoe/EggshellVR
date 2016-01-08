@@ -6,6 +6,8 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class FishingMinigame : MonoBehaviour
 {
+	public float RodOffset;
+
 	public bool isRodActive;
 	public bool isHookOut;
 	public Transform rod;
@@ -29,11 +31,6 @@ public class FishingMinigame : MonoBehaviour
 			UseRod ();
 	}
 
-	public void LockMovement ()
-	{
-		GameObject.FindGameObjectWithTag("Player").GetComponent<RigidbodyFirstPersonController>().LockedInput = isRodActive;
-	}
-
 	public void SpawnFish (Transform spawningFish)
 	{
 		float xMin = spawnZone.xMin;
@@ -49,9 +46,14 @@ public class FishingMinigame : MonoBehaviour
 
 	public void ActivateRod ()
 	{
+		if (isHookOut)
+			return;
 		isRodActive = !isRodActive;
 		rod.gameObject.SetActive (isRodActive);
-		LockMovement();
+		
+		var player = GameObject.FindGameObjectWithTag ("Player");
+		rod.position = player.transform.position + transform.forward * RodOffset + transform.right * 0.1f;
+		player.GetComponent<RigidbodyFirstPersonController>().LockedInput = isRodActive;
 
 		if (!isRodActive)
 		{
