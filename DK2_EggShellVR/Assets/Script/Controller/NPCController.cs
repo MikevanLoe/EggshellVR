@@ -61,7 +61,6 @@ public class NPCController : MonoBehaviour {
 		case "Couple":
 			_personality = new Couple(this);
 			break;
-			break;
 		case "Rude":
 			_personality = new Rude(this);
 			break;
