@@ -27,9 +27,8 @@ public class TitleController : MonoBehaviour {
 		_states.Add (transState);
 
 		//If there is a VR device, start the game with a moment for calibration
-		if (VRDevice.isPresent) {
+		if (VRDevice.isPresent)
 			_states.Set ("RecenterState");
-		}
 		else
 			_states.Set ("TitleState");
 

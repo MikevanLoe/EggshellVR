@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
@@ -181,5 +182,25 @@ public class CutsceneController : MonoBehaviour
 	{
 		//If the scene is NOT null, scene IS playing
 		return _curScene != null;
+	}
+
+	public IEnumerator Blink()
+	{
+		GameObject _talkIcon = GameObject.Find ("TalkIcon");
+		Material talkMat = _talkIcon.GetComponent<MeshRenderer> ().material;
+		Color c = _talkIcon.GetComponent<MeshRenderer> ().material.color;
+		float stepR = 0.75f ;
+		int counter = 0;
+
+		while (counter < 3) {
+			c.r += stepR;
+			talkMat.color = c;
+			yield return new WaitForSeconds(1f / 3f);
+			c.r -= c.r;
+			talkMat.color = c;
+			counter++;
+			yield return new WaitForSeconds(1f / 3f);
+		}
+		Debug.Log ("blinked");
 	}
 }

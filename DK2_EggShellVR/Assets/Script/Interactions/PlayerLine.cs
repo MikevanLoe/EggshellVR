@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerLine : Interaction
 {
@@ -8,6 +9,7 @@ public class PlayerLine : Interaction
 	private GameObject _talkIcon;
 	private string _hintText;
 	private Action _finished;
+	private CutsceneController _cutCont;
 	
 	public PlayerLine (string hint, float dur, Action finished)
 	{
@@ -20,6 +22,7 @@ public class PlayerLine : Interaction
 		_hintMesh = GameObject.Find ("HintText").GetComponent<TextMesh>();
 		_talkIcon = GameObject.Find ("TalkIcon");
 		_voiceResponse = GameObject.FindGameObjectWithTag ("GameController").GetComponent<VoiceResponse> ();
+		_cutCont = GameObject.FindGameObjectWithTag ("GameController").GetComponent<CutsceneController> ();
 	}
 
 	public override void Execute()
@@ -42,6 +45,7 @@ public class PlayerLine : Interaction
 		//if the speech length is shorter than minimum
 		if (length < Duration) 
 		{
+			_cutCont.StartCoroutine(_cutCont.Blink());
 			Execute (); //Start again
 			return;
 		}
