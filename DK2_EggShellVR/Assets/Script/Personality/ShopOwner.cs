@@ -16,7 +16,7 @@ public class ShopOwner : Personality
 			if (cutscenecont.IsPlaying ())
 				return;
 			cutscenecont.PlayCutscene ("ShopOwnerIntro");
-			GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vishaak", 1, "Dit is een vishaak gemaakt van ijzer.  De vishaak is \nvan uitzonderlijk goede kwaliteit en lijkt nooit \neerder gebruikt te zijn."));
+			GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddItem(new ItemModel("Vishaak", 1, "Dit is een vishaak gemaakt van \nijzer. De vishaak is van goede \nkwaliteit en lijkt nooit eerder \ngebruikt te zijn."));
 		}
 	}
 }
