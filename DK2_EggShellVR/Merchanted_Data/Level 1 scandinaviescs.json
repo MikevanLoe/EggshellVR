@@ -1,51 +1,13 @@
 {"scenes": [
 	{
-<<<<<<< HEAD
-		"SceneName" : "MedusaIntro",
-=======
 		"SceneName" : "IslandIntro",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
-		"Range" : 1,
-		"Interaction" : [
-			{
-				"Type" : "Event",
-				"ScriptKey" : "LockPlayer"
-			},
-<<<<<<< HEAD
-			{ 
-				"Type" : "NPCLine",
-				"NpcName" : "Medusa",
-				"VoiceKey" : "visser_01",
-				"Subtitles" : "Hallo, vreemdeling!",
-				"Duration" : 2.0
-			},
-			{
-				"Type" : "Event",
-				"ScriptKey" : "UnlockPlayer"
-			},
-			{ 
-				"Type" : "PlayerLine",
-				"Hint" : "Stel jezelf voor.",
-				"Duration" : 1.0
-			}
-		]
-	},
 
-	{
-		"SceneName" : "IslandIntro",
 		"Range" : 1,
 		"Interaction" : [
 			{
 				"Type" : "Event",
 				"ScriptKey" : "LockPlayer"
 			},
-			{ 
-				"Type" : "NPCLine",
-				"NpcName" : "Islander",
-				"VoiceKey" : "",
-				"Subtitles" : "Gegroet vreemdeling. Welkom op Svanhildr eiland.",
-				"Duration" : 4.0
-=======
 			{
 				"Type" : "Event",
 				"ScriptKey" : "CloseMenu"
@@ -69,18 +31,12 @@
 				"VoiceKey" : "monoloog 1",
 				"Subtitles" : "Nu werd ik aangesproken door een ietwat vreemde \nman. Hij zei: ",
 				"Duration" : 3
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Islander",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-				"Subtitles" : "Voel je hier thuis. We hebben van alles op dit \neiland.",
-=======
 				"VoiceKey" : "aankomst meneer 1",
 				"Subtitles" : "Gegroet vreemdeling. Welkom op Svanhildr eiland. \nVoel je hier thuis. We hebben van alles op dit \neiland.",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Duration" : 4.4
 			},
 			{ 
@@ -91,11 +47,7 @@
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Islander",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "aankomst meneer 2",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Dat is geen probleem. Er gaat elke dag een veerboot \nnaar het vaste land. Je kan mee voor 6 goudstukken.",
 				"Duration" : 6.1
 			},
@@ -107,33 +59,21 @@
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Islander",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "aankomst meneer 3",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Als je ons helpt kun je vast wat geld verdienen. \nEr zwemt hier erg veel vis bij de pier, \nmaar we kunnen ze niet vangen.",
 				"Duration" : 5.8
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Islander",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "aankomst meneer 4",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "We hebben namelijk geen vishengel. Als jij een \nvishengel maakt en wat vis voor ons vangt zijn \ner vast mensen die het van je willen kopen.",
 				"Duration" : 6.4
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Islander",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "aankomst meneer 5",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Als je hulp nodig hebt met het maken van een hengel \nkunnen de mensen in het dorp je ermee helpen.",
 				"Duration" : 4.4
 			},
@@ -145,11 +85,7 @@
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Islander",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "aankomst meneer 6",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Geen probleem. Veel succes met de vis.",
 				"Duration" : 2.5
 			},
@@ -157,19 +93,14 @@
 				"Type" : "Event",
 				"ScriptKey" : "UnlockPlayer"
 			},
-<<<<<<< HEAD
-=======
 			{
 				"Type" : "Event",
 				"ScriptKey" : "InvUnlock"
 			},
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Doei.",
 				"Duration" : 0.3
-<<<<<<< HEAD
-=======
 			},
 			{ 
 				"Type" : "NPCLine",
@@ -206,7 +137,7 @@
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Dat klopt. Dus jij bent de veerboot eigenaar?",
-				"Duration" : 1.0
+				"Duration" : 1.5
 			},
 			{ 
 				"Type" : "NPCLine",
@@ -225,7 +156,7 @@
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Ik heb het geld. Breng mij naar Raafnika.",
-				"Duration" : 1.0
+				"Duration" : 1.3
 			},
 			{ 
 				"Type" : "NPCLine",
@@ -277,7 +208,6 @@
 			{
 				"Type" : "Event",
 				"ScriptKey" : "UnlockPlayer"
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			}
 		]
 	},
@@ -294,12 +224,6 @@
 				"Type" : "Event",
 				"ScriptKey" : "LockPlayer"
 			},
-<<<<<<< HEAD
-			{ 
-				"Type" : "NPCLine",
-				"NpcName" : "ShopOwner",
-				"VoiceKey" : "",
-=======
 			{
 				"Type" : "Event",
 				"ScriptKey" : "CloseMenu"
@@ -312,65 +236,46 @@
 				"Type" : "NPCLine",
 				"NpcName" : "ShopOwner",
 				"VoiceKey" : "shop owner 1",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Hallo. Kan ik je ergens mee helpen?",
 				"Duration" : 2.5
 			},
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Kan je helpen met het maken van een vishengel?",
-				"Duration" : 2.0
+				"Duration" : 1.5
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "ShopOwner",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "shop owner 2",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Mag ik vragen waar je die voor nodig hebt?",
 				"Duration" : 3.1
 			},
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Ik wil de mensen op het eiland helpen door vis te vangen.",
-				"Duration" : 1.8
+				"Duration" : 1.5
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "ShopOwner",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "shop owner 3",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Okay, ik kan wel helpen. Ik heb volgens mij nog wel iets liggen.",
 				"Duration" : 3.4
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "ShopOwner",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-				"Subtitles" : "Oh, kijk. Ik heb hier een vishaak. Kan je die gebruiken?",
-=======
 				"VoiceKey" : "shop owner 4",
 				"Subtitles" : "Ik heb hier een vishaak. Kan je die gebruiken?",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Duration" : 3.4
 			},
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Die heb ik zeker nodig.",
-				"Duration" : 1.0
+				"Duration" : 0.8
 			},
-			{ 
-<<<<<<< HEAD
-				"Type" : "NPCLine",
-				"NpcName" : "ShopOwner",
-				"VoiceKey" : "",
-=======
+			{
 				"Type" : "Event",
 				"ScriptKey" : "TriggerAnim",
 				"Name" : "ShopOwner",
@@ -381,30 +286,22 @@
 				"Type" : "NPCLine",
 				"NpcName" : "ShopOwner",
 				"VoiceKey" : "shop owner 5",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Alstjeblieft, ik hoop dat je er iets aan hebt.",
 				"Duration" : 3.4
 			},
 			{
 				"Type" : "Event",
 				"ScriptKey" : "Finished",
-<<<<<<< HEAD
-				"Subject" : "ShopOwner"
-=======
 				"Name" : "ShopOwner"
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			},
 			{
 				"Type" : "Event",
 				"ScriptKey" : "UnlockPlayer"
 			},
-<<<<<<< HEAD
-=======
 			{
 				"Type" : "Event",
 				"ScriptKey" : "InvUnlock"
 			},
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Bedankt voor je hulp.",
@@ -413,20 +310,14 @@
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "ShopOwner",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "shop owner 6",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Geen probleem. Veel succes.",
 				"Duration" : 1.8
 			}
 		]
 	},
 	{
-<<<<<<< HEAD
-		"SceneName" : "RudeDude",
-=======
+
 		"SceneName" : "PresGood",
 		"Range" : 999999,
 		"Interaction" : [
@@ -458,7 +349,6 @@
 	},
 	{
 		"SceneName" : "PresIgnore",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 		"Range" : 1,
 		"Interaction" : [
 			{ 
@@ -470,8 +360,6 @@
 				"Type" : "Event",
 				"ScriptKey" : "LockPlayer"
 			},
-<<<<<<< HEAD
-=======
 			{
 				"Type" : "Event",
 				"ScriptKey" : "CloseMenu"
@@ -667,13 +555,10 @@
 				"Type" : "Event",
 				"ScriptKey" : "InvLock"
 			},
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
 				"VoiceKey" : "",
-<<<<<<< HEAD
-=======
 				"Subtitles" : "...",
 				"Duration" : 1.5
 			},
@@ -718,23 +603,18 @@
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
 				"VoiceKey" : "rude dude 1",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Uuhm hallo, jij bent hier nieuw toch?",
 				"Duration" : 2.5
 			},
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Dat klopt. Ik kom van het vaste land.",
-				"Duration" : 2.0
+				"Duration" : 1.3
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "rude dude 2",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Jij bent die jongen die verbannen is naar dit eiland toch?",
 				"Duration" : 3.1
 			},
@@ -746,34 +626,20 @@
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-				"Subtitles" : "Wat is er dan gebeurd? ik kan me niet voorstellen dat je voor \nniets verbannen bent, dat zou heel erg raar zijn.",
-=======
 				"VoiceKey" : "rude dude 3",
 				"Subtitles" : "Wat is er gebeurd dan? Ik kan me niet voorstellen dat je voor \nniets verbannen bent, dat zou heel erg raar zijn.",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Duration" : 3.4
 			},
 			{ 
 				"Type" : "PlayerLine",
-<<<<<<< HEAD
-				"Hint" : "Leg uit wat er gebeurd is.",
-=======
 				"Hint" : "Het volk is opgelicht met slechte uitvindingen en ik kreeg hier \nde schuld van. Maar het waren niet mijn uitvindingen.",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
-				"Duration" : 1.0
+				"Duration" : 3.0
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-				"Subtitles" : "Uuhm oke, ik vind het maar een beetje een raar verhaal, \nmaar kan ik je ergens mee helpen?",
-=======
 				"VoiceKey" : "rude dude 4",
 				"Subtitles" : "Uuhm oke, ik vind het maar een beetje een raar verhaal, \nmaar wat wou je van me?",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Duration" : 3.4
 			},
 			{ 
@@ -784,42 +650,26 @@
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "rude dude 5",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Ah oke, dus je wil ons helpen, ik weet wel waar je touw \nkan vinden voor je vishengel.",
 				"Duration" : 1.8
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "rude dude 6",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Rechts van mij zie je het eiland met de twee bergen. Als je \ndaarheen gaat zie je in de verte de oude wachttoren.",
 				"Duration" : 3.0
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "rude dude 7",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "De wachttoren wordt al jaren niet gebruikt, maar er ligt \nnog wat oud gereedschap. Met wat geluk kun je iets vinden \nvoor je vishengel.",
 				"Duration" : 3.0
 			},
 			{
 				"Type" : "Event",
-<<<<<<< HEAD
-				"ScriptKey" : "Finished",
-				"Subject" : "Rude"
-=======
 				"ScriptKey" : "AddObjective",
 				"Name" : "Zoek het touw bij de oude wachttoren"
 			},
@@ -832,19 +682,15 @@
 				"Type" : "Event",
 				"ScriptKey" : "QueueScene",
 				"Name" : "RudeMono"
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			},
 			{
 				"Type" : "Event",
 				"ScriptKey" : "UnlockPlayer"
 			},
-<<<<<<< HEAD
-=======
 			{
 				"Type" : "Event",
 				"ScriptKey" : "InvUnlock"
 			},
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Ik zal gaan kijken. Dankjewel.",
@@ -853,19 +699,13 @@
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "Rude",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "rude dude 8",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Ja hoor. Succes.",
 				"Duration" : 3.0
 			}
 		]
 	},
 	{
-<<<<<<< HEAD
-=======
 		"SceneName" : "RudeMono",
 		"Range" : 9999999,
 		"Interaction" : [
@@ -878,7 +718,6 @@
 		]
 	},
 	{
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 		"SceneName" : "CoupleScene",
 		"Range" : 1,
 		"Interaction" : [
@@ -891,12 +730,6 @@
 				"Type" : "Event",
 				"ScriptKey" : "LockPlayer"
 			},
-<<<<<<< HEAD
-			{ 
-				"Type" : "NPCLine",
-				"NpcName" : "CoupleM",
-				"VoiceKey" : "",
-=======
 			{
 				"Type" : "Event",
 				"ScriptKey" : "CloseMenu"
@@ -909,98 +742,68 @@
 				"Type" : "NPCLine",
 				"NpcName" : "CoupleM",
 				"VoiceKey" : "frank 1",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "He! Een nieuw gezicht!",
 				"Duration" : 2.5
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "CoupleF",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-				"Subtitles" : "Hallo, ik ben Ellis en dit is mijn man Francis.",
-=======
 				"VoiceKey" : "ellis 1",
 				"Subtitles" : "Hallo, ik ben Ellis en dit is mijn man Frank.",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Duration" : 2.5
 			},
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Kunnen jullie mij helpen een vishengel maken?",
-				"Duration" : 2.0
+				"Duration" : 1.5
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "CoupleF",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "ellis 2",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Hmm... Als je een vishengel maakt dan heb je een stok nodig.",
 				"Duration" : 3.1
 			},
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Kan ik niet gewoon een dikke tak van een boom halen?",
-				"Duration" : 2.0
+				"Duration" : 1.8
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "CoupleM",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "frank 2",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Ik zou niet zomaar een stok uit het bos pakken, als je een \nhengel wilt maken heb je een sterk stuk hout nodig. \nBijvoorbeeld van een esdoorn boom.",
 				"Duration" : 3.1
 			},
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Waar kan ik esdoorn hout vinden?",
-				"Duration" : 2.0
+				"Duration" : 1.3
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "CoupleM",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "frank 3",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Tsja... Dat weet ik niet...  Misschien is er een handelaar \ndie een mooie stok verkoopt?",
 				"Duration" : 3.1
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "CoupleF",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "ellis 3",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Achter in het bos staat een esdoorn boom. Hij staat helemaal \nalleen, los van de andere bomen.",
 				"Duration" : 3.1
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "CoupleM",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "frank 4",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Ohja, die boom is heel oud. Er ligt vast een mooie tak op de \ngrond.",
 				"Duration" : 3.1
 			},
 			{
 				"Type" : "Event",
-<<<<<<< HEAD
-				"ScriptKey" : "Finished",
-				"Subject" : "CoupleM"
-=======
 				"ScriptKey" : "AddObjective",
 				"Name" : "Zoek de stok achterin het bos"
 			},
@@ -1008,23 +811,16 @@
 				"Type" : "Event",
 				"ScriptKey" : "Finished",
 				"Name" : "CoupleM"
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			},
 			{
 				"Type" : "Event",
 				"ScriptKey" : "Finished",
-<<<<<<< HEAD
-				"Subject" : "CoupleF"
-=======
 				"Name" : "CoupleF"
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			},
 			{
 				"Type" : "Event",
 				"ScriptKey" : "UnlockPlayer"
 			},
-<<<<<<< HEAD
-=======
 			{
 				"Type" : "Event",
 				"ScriptKey" : "InvUnlock"
@@ -1034,26 +830,19 @@
 				"ScriptKey" : "QueueScene",
 				"Name" : "CouplePost"
 			},
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 			{ 
 				"Type" : "PlayerLine",
 				"Hint" : "Oke. Het bos op dit eiland. Ik ga zoeken.",
-				"Duration" : 1.8
+				"Duration" : 1.6
 			},
 			{ 
 				"Type" : "NPCLine",
 				"NpcName" : "CoupleF",
-<<<<<<< HEAD
-				"VoiceKey" : "",
-=======
 				"VoiceKey" : "ellis 4",
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 				"Subtitles" : "Als je het lukt om vis te vangen dan ben ik je eerste klant.",
 				"Duration" : 3.0
 			}
 		]
-<<<<<<< HEAD
-=======
 	},
 	{
 		"SceneName" : "CouplePost",
@@ -1177,6 +966,5 @@
 				"Duration" : -1
 			}
 		]
->>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 	}
 ]}
