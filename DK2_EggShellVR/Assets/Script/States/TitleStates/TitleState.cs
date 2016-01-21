@@ -8,6 +8,7 @@ public class TitleState : State<TitleController>
 	private Transform SelectionTransform;
 	private List<Transform> MenuTransforms;
 	private bool _axisUsed;
+	private bool _finished;
 
 	public TitleState (TitleController c, Transform s, List<Transform> m) : base(c) 
 	{
@@ -23,7 +24,7 @@ public class TitleState : State<TitleController>
 	}
 	
 	public override bool Handle()
-	{	
+	{
 		//Handle title choices
 		if(Input.GetButtonDown("Submit") || Input.GetKeyDown(KeyCode.Return))
 		{

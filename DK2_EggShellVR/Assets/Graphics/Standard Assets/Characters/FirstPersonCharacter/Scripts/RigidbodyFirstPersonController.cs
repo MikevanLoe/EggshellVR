@@ -83,8 +83,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			get {return m_LockedInput;}
 			set 
 			{
-				m_LockedInput = value;
-				m_RigidBody.velocity = Vector3.zero;
+				if(value != m_LockedInput)
+				{
+					m_RigidBody.velocity = Vector3.zero;
+					m_LockedInput = value;
+				}
 			}
 		}
 		public bool MouseLocked = true;
@@ -138,7 +141,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void Update()
         {
 			if(!MouseLocked)
-            	RotateView();
+            	RotateView(false);
 
             if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump && !LockedInput)
             {
@@ -148,7 +151,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 
         private void FixedUpdate()
-        {
+		{
+			if(!MouseLocked)
+				RotateView(true);
             GroundCheck();
             Vector2 input = GetInput();
 
@@ -234,7 +239,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 
-        private void RotateView()
+        private void RotateView(bool controller)
         {
             //avoids the mouse looking if the game is effectively paused
             if (Mathf.Abs(Time.timeScale) < float.Epsilon) return;
@@ -242,7 +247,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // get the rotation before it's changed
             float oldYRotation = transform.eulerAngles.y;
 
-            mouseLook.LookRotation (transform, cam.transform);
+            mouseLook.LookRotation (transform, cam.transform, controller);
 
             if (m_IsGrounded || advancedSettings.airControl)
             {

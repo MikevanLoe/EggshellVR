@@ -27,7 +27,11 @@ public class PlayerController : MonoBehaviour {
 	{
 		_view = GameObject.FindGameObjectWithTag("MainCamera").transform;
 		//Attach the text container to the camera
-		transform.FindChild ("TextContainer").SetParent (_view.transform);
+		Transform textCont = transform.FindChild ("TextContainer");
+		Transform textBoxPos = _view.transform.FindChild ("TextBoxPos");
+		textCont.SetParent (_view.transform);
+		textCont.localPosition = textBoxPos.localPosition;
+		textCont.localRotation = textBoxPos.localRotation;
 		if (_view == null)
 			_view = transform;
 		Inventory = new List<ItemModel> ();
@@ -68,7 +72,7 @@ public class PlayerController : MonoBehaviour {
 		if (iLock)
 			InvLock = true;
 		InventoryObject.gameObject.SetActive(true);
-		if(_invOpen)
+		if(_invOpen || _invTweening)
 			return;
 		StartCoroutine(OpenAndCloseInventory(InventoryOpen));
 	}
@@ -78,7 +82,6 @@ public class PlayerController : MonoBehaviour {
 		if(!_invOpen)
 			return;
 		InvLock = false;
-		_fpsController.LockedInput = false;
 		StartCoroutine(OpenAndCloseInventory(InventoryClosed));
 	}
 	
@@ -122,7 +125,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		_invTweening = true;
 		//Calculate progress to move per frame
-		float progPerFrame = 1 * 0.01f / TweenTime;
+		float progPerFrame = 1 * Time.deltaTime / TweenTime;
 		Vector3 startPos = InventoryObject.localPosition;
 		Quaternion startRot = InventoryObject.localRotation;
 		for (float prog = 0; prog <= 1f; prog += progPerFrame)
@@ -130,7 +133,7 @@ public class PlayerController : MonoBehaviour {
 			//Tween local transform
 			InventoryObject.localPosition = Vector3.Lerp(startPos, destination.localPosition, prog);
 			InventoryObject.localRotation = Quaternion.Slerp(startRot, destination.localRotation, prog);
-			yield return new WaitForSeconds(0.01f);
+			yield return new WaitForEndOfFrame();
 		}
 		InventoryObject.localPosition = destination.localPosition;
 		InventoryObject.localRotation = destination.localRotation;
@@ -207,10 +210,16 @@ public class PlayerController : MonoBehaviour {
 		else
 			Inventory.RemoveAt(index);
 	}
-
+	
 	//Check if the player inventory contains a given item
 	public bool HasItem(string iName, float quanitity = 1)
 	{
 		return Inventory.Any (i => i.Name == iName && i.Quantity >= quanitity);
+	}
+	
+	//Check if the player inventory contains a given item
+	public ItemModel FindItem(string iName)
+	{
+		return Inventory.Find (i => i.Name == iName);
 	}
 }

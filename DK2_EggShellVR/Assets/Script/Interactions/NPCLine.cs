@@ -8,6 +8,7 @@ public class NPCLine : Interaction
 	private string _NPCName;
 	private string _voiceKey;
 	private AudioClip _clip;
+	private Animator _anim;
 
 	public NPCLine (string name, string key, string sub, float dur)
 	{
@@ -37,13 +38,18 @@ public class NPCLine : Interaction
 		//Get the NPC and its Audio Source
 		var npc = GameObject.Find (_NPCName);
 		if(npc == null)
-			throw new Exception("Cutscene NPC name not found in scene");
+			throw new Exception("Cutscene NPC name not found in scene:" + _NPCName);
+		_anim = npc.GetComponent<Animator> ();
+		if(_anim == null)
+			throw new Exception("Cutscene NPC has no animator attached");
 		var aSource = npc.GetComponent<AudioSource> ();
 		if(aSource == null)
 			throw new Exception("Cutscene NPC has no audio source attached");
 		//Play the clip from the NPC's audio source
-		aSource.PlayOneShot (_clip);
+		aSource.clip = _clip;
+		aSource.Play ();
 
+		_anim.SetBool ("Talk", true);
 		_subtitlesMesh = GameObject.Find("HintText").GetComponent<TextMesh>();
 		_subtitlesMesh.color = Color.white;
 		_subtitlesMesh.text = _subtitlesText;
@@ -58,5 +64,6 @@ public class NPCLine : Interaction
 	{
 		_subtitlesMesh = GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<TextMesh>();
 		_subtitlesMesh.text = "";
+		_anim.SetBool ("Talk", false);
 	}
 }

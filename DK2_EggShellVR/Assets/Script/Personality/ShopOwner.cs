@@ -4,7 +4,7 @@ public class ShopOwner : Personality
 {
 	public ShopOwner (NPCController c) : base(c)
 	{
-		_demand = 6;
+		Demand = 6;
 	}
 	
 	public override void LookedAt()

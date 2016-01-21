@@ -17,14 +17,22 @@
 		"key" : "propositio",
 		"id" : 0,
 		"sequence" : 0,
+<<<<<<< HEAD
 		"words" : "Drie vissen! \néén kilo \n35 centimeter \n2 goudstukken\n per stuk!",
+=======
+		"words" : "Drie vissen! \neen kilo \n35 centimeter \n2 goudstukken\n per stuk!",
+>>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 		"time" : 15
 	},
 	{
 		"key" : "argumentatio",
 		"id" : 0,
 		"sequence" : 0,
+<<<<<<< HEAD
 		"words" : "Zelfs gevangen! \nVishengel! \nHout van de Esdoorn boom \n Hennep Touw \nIjzer vishaakje",
+=======
+		"words" : "Zelf gevangen! \nVishengel! \nHout van de Esdoorn boom \n Hennep Touw \nIjzer vishaakje",
+>>>>>>> 5739232b9f43b626d6eca5474e8673b2f8c37185
 		"time" : 25
 	},
 	{

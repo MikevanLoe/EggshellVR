@@ -16,6 +16,8 @@ public class FishingMinigame : MonoBehaviour
 	public List<Transform> fishList;
 	public Animator anim;
 
+	private float _hookDelay;
+
 	public void Start ()
 	{
 		fishList = spawnZone.GetComponent<SpawnZone> ().fishes;
@@ -27,7 +29,7 @@ public class FishingMinigame : MonoBehaviour
 	public void Update ()
 	{
 		// Use the rod when the left mouse button is pressed and the rod is active	
-		if(Input.GetButtonDown("Fire1") && isRodActive)
+		if(Input.GetButtonDown("Fire1") && isRodActive && Time.time > _hookDelay)
 			UseRod ();
 	}
 
@@ -64,6 +66,7 @@ public class FishingMinigame : MonoBehaviour
 
 	public void UseRod ()
 	{
+		_hookDelay = Time.time + 1;
 		isHookOut = !isHookOut;
 		anim.SetBool("isHookOut", isHookOut);
 	}

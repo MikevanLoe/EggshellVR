@@ -6,14 +6,17 @@ public class NPCController : MonoBehaviour {
 	public string PersonalityName;
 	public Vector3 RotOffset;
 	public float MaxRot = 2f;
+	public Personality Personality;
+	[HideInInspector]
+	public Animator MyAnimator;
 
 	private Transform _center;
 	private Transform _neck;
+	private Transform _target;
 	private StateMachine<NPCController> _stateMachine;
 	private float _curAngle;
 	private Dictionary<string, bool> Switches;
 	private Dictionary<string, float> Variables;
-	private Personality _personality;
 	private Vector3 _originalPosition;
 
 	public StateMachine<NPCController> NPCStateMachine {
@@ -30,6 +33,15 @@ public class NPCController : MonoBehaviour {
 		_center = FindTransform (transform, "Center");
 		if (_center == null)
 			throw new UnityException ("NPC: " + name + " has no center attached");
+
+		MyAnimator = GetComponent<Animator> ();
+		if (MyAnimator == null)
+			throw new UnityException ("NPC: " + name + " has no Animator attached");
+
+		_target = new GameObject ("LookTarget").transform;
+		_target.parent = transform;
+		_target.position = _center.position;
+		_target.rotation = _center.rotation;
 
 		_stateMachine = new StateMachine<NPCController> ();
 
@@ -50,19 +62,22 @@ public class NPCController : MonoBehaviour {
 		switch (PersonalityName) 
 		{
 		case "Bland":
-			_personality = new Bland(this);
+			Personality = new Bland(this);
 			break;
 		case "Islander":
-			_personality = new Islander(this);
+			Personality = new Islander(this);
 			break;
 		case "ShopOwner":
-			_personality = new ShopOwner(this);
+			Personality = new ShopOwner(this);
 			break;
 		case "Couple":
-			_personality = new Couple(this);
+			Personality = new Couple(this);
 			break;
 		case "Rude":
-			_personality = new Rude(this);
+			Personality = new Rude(this);
+			break;
+		case "PresTutorial":
+			Personality = new PresTutorial(this);
 			break;
 
 		default:
@@ -73,21 +88,25 @@ public class NPCController : MonoBehaviour {
 	void LateUpdate () 
 	{
 		_stateMachine.Handle ();
-		_personality.Update ();
+		Personality.Update ();
 	}
 
 	public void MarketCall(float performance)
 	{
 		var stateName = _stateMachine.GetCurState ().Name;
-		bool interested = _personality.MarketCall (performance);
+		bool interested = Personality.MarketCall (performance);
 		if (stateName != "CrowdState" && stateName != "TravelState") 
 		{
 			if (interested) 
 			{
+				_originalPosition = transform.position;
 				_stateMachine.Set ("TravelState");
 				var travelState = (TravelState)_stateMachine.GetCurState ();
-				var obj = GameObject.FindGameObjectWithTag("PresentationController");
-				PresentationController presCont = obj.GetComponent<PresentationController>();
+
+				//Find Presentation Controller
+				var presContObj = GameObject.FindGameObjectWithTag("PresentationController");
+				PresentationController presCont = presContObj.GetComponent<PresentationController>();
+
 				travelState.Destination = presCont.GetCrowdPosition();
 				travelState.NextState = "CrowdState";
 			}
@@ -96,33 +115,77 @@ public class NPCController : MonoBehaviour {
 		{
 			if(!interested)
 			{
-				TravelState travelState;
+				var crowdState = (CrowdState) _stateMachine.Get ("CrowdState");
+				if(!crowdState.IsReadyToLeave())
+					return;
 				if (stateName != "TravelState")
 					_stateMachine.Set ("TravelState");
-				travelState = (TravelState)_stateMachine.GetCurState ();
+				TravelState travelState = (TravelState)_stateMachine.GetCurState ();
 				travelState.Destination = _originalPosition;
 				travelState.NextState = "TownState";
 			}
 		}
 	}
 
+	/// <summary>
+	/// Travel to the specified Destination and change to set state afterwards.
+	/// </summary>
+	/// <param name="Destination">Destination.</param>
+	/// <param name="NextState">Next state.</param>
+	public void Travel(Vector3 Destination, string NextState)
+	{
+		string stateName = _stateMachine.GetCurState ().Name;
+		if (stateName != "TravelState")
+			_stateMachine.Set ("TravelState");
+		TravelState travelState = (TravelState)_stateMachine.GetCurState ();
+		travelState.Destination = Destination;
+		travelState.NextState = NextState;
+	}
+
 	public void LookAt(Transform obj)
 	{
 		//Create a dummy that looks directly at the target
-		Transform target = new GameObject().transform;
-		target.position = _neck.position;
-		target.rotation = _neck.rotation;
-		target.LookAt(obj.position);
+		_target.position = _neck.position;
+		_target.rotation = _neck.rotation;
+		_target.LookAt(obj.position);
 
-		float a = Mathf.Abs(target.rotation.eulerAngles.y - _center.rotation.eulerAngles.y);
+		//Difference between target angle and neutral look angle
+		float a = Mathf.Abs(_target.rotation.eulerAngles.y - _center.rotation.eulerAngles.y);
+
+		//If the target angle is more than 70 degrees off from neutral angle, look at neutral angle
 		if (a >= 70)
 		{
-			target.position = _center.position;
-			target.rotation = _center.rotation;
+			_target.position = _center.position;
+			_target.rotation = _center.rotation;
 		}
-		target.Rotate (RotOffset);
-		_neck.rotation = Quaternion.RotateTowards(_neck.rotation, target.rotation, MaxRot);
+		//Offset rotation if necessary
+		_target.Rotate (RotOffset);
+		//Rotate towards destination
+		_neck.rotation = Quaternion.RotateTowards(_neck.rotation, _target.rotation, MaxRot);
 		return;
+	}
+
+	/// <summary>
+	/// Turns NPC to target
+	/// </summary>
+	/// <returns>The amount by which the NPC has turned</returns>
+	/// <param name="obj">Target.</param>
+	/// <param name="maxRot">Max rotation.</param>
+	public float TurnTo(Vector3 target)
+	{
+		//Create a dummy that looks directly at the target
+		_target.position = transform.position;
+		_target.rotation = transform.rotation;
+		_target.LookAt(target);
+
+		//Ignore any rotation on all axes but Y
+		var newRot = _target.rotation.eulerAngles;
+		newRot.x = 0;
+		newRot.z = 0;
+		_target.rotation = Quaternion.Euler (newRot);
+
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, _target.rotation, MaxRot * 3);
+		return newRot.y - transform.rotation.eulerAngles.y;
 	}
 	
 	public Transform GetNeckTransform()
@@ -137,7 +200,7 @@ public class NPCController : MonoBehaviour {
 
 	public void LookedAt()
 	{
-		_personality.LookedAt ();
+		Personality.LookedAt ();
 	}
 	
 	public bool GetSwitch(string key)
@@ -164,6 +227,11 @@ public class NPCController : MonoBehaviour {
 	public void SetVariable(string key, float value)
 	{
 		Variables [key] = value;
+	}
+
+	public State<NPCController> GetState(string state)
+	{
+		return _stateMachine.Get (state);
 	}
 
 	public static Transform FindTransform(Transform parent, string name)

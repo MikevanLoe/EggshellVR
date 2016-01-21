@@ -4,7 +4,8 @@ public class Couple : Personality
 {
 	public Couple (NPCController c) : base(c)
 	{
-		_demand = Mathf.Infinity;
+		Demand = Mathf.Infinity;
+		Demand = 8;
 	}
 	
 	public override void LookedAt()

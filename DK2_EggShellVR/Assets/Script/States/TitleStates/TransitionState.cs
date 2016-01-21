@@ -7,60 +7,28 @@ public class TransitionState : State<TitleController>
 {
 	private Transform _target;
 	private Transform _mover;
-	private float _damping = 3;
-	private float _startDist;
-	private Quaternion _startRot;
-	public bool _started = false;
+	private IntroScene IntroCont;
 
-	public TransitionState (TitleController c) : base(c) 
+	public TransitionState (TitleController c, IntroScene i) : base(c) 
 	{
 		_target = GameObject.FindGameObjectWithTag("Player").transform;
 		_mover = _client.transform.FindChild ("CameraObject");
+		IntroCont = i;
+		IntroCont.Finish = Transition;
 	}
 
 	public override void Enter()
 	{
-		//When transitioning, double rotation speed
-		_client.RotPerSecond *= 2f;
+		_client.StartCoroutine(_client.FadeIn(StartIntro));
 	}
 
-	public override bool Handle()
+	public void StartIntro()
 	{
-		//Before we can start, make sure the camera isn't behind the mountain
-		if (!_started) 
-		{
-			//Between these angles is the mountain. Only start when NOT behind them.
-			if (_client.Angle < 94 || _client.Angle > 163) 
-			{
-				_mover.SetParent (null);
-				_startDist = Vector3.Distance (_mover.position, _target.position);
-				_startRot = _mover.rotation;
-				_started = true;
-			}
-			return true;
-		}
+		IntroCont.gameObject.SetActive (true);
+	}
 
-		//Until the camera is close enough, keep moving towards it
-		float dist = Vector3.Distance (_mover.position, _target.position);
-		if (dist > 0.2f) 
-		{
-			
-			if(Debug.isDebugBuild)
-			{
-				//Be INSTANT
-				_damping = Time.deltaTime;
-			}
-			//Damping is used for smooth movement, basically, it moves a set 
-			//amount of the distance every second.
-			Vector3 dir = (_target.position - _mover.position) / _damping;
-			//Because near the end it would move very slow, a fixed amount is added
-			_mover.position = _mover.position + (dir + dir.normalized * 2) * Time.deltaTime;
-			//Smoothly rotate the camera to be looking at the same direction as the target
-			_mover.rotation = Quaternion.Lerp(_startRot, _target.rotation, 1 - 1 / _startDist * dist);
-
-			return true;
-		}
-
+	public void Transition()
+	{
 		//Unlock the player controller and turn on the camera
 		var rfpc = _target.GetComponent<RigidbodyFirstPersonController> ();
 		rfpc.MouseLocked = false;
@@ -71,8 +39,12 @@ public class TransitionState : State<TitleController>
 		
 		//Turn off the title objects
 		_mover.gameObject.SetActive (false);
-		_client.gameObject.SetActive (false);
 
-		return true;
+		_client.StartCoroutine(_client.FadeOut(End));
+	}
+
+	public void End()
+	{
+		_client.gameObject.SetActive (false);
 	}
 }

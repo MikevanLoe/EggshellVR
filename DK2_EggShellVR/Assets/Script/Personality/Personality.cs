@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 public abstract class Personality
 {
+	public float Demand;
+
 	protected NPCController _client;
 	protected AudioSource _audioSource;
 	protected List<AudioClip> _voiceClips;
 	protected GameController _gameController;
-	protected float _demand;
 
 	public Personality (NPCController c)
 	{
@@ -28,7 +29,7 @@ public abstract class Personality
 	
 	public virtual bool MarketCall(float performance)
 	{
-		if (performance > _demand)
+		if (performance > Demand)
 			return true;
 		return false;
 	}

@@ -53,4 +53,4 @@ public class PlayerLine : Interaction
 		_talkIcon.SetActive (false);
 		_finished ();
 	}
-}
+	}	
