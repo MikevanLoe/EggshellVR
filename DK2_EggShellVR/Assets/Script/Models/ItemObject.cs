@@ -29,6 +29,10 @@ public class ItemObject : MonoBehaviour {
 		//This object should be destroyed when the Pickup text is destroyed too.
 		float deathTime = PickupText.GetComponent<FloatUpAndDestroy> ().Lifetime;
 		Destroy (gameObject, deathTime);
+
+		var SESource = GameObject.Find ("SoundEffects").GetComponent<AudioSource> ();
+		var SE = Resources.Load<AudioClip>("menu");
+		SESource.PlayOneShot (SE);
 	}
 
 	//Called when the object is looked at

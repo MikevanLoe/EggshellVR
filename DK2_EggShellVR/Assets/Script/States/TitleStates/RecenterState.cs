@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.VR;
 
 public class RecenterState : State<TitleController>
 {
@@ -21,10 +22,17 @@ public class RecenterState : State<TitleController>
 		//Wait for player to press key and start recenter process
 		if (Input.anyKeyDown && RecenterText.activeSelf) 
 		{
-			_client.StartCoroutine("Recenter");
+			_client.StartCoroutine(_client.FadeIn(Recenter));
 			//Hide recenter text
 			RecenterText.SetActive(false);
 		}
 		return true;
+	}
+
+	public void Recenter()
+	{
+		InputTracking.Recenter ();
+		_client.SetState ("TitleState");
+		_client.StartCoroutine(_client.FadeIn(null));
 	}
 }

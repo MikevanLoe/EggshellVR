@@ -21,10 +21,13 @@ public class PresentationController : MonoBehaviour {
 	
 	public Transform MarketStand;
 	public GameObject PresMenuObject;
-	
+	public float TalkTime;
+
+	private HeartrateReader _HRModule;
 	private TextMesh _lineDisplay;
 	private TextMesh _scoreDisplay;
-	private List<GameObject> _audience;
+	private List<GameObject> _NPCs;
+	private List<CrowdState> _audience;
 	private VoiceResponse _voiceSystem;
 	private Dictionary<string, List<List<Sentence>>> _lines;
 	private string _curKey;
@@ -34,22 +37,24 @@ public class PresentationController : MonoBehaviour {
 	private float _timerStart;
 	private float _partDuration;
 	private float _presentationStart;
-	private float _talkTime;
 	private float _partTalkTime;
 	private float _lookScore;
-	private List<GameObject> _NPCs;
+	private float _sellMoment;
 
-	void Start () 
+	void Start ()
 	{
 		//The voice response object is used to determine when the player is talking
-		_voiceSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<VoiceResponse> ();
+		var gc = GameObject.FindGameObjectWithTag ("GameController");
+		_voiceSystem = gc.GetComponent<VoiceResponse> ();
 		if (_voiceSystem == null)
 			throw new UnityException ("Game Controller has no VoiceResponse script attached to it!");
+
+		_HRModule = gc.GetComponent<HeartrateReader> ();
 
 		GetLinesFromJSON ();
 		_NPCs = new List<GameObject> ();
 		
-		_audience = new List<GameObject> ();
+		_audience = new List<CrowdState> ();
 
 		_lineDisplay = PresMenuObject.transform.GetChild (1).GetComponent<TextMesh> ();
 		_scoreDisplay = PresMenuObject.transform.GetChild (2).GetComponent<TextMesh> ();
@@ -88,21 +93,31 @@ public class PresentationController : MonoBehaviour {
 
 	void Update()
 	{
-		if (_voiceSystem.IsSpeaking () && presState != PresentationState.Idle) 
+		//If the presentation isn't active but there's still an audience, tell them to leave
+		if ( presState == PresentationState.Idle) 
+		{
+			if( _audience.Count <= 0 )
+				return;
+			for (int i = 0; i < _NPCs.Count; i++) {
+				_NPCs [i].SendMessage ("MarketCall", -1, SendMessageOptions.DontRequireReceiver);
+			}
+			return;
+		}
+		//At any time while the presentation is going, check the score
+		else if (_voiceSystem.IsSpeaking ()) 
 		{
 			//Keep track of the time the player has been talking
-			_talkTime += Time.deltaTime;
+			TalkTime += Time.deltaTime;
 			_partTalkTime += Time.deltaTime;
 			//Ask all NPCs if they want to come watch
-			for (int i = 0; i < _NPCs.Count; i++)
+			for (int i = 0; i < _NPCs.Count; i++) 
 			{
-				_NPCs [i].SendMessage ("MarketCall", _talkTime, 
-				                       SendMessageOptions.DontRequireReceiver);
+				_NPCs [i].SendMessage ("MarketCall", TalkTime, SendMessageOptions.DontRequireReceiver);
 			}
-			if(Debug.isDebugBuild)
+			if (Debug.isDebugBuild) 
 			{
 				//Display the current talk time in the display for debug
-				_scoreDisplay.text = (Mathf.Round(_talkTime * 10) / 10).ToString ();
+				_scoreDisplay.text = (Mathf.Round (TalkTime * 10) / 10).ToString ();
 			}
 		}
 		if (presState == PresentationState.Attracting) 
@@ -142,26 +157,59 @@ public class PresentationController : MonoBehaviour {
 	/// </summary>
 	void ActiveState ()
 	{
+		//If a sell moment is set and sell moment has been reached
+		if(_sellMoment >= 0 && Time.time >= _sellMoment && _audience.Count > 0)
+		{
+			_sellMoment = -1;
+			_audience[Random.Range(0, _audience.Count-1)].Sell();
+		}
 		//Part finished
-		if (_timerStart + _partDuration < Time.time) {
+		if (_timerStart + _partDuration < Time.time) 
+		{
 			_voiceSystem.ForceStop ();
 			//Show sentence
 			Sentence s = GetNextSentence ();
-			//TODO: End the presentation when there is no next line
-			if (s != null) 
+			//If the next sentence is null, the presentation is OVER!!!
+			if (s == null) 
 			{
-				_lineDisplay.text = s.Words;
-				_partDuration = s.Time;
-				_partTalkTime = 0;
-			}
-			else 
-			{
-				GameObject.FindGameObjectWithTag ("Player").GetComponent<RigidbodyFirstPersonController> ().LockedInput = false;
-				GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().IgnoreLook = false;
-				//TODO: Display end score and whatever
+				//Unlock the players controls
+				var playerObj = GameObject.FindGameObjectWithTag ("Player");
+				playerObj.GetComponent<RigidbodyFirstPersonController> ().LockedInput = false;
 
+				var player = playerObj.GetComponent<PlayerController> ();
+				player.IgnoreLook = false;
+				player.InvLock = false;
+
+//				player.transform.FindChild ("Menu").GetComponent<MenuController> ().UnlockMenu ();
+
+				//Stop the presentation
 				presState = PresentationState.Idle;
+
+				//Play the good or bad cutscene
+				var cutscenecont = GameObject.FindGameObjectWithTag ("GameController").GetComponent<CutsceneController> ();
+				if (cutscenecont.IsPlaying ())
+					throw new UnityException ("Cutscene playing at end of presentation.");
+				if (player.HasItem ("Goud", 6))
+					cutscenecont.PlayCutscene ("PresGood");
+				else
+					cutscenecont.PlayCutscene ("PresBad");
+				return;
 			}
+			_lineDisplay.text = s.Words;
+			_partDuration = s.Time;
+			_partTalkTime = 0;
+
+			if(_curKey == "narratio" || _curKey == "argumentatio")
+			{
+				//Sell a fish at a random moment between the start of the part and the end;
+				_sellMoment = Time.time + Random.Range(0, s.Time);
+			}
+			else if (_curKey == "peroratio")
+			{
+				//Sell near the end
+				_sellMoment = Time.time;
+			}
+			
 			_timerStart = Time.time;
 			_voiceSystem.StartListening (PitchSpoken);
 		}
@@ -197,6 +245,7 @@ public class PresentationController : MonoBehaviour {
 			_curKey = "peroratio";
 			break;
 		default:
+			_curKey = null;
 			return null;
 		}
 		//Get random id from possible id's
@@ -217,8 +266,8 @@ public class PresentationController : MonoBehaviour {
 	/// <returns>The crowd position.</returns>
 	public Vector3 GetCrowdPosition()
 	{
-		//Random distance to stand
-		float y = Random.Range (pSettings.CrowdRadius / 10, pSettings.CrowdRadius);
+		//Random distance to stand, preferably far away
+		float y = Random.Range (pSettings.CrowdRadius / 10 * 8, pSettings.CrowdRadius);
 		//Maximum crowd width at distance
 		float x = Mathf.Tan (pSettings.CrowdAngle) * y;
 		//Random point in width
@@ -246,11 +295,17 @@ public class PresentationController : MonoBehaviour {
 		//Score approaches distraction, based on crowd size
 		_lookScore += (distraction - _lookScore) / _audience.Count;
 	}
-
-	public void JoinAudience(GameObject NPC)
+	
+	public void JoinAudience(CrowdState NPC)
 	{
 		if (!_audience.Contains (NPC))
 			_audience.Add (NPC);
+	}
+	
+	public void LeaveAudience(CrowdState NPC)
+	{
+		if (_audience.Contains (NPC))
+			_audience.Remove (NPC);
 	}
 	
 	public float GetConvScore()
@@ -258,8 +313,8 @@ public class PresentationController : MonoBehaviour {
 		float totalTime = Time.time - _presentationStart;
 		if (totalTime <= 0)
 			return 1;
-		float score = 1 / totalTime * _talkTime;
-		score *= 2;
+		float score = 1 / totalTime * TalkTime;
+		score *= 1.5f;
 		score = Mathf.Clamp01 (score);
 		return score;
 	}
@@ -269,7 +324,7 @@ public class PresentationController : MonoBehaviour {
 		float totalTime = Time.time - _presentationStart;
 		if (totalTime <= 0)
 			return 1;
-		float score = 1 / _partDuration * _talkTime;
+		float score = 1 / _partDuration * _partTalkTime;
 		score *= 2;
 		score = Mathf.Clamp01 (score);
 		return score;
@@ -285,17 +340,24 @@ public class PresentationController : MonoBehaviour {
 		return Mathf.Clamp01( 1 / _partDuration * (Time.time - _timerStart) );
 	}
 
+	public float GetAvgScore()
+	{
+		float score1 = 1 - _HRModule.CalculateMeterScale();
+		float score2 = GetLookScore();
+		float score3 = GetConvScore();
+		return (score1 + score2 + score3) / 3;
+	}
+
 	/// <summary>
 	/// Called when the player is inside of the presentation area.
 	/// </summary>
 	public void DetectOn()
 	{
+		//Make sure player has enough fish to sell
 		var player = GameObject.FindGameObjectWithTag ("Player");
 		if (!player.GetComponent<PlayerController> ().HasItem ("Vis", 3)) {
 			return;
 		}
-
-		_lineDisplay.text = "Detect ON!";
 
 		presState = PresentationState.Attracting;
 		//Show sentence
@@ -303,6 +365,7 @@ public class PresentationController : MonoBehaviour {
 		_lineDisplay.text = s.Words;
 		_partDuration = s.Time;
 		_partTalkTime = 0;
+		TalkTime = 0;
 
 		_timerStart = Time.time;
 		_presentationStart = Time.time;
@@ -322,17 +385,7 @@ public class PresentationController : MonoBehaviour {
 	public void DetectOff()
 	{
 		var player = GameObject.FindGameObjectWithTag ("Player");
-		if (!player.GetComponent<PlayerController> ().HasItem ("Vis", 3)) {
-			return;
-		}
-
-		_lineDisplay.text = "Detect OFF!";
-		//Tell all NPCs the show is over
-		for(int i = 0; i < _NPCs.Count; i++)
-		{
-			if(_NPCs[i].GetComponent<NPCController>() != null)
-				_NPCs[i].SendMessage ("MarketCall", 0f, SendMessageOptions.DontRequireReceiver); //Send 0 as performance so everyone loses interest instantly
-		}
-		GameObject.Find ("Menu").GetComponent<MenuController>().UnlockMenu();
+		var menu = player.transform.FindChild ("Menu").GetComponent<MenuController>();
+		menu.UnlockMenu ();
 	}
 }

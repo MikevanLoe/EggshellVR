@@ -3,7 +3,7 @@ public abstract class State<T>
 {
 	public String Name;
 
-	public T _client;
+	protected T _client;
 
 	public State(T c)
 	{
@@ -15,5 +15,7 @@ public abstract class State<T>
 
 	public virtual void Exit(){}
 
-	public abstract bool Handle();
+	public virtual bool Handle(){
+		return true;
+	}
 }

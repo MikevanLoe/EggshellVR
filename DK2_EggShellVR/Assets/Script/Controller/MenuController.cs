@@ -7,9 +7,10 @@ public class MenuController : MonoBehaviour {
 	/// The crafting menu state has a lot of things we want
 	/// to edit in the Unity Editor. Thats why its public.
 	/// </summary>
-	public CraftingState craftingState;
 	public Animator Animator;
 	public GameObject LockedMenuObject;
+	[HideInInspector]
+	public QuestlogState Questlog;
 
 	private State<MenuController> _preLockState;
 	private StateMachine<MenuController> _stateMachine;
@@ -24,18 +25,22 @@ public class MenuController : MonoBehaviour {
 	/// <summary>
 	/// Initialize the menu
 	/// </summary>
-	void Start () 
+	void Awake () 
 	{
 		Player = transform.parent.GetComponent<PlayerController>();
 		_stateMachine = new StateMachine<MenuController> ();
 		Animator = GetComponent<Animator> ();
+		
+		var craftingState = new CraftingState(this);
 		_stateMachine.Add (craftingState);
-
-		craftingState.Start ();
 		
 		var inventoryState = new InventoryState (this);
 		_stateMachine.Add (inventoryState);
-		_stateMachine.Set ("CraftingState");
+
+		Questlog = new QuestlogState (this);
+		_stateMachine.Add (Questlog);
+
+		_stateMachine.Set ("QuestlogState");
 
 		//Disable menu after initializing
 		gameObject.SetActive (false);
@@ -75,6 +80,7 @@ public class MenuController : MonoBehaviour {
 		//Check if we can flip right now
 		if (running)
 			yield break;
+
 		if (next) 
 		{
 			if (_stateMachine.TryNext () < 0)
@@ -89,6 +95,10 @@ public class MenuController : MonoBehaviour {
 			Animator.SetTrigger("flip2");
 		else
 			Animator.SetTrigger("flip");
+		
+		var SESource = GameObject.Find ("SoundEffects").GetComponent<AudioSource> ();
+		var SE = Resources.Load<AudioClip>("page turn");
+		SESource.PlayOneShot (SE);
 
 		yield return new WaitForSeconds(0.3f);
 		if(next)

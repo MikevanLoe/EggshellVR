@@ -55,6 +55,11 @@ public class StateMachine<T>
 		_curState.Enter();
 	}
 
+	public State<T> Get(string state)
+	{
+		return _states.Find (s => s.Name == state);
+	}
+
 	public int TryNext()
 	{
 		int s = _states.FindIndex (st => st == _curState);

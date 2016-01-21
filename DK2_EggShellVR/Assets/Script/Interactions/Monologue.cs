@@ -40,10 +40,11 @@ public class Monologue : Interaction
 		var aSource = asObj.GetComponent<AudioSource> ();
 
 		//Play the clip from the NPC's audio source
-		aSource.PlayOneShot (_clip);
+		aSource.clip = _clip;
+		aSource.Play ();
 		
 		_subtitlesMesh = GameObject.Find("HintText").GetComponent<TextMesh>();
-		_subtitlesMesh.color = Color.white;
+		_subtitlesMesh.color = new Color(0.75f, 0.75f, 0.75f);
 		_subtitlesMesh.text = _subtitlesText;
 	}
 	

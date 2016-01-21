@@ -2,23 +2,32 @@ using UnityEngine;
 
 public class Rude : Personality
 {	
-	private Transform _player;
+	private PlayerController _player;
 	private bool _done;
 
 	public Rude (NPCController c) : base(c)
 	{
-		_player = GameObject.FindGameObjectWithTag ("Player").transform;
-		_demand = Mathf.Infinity;
+		_player = GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ();
+		Demand = Mathf.Infinity;
+		Demand = 22;
 	}
-	
-	public override void Update()
+
+	public override void LookedAt ()
 	{
+		
 		if (_client.GetSwitch("Finished"))
 			return;
-		//When the player gets close
-		if (Vector3.Distance(_player.position, _client.transform.position) < 2.5f) {
+		if (_client.NPCStateMachine.GetCurState ().Name == "TownState") {
 			var cutscenecont = GameObject.FindGameObjectWithTag ("GameController").GetComponent<CutsceneController> ();
-			if(!cutscenecont.IsPlaying())
+			
+			if(cutscenecont.IsPlaying())
+				return;
+			//Only talk if the player has the stick
+			if (!_player.HasItem("Stok"))
+			{
+				cutscenecont.PlayCutscene ("RudeIgnore");
+			}
+			else
 				cutscenecont.PlayCutscene ("RudeDude");
 		}
 	}

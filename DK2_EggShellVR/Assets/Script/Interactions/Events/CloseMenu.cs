@@ -13,6 +13,6 @@ public class CloseMenu : SceneEvent
 
 	public override void Execute()
 	{
-		_player.ForceOpenInv (true, true);
+		_player.ForceCloseInv ();
 	}
 }

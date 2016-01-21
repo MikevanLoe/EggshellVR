@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
-using UnityEngine.VR;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using UnityEngine.VR;
 
 public class TitleController : MonoBehaviour {
 	public GameObject RecenterText;
 	public Transform Logo;
 	public Transform Selection;
 	public List<Transform> Menu;
+	public IntroScene IntroController;
 	public Material FadeMaterial;
 	public Transform Center;
 	public float RotPerSecond = 7;
@@ -21,15 +23,14 @@ public class TitleController : MonoBehaviour {
 		_states = new StateMachine<TitleController> ();
 		RecenterState recenterState = new RecenterState (this, RecenterText);
 		TitleState titleState = new TitleState (this, Selection, Menu);
-		TransitionState transState = new TransitionState (this);
+		TransitionState transState = new TransitionState (this, IntroController);
 		_states.Add (recenterState);
 		_states.Add (titleState);
 		_states.Add (transState);
 
 		//If there is a VR device, start the game with a moment for calibration
-		if (VRDevice.isPresent) {
+		if (VRDevice.isPresent)
 			_states.Set ("RecenterState");
-		}
 		else
 			_states.Set ("TitleState");
 
@@ -39,6 +40,11 @@ public class TitleController : MonoBehaviour {
 	// Let the states handle the update
 	void Update () {
 		_states.GetCurState ().Handle ();
+	}
+
+	public void SetState(string state)
+	{
+		_states.Set (state);
 	}
 
 	void FixedUpdate()
@@ -62,41 +68,52 @@ public class TitleController : MonoBehaviour {
 		Logo.gameObject.SetActive (false);
 		_states.Set ("TransitionState");
 	}
-
+	
 	/// <summary>
 	/// Fade out the screen to seemlessly recenter the VR
 	/// </summary>
-	IEnumerator Recenter()
+	public IEnumerator FadeIn(Action Finished)
 	{
-		float stepA = 1f * (1f / 60f);		//Amount of alpha to add every frame
+		float stepA = 1f * Time.deltaTime;		//Amount of alpha to add every frame
 		Color c = FadeMaterial.color;
-
+		
 		//Fade to black
 		while(c.a < 1f)
 		{
 			c.a += stepA;
 			FadeMaterial.color = c;
-			yield return new WaitForSeconds(1f/60f);
+			yield return new WaitForEndOfFrame();
 		}
-
+		
 		//Round off color
 		c.a = 1f;
 		FadeMaterial.color = c;
-
-		//Recenter VR
-		InputTracking.Recenter ();
-
-		//Change state to bring up the title
-		_states.Set ("TitleState");
-
+		
+		if(Finished != null)
+			Finished ();
+	}
+	
+	/// <summary>
+	/// Fade out the screen to seemlessly recenter the VR
+	/// </summary>
+	public IEnumerator FadeOut(Action Finished)
+	{
+		float stepA = 1f * Time.deltaTime;		//Amount of alpha to add every frame
+		Color c = FadeMaterial.color;
+		
 		//Remove fade
 		while(c.a > 0)
 		{
 			c.a -= stepA;
 			FadeMaterial.color = c;
-			yield return new WaitForSeconds(1f/60f);
+			yield return new WaitForEndOfFrame();
 		}
+		
+		//Round off color
 		c.a = 0f;
 		FadeMaterial.color = c;
+
+		if(Finished != null)
+			Finished ();
 	}
 }

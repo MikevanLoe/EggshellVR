@@ -21,16 +21,12 @@ public class CraftingState : MenuState
 
 	public CraftingState (MenuController c) : base(c)
 	{
-	}
-
-	/// <summary>
-	/// Called during the start of menu
-	/// </summary>
-	public void Start()
-	{
 		//Find Crafting menu
 		Menu = _client.transform.FindChild ("Crafting Menu").gameObject;
+
 		SelectionHighlight = _client.transform.FindChild ("Crafting Menu/Highlight");
+
+		//Find crafting slots
 		int i = 1;
 		Slots = new List<ItemSlotModel> ();
 		while (true) 
@@ -42,6 +38,7 @@ public class CraftingState : MenuState
 			i++;
 		}
 
+		//Find inventory slots
 		i = 1;
 		InventorySlots = new List<ItemSlotModel> ();
 		while (true) {
@@ -51,7 +48,7 @@ public class CraftingState : MenuState
 			InventorySlots.Add(new ItemSlotModel(slotT.gameObject));
 			i++;
 		}
-
+		
 		//Intiailize the crafting menu and inventory screen
 		foreach (var slot in Slots) 
 		{
@@ -63,6 +60,16 @@ public class CraftingState : MenuState
 			slot.ResetMaterials();
 			slot.Item = null;
 		}
+
+		//Set recipes
+		Recipes = new List<RecipeModel> {
+			new RecipeModel(
+				new ItemModel("Hengel", 1, "Dit is een vishengel. Hij bestaat uit een stok \nvan een esdoornboom, een vishaak gemaakt van \nijzer en een touw gemaakt van hennep."),
+				new ItemModel("Stok", 1, ""),
+				new ItemModel("Touw", 1, ""),
+				new ItemModel("Vishaak", 1, "")
+				)
+		};
 	}
 	
 	public override void Enter()
@@ -210,15 +217,17 @@ public class CraftingState : MenuState
 		if (selected >= 0) 
 		{
 			int slotsCount = InventorySlots.Count ();
-			if (!heldX && input.x != 0) 
+			if (!heldX && input.x != 0)
 			{
 				//Inventory page x
 				int hold = selected;
 				selected += (int)input.x * slotsCount / 2;
 				if (selected >= InventorySlots.Count ())
 					selected = hold;
-				if (selected >= -3)
+				else if (selected > -3)
 					selected = (int)Mathf.Clamp (selected, -2, slotsCount - 1);
+				else
+					selected = -4;
 			}
 			if (!heldY && input.y != 0) 
 			{

@@ -9,6 +9,6 @@ public class Bland : Personality
 		_voiceClips.Add(_gameController.GetClip ("bezoeker_03"));
 		_voiceClips.Add(_gameController.GetClip ("bezoeker_04"));
 		
-		_demand = Random.Range(1, 10);
+		Demand = Random.Range(1, 10);
 	}
 }

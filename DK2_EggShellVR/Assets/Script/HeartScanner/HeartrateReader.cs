@@ -89,7 +89,7 @@ public class HeartrateReader : MonoBehaviour {
 		catch (Exception ex)
 		{
 			Debug.LogWarning("Failed to connect to the heartrate scanner.\n" +
-				"Please make sure there is an ANT+ device available and a heartrate sensor nearby broadcasting heartrate before trying again./n" + 
+				"Please make sure there is an ANT+ device available and a heartrate sensor nearby broadcasting heartrate before trying again.\n" + 
 			                 ex.Message);
 		}
 		//Since HRLow tracks the minimum, its initial value has to be above the minimum

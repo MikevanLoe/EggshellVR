@@ -8,6 +8,8 @@ public class CutsceneController : MonoBehaviour
 	private Dictionary<string, SceneModel> _cutscenes;
 	private List<Interaction> _curScene;
 	private Queue<string> _sceneQueue;
+	private GameObject _buttonIcon;
+	private MusicController _musicCont;
 	private float _interactionDelay;
 	private int _curInteraction = -1;
 	private Transform _player;
@@ -21,6 +23,9 @@ public class CutsceneController : MonoBehaviour
 		SerializeJson ();
 		_sceneQueue = new Queue<string> ();
 		_player = GameObject.FindGameObjectWithTag ("Player").transform;
+		_buttonIcon = GameObject.Find ("ButtonIcon");
+		_buttonIcon.SetActive(false);
+		_musicCont = GameObject.Find ("Music").GetComponent<MusicController>();
 	}
 
 	void Update()
@@ -45,6 +50,7 @@ public class CutsceneController : MonoBehaviour
 			//By setting curscene to null next update no scene will be played
 			_curScene = null;
 			_curInteraction = -1;
+			_musicCont.SetVolume (-1);
 			return;
 		}
 
@@ -73,16 +79,20 @@ public class CutsceneController : MonoBehaviour
 
 		//Go to next interaction
 		_curInteraction++;
+
+		//If there are no interactions left, end the scene
 		if (_curScene.Count <= _curInteraction) 
 		{
 			_curScene = null;
 			_curInteraction = -1;
+			_musicCont.SetVolume (-1);
 			return;
 		}
 		
 		_curScene [_curInteraction].Execute ();
 
 		_waitInput = false;
+		_buttonIcon.SetActive(false);
 
 		if (_curScene [_curInteraction] is PlayerLine)
 			_interactionDelay = Mathf.Infinity;			//Player lines don't end until they're spoken
@@ -96,6 +106,8 @@ public class CutsceneController : MonoBehaviour
 				_interactionDelay = Mathf.Infinity;
 				_waitInput = true;
 				_waitButton = _curScene[_curInteraction].WaitButton;
+				if(_waitButton == null)
+					_buttonIcon.SetActive(true);
 			}
 		}
 	}
@@ -161,6 +173,7 @@ public class CutsceneController : MonoBehaviour
 		_curScene = _cutscenes [key].Interactions;
 		_sceneRange = _cutscenes [key].Range;
 		_interactionDelay = 0;
+		_musicCont.SetVolume (0.2f);
 		return true;
 	}
 
