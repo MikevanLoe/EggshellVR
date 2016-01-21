@@ -1,0 +1,37 @@
+{"lines": [
+	{
+		"key" : "exordium",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Komt dat zien!",
+		"time" : 15
+	},
+	{
+		"key" : "narratio",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Verse vis \nHaring \nNjord zee",
+		"time" : 10
+	},
+	{
+		"key" : "propositio",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Drie vissen! \néén kilo \n35 centimeter \n2 goudstukken\n per stuk!",
+		"time" : 15
+	},
+	{
+		"key" : "argumentatio",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Zelfs gevangen! \nVishengel! \nHout van de Esdoorn boom \n Hennep Touw \nIjzer vishaakje",
+		"time" : 25
+	},
+	{
+		"key" : "peroratio",
+		"id" : 0,
+		"sequence" : 0,
+		"words" : "Koop nu!",
+		"time" : 10
+	}
+]}
