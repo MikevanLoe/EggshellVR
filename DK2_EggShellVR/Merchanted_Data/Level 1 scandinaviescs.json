@@ -1,0 +1,968 @@
+{"scenes": [
+	{
+		"SceneName" : "IslandIntro",
+		"Range" : 1,
+		"Interaction" : [
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "CloseMenu"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvLock"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "AddObjective",
+				"Name" : "Ga naar het dorp en spreek \nmet de dorpsbewoners."
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "QueueScene",
+				"Name" : "Menututorial"
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 1",
+				"Subtitles" : "Nu werd ik aangesproken door een ietwat vreemde \nman. Hij zei: ",
+				"Duration" : 3
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "aankomst meneer 1",
+				"Subtitles" : "Gegroet vreemdeling. Welkom op Svanhildr eiland. \nVoel je hier thuis. We hebben van alles op dit \neiland.",
+				"Duration" : 4.4
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Hoe kom ik van het eiland af?",
+				"Duration" : 1.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "aankomst meneer 2",
+				"Subtitles" : "Dat is geen probleem. Er gaat elke dag een veerboot \nnaar het vaste land. Je kan mee voor 6 goudstukken.",
+				"Duration" : 6.1
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Maar ik heb geen geld.",
+				"Duration" : 1.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "aankomst meneer 3",
+				"Subtitles" : "Als je ons helpt kun je vast wat geld verdienen. \nEr zwemt hier erg veel vis bij de pier, \nmaar we kunnen ze niet vangen.",
+				"Duration" : 5.8
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "aankomst meneer 4",
+				"Subtitles" : "We hebben namelijk geen vishengel. Als jij een \nvishengel maakt en wat vis voor ons vangt zijn \ner vast mensen die het van je willen kopen.",
+				"Duration" : 6.4
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "aankomst meneer 5",
+				"Subtitles" : "Als je hulp nodig hebt met het maken van een hengel \nkunnen de mensen in het dorp je ermee helpen.",
+				"Duration" : 4.4
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Bedankt voor alles.",
+				"Duration" : 1.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "aankomst meneer 6",
+				"Subtitles" : "Geen probleem. Veel succes met de vis.",
+				"Duration" : 2.5
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "UnlockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvUnlock"
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Doei.",
+				"Duration" : 0.3
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "aankomst meneer 7",
+				"Subtitles" : "Doei.",
+				"Duration" : 2.5
+			}
+		]
+	},
+	{
+		"SceneName" : "Ferryman",
+		"Range" : 1,
+		"Interaction" : [
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "CloseMenu"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvLock"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "veerboot 1",
+				"Subtitles" : "Hallo, ben je hier voor de veerboot?",
+				"Duration" : 4.0
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Dat klopt. Dus jij bent de veerboot eigenaar?",
+				"Duration" : 1.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "veerboot 2",
+				"Subtitles" : "Ik vertrek dadelijk naar het vaste land in de buurt van \nRaafnika, je zou mee mogen reizen.",
+				"Duration" : 6.1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "veerboot 3",
+				"Subtitles" : "De prijs om mee te mogen is 6 goudstukken.",
+				"Duration" : 6.4
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Ik heb het geld. Breng mij naar Raafnika.",
+				"Duration" : 1.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Islander",
+				"VoiceKey" : "veerboot 4",
+				"Subtitles" : "Oke, dan vertrekken we.",
+				"Duration" : 2.5
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "RollEnding"
+			}
+		]
+	},
+	{
+		"SceneName" : "Menututorial",
+		"Range" : 99999,
+		"Interaction" : [
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 2 1",
+				"Subtitles" : "Ik schreef in mijn logboek wat ik moest doen. Druk op Y om \nje logboek te bekijken.",
+				"WaitButton" : "Inventory",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "Tutorial",
+				"Text" : "Dit is je logboek. Als je ooit niet weet wat je moet doen, \nkan je hier altijd terug lezen waar je naartoe moet.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 2 2",
+				"Subtitles" : "Met de RB en LB knoppen sla je de pagina om. Daar vind je \nalle materialen die je hebt verzameld en kun je ze \nsamenvoegen om iets te maken. Probeer het even uit voor je \nverder gaat.",
+				"WaitButton" : "MenuLeft",
+				"Duration" :-1
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 3",
+				"Subtitles" : "Ik besloot om met de mensen uit het dorp te gaan praten.",
+				"Duration" : 6
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "UnlockPlayer"
+			}
+		]
+	},
+	{
+		"SceneName" : "ShopOwnerIntro",
+		"Range" : 1,
+		"Interaction" : [
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Hallo",
+				"Duration" : 0.3
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "CloseMenu"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvLock"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "ShopOwner",
+				"VoiceKey" : "shop owner 1",
+				"Subtitles" : "Hallo. Kan ik je ergens mee helpen?",
+				"Duration" : 2.5
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Kan je helpen met het maken van een vishengel?",
+				"Duration" : 2.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "ShopOwner",
+				"VoiceKey" : "shop owner 2",
+				"Subtitles" : "Mag ik vragen waar je die voor nodig hebt?",
+				"Duration" : 3.1
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Ik wil de mensen op het eiland helpen door vis te vangen.",
+				"Duration" : 1.8
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "ShopOwner",
+				"VoiceKey" : "shop owner 3",
+				"Subtitles" : "Okay, ik kan wel helpen. Ik heb volgens mij nog wel iets liggen.",
+				"Duration" : 3.4
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "ShopOwner",
+				"VoiceKey" : "shop owner 4",
+				"Subtitles" : "Ik heb hier een vishaak. Kan je die gebruiken?",
+				"Duration" : 3.4
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Die heb ik zeker nodig.",
+				"Duration" : 1.0
+			},
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "TriggerAnim",
+				"Name" : "ShopOwner",
+				"Text" : "Give",
+				"Duration" : 0
+			}
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "ShopOwner",
+				"VoiceKey" : "shop owner 5",
+				"Subtitles" : "Alstjeblieft, ik hoop dat je er iets aan hebt.",
+				"Duration" : 3.4
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "Finished",
+				"Name" : "ShopOwner"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "UnlockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvUnlock"
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Bedankt voor je hulp.",
+				"Duration" : 1.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "ShopOwner",
+				"VoiceKey" : "shop owner 6",
+				"Subtitles" : "Geen probleem. Veel succes.",
+				"Duration" : 1.8
+			}
+		]
+	},
+	{
+		"SceneName" : "PresGood",
+		"Range" : 999999,
+		"Interaction" : [
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 10",
+				"Subtitles" : "Iedereen reageerde erg enthousiast op mijn presentatie, ik \nverkocht deze vissen dan ook erg snel.",
+				"Duration" : 4.0
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 11",
+				"Subtitles" : "Nadat ik al mijn vis verkocht had, bedacht ik mij dat ik \nmisschien genoeg geld had om met de boot te gaan, \ndus ik ging naar de pier.",
+				"Duration" : 4.0
+			}
+		]
+	},
+	{
+		"SceneName" : "PresBad",
+		"Range" : 999999,
+		"Interaction" : [
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 12",
+				"Subtitles" : "Helaas had ik niet al mijn vis verkocht, Ik moest nu nogmaals op de \nmarkt gaan staan om de resterende vis te verkopen",
+				"Duration" : 4.0
+			}
+		]
+	},
+	{
+		"SceneName" : "PresIgnore",
+		"Range" : 1,
+		"Interaction" : [
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Hallo",
+				"Duration" : 0.3
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "CloseMenu"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvLock"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 16",
+				"Subtitles" : "Oh, sorry. Kun je misschien later terug komen? Ik ben aan het \nvoorbereiden op mijn presentatie.",
+				"Duration" : 4.0
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 13",
+				"Subtitles" : "Deze man had duidelijk geen intentie om met mij te praten. \nIk besloot later terug te komen.",
+				"Duration" : 4.0
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "UnlockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvUnlock"
+			}
+		]
+	},
+	{
+		"SceneName" : "PresTutorial",
+		"Range" : 1,
+		"Interaction" : [	
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "CloseMenu"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvLock"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 1",
+				"Subtitles" : "Komt dat zien, komt dat zien. Ik heb de meest verse haringen. \nNet gevangen uit de Njord zee.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 2",
+				"Subtitles" : "Ik heb 3 vissen voor u. Ze wegen wel een kilo en ze zijn wel \n34 cm lang. Maar voor 2 goudstukken per stuk zijn ze voor u. \nKoop ze nu de vissen nog vers zijn.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 3",
+				"Subtitles" : "Hallo, Wil je ook iets verkopen? Ik kan je wel helpen.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 14",
+				"Subtitles" : "Als je gaat presenteren moet je proberen om altijd te blijven \npraten en zo veel mogelijk oog contact maken. Gelukkig \nheb jij je boek om je voortgang bij te houden.",
+				"Duration" : -1
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "OpenPresMenu"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 15",
+				"Subtitles" : "Hier, pak je boek erbij. Ik zal je uitleggen hoe het werkt.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 4",
+				"Subtitles" : "Aan de linker kant kan je zien hoe goed je score is in de \npresentatie. De bovenste balk gaat over je hartslag. Probeer \nrustig te blijven zodat je hartslag niet te veel stijgt.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 5",
+				"Subtitles" : "De balk hieronder is de score die gaat over het aankijken van \nhet publiek. Het is namelijk heel belangrijk dat je het publiek \ngoed aankijkt tijdens de presentatie. Anders zullen ze hun \ninteresse snel verliezen. ",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 6",
+				"Subtitles" : "Ten slotte zie je een balk die aangeeft hoe goed je aan het \nspreken bent. Probeer zo veel mogelijk te spreken in de \ntijd die je hebt.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 8",
+				"Subtitles" : "Het is de bedoeling dat je de balkjes zo vol mogelijk probeert \nte krijgen en houden.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 9",
+				"Subtitles" : "Op de rechter pagina zie je verschillende woorden staan. \nDeze kun je gebruiken als hints om een zo goed \nmogelijk verhaal te creeeren.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 9.5",
+				"Subtitles" : "Jouw presentatie word opgedeeld in verschillende \nonderdelen. De hints zullen veranderen wanneer de tijd om is \nvoor het huidige onderdeel.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 10",
+				"Subtitles" : "Onder de hints zie je twee balkjes.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 11",
+				"Subtitles" : "Het eerste balkje geeft aan hoeveel je hebt gesproken in de \ntijd die je hebt voor dit onderdeel van de presentatie",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 12",
+				"Subtitles" : "En het tweede balkje geeft aan hoeveel tijd je nog hebt voor \ndit deel van de presentatie. Als het balkje vol is. Dan is dat \nonderdeel van de presentatie afgelopen. Dan zal je nieuwe \nhints krijgen en begint de timer opnieuw te lopen.",
+				"Duration" : -1
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "ClosePresMenu"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "PresDude",
+				"VoiceKey" : "tutorial 13",
+				"Subtitles" : "En dat is alles. Ik hoop dat het duidelijk is. Veel succes met \nje presentatie.",
+				"Duration" : -1
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "UnlockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvUnlock"
+			}
+			{
+				"Type" : "Event",
+				"ScriptKey" : "MovePresDude"
+			},
+		]
+	},
+	{
+		"SceneName" : "RudeIgnore",
+		"Range" : 1,
+		"Interaction" : [
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Hallo",
+				"Duration" : 0.3
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "CloseMenu"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvLock"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "",
+				"Subtitles" : "...",
+				"Duration" : 1.5
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 13",
+				"Subtitles" : "Deze man had duidelijk geen intentie om met mij te praten. \nIk besloot later terug te komen.",
+				"Duration" : 4.0
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "UnlockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvUnlock"
+			}
+		]
+	},
+	{
+		"SceneName" : "RudeDude",
+		"Range" : 1,
+		"Interaction" : [
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Hallo",
+				"Duration" : 0.3
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "CloseMenu"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvLock"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "rude dude 1",
+				"Subtitles" : "Uuhm hallo, jij bent hier nieuw toch?",
+				"Duration" : 2.5
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Dat klopt. Ik kom van het vaste land.",
+				"Duration" : 2.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "rude dude 2",
+				"Subtitles" : "Jij bent die jongen die verbannen is naar dit eiland toch?",
+				"Duration" : 3.1
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Ja dat klopt, maar het is niet mijn schuld. Ik ben verraden.",
+				"Duration" : 1.8
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "rude dude 3",
+				"Subtitles" : "Wat is er gebeurd dan? Ik kan me niet voorstellen dat je voor \nniets verbannen bent, dat zou heel erg raar zijn.",
+				"Duration" : 3.4
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Het volk is opgelicht met slechte uitvindingen en ik kreeg hier \nde schuld van. Maar het waren niet mijn uitvindingen.",
+				"Duration" : 1.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "rude dude 4",
+				"Subtitles" : "Uuhm oke, ik vind het maar een beetje een raar verhaal, \nmaar wat wou je van me?",
+				"Duration" : 3.4
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Ik wil een vishengel maken om te vissen.",
+				"Duration" : 1.0,
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "rude dude 5",
+				"Subtitles" : "Ah oke, dus je wil ons helpen, ik weet wel waar je touw \nkan vinden voor je vishengel.",
+				"Duration" : 1.8
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "rude dude 6",
+				"Subtitles" : "Rechts van mij zie je het eiland met de twee bergen. Als je \ndaarheen gaat zie je in de verte de oude wachttoren.",
+				"Duration" : 3.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "rude dude 7",
+				"Subtitles" : "De wachttoren wordt al jaren niet gebruikt, maar er ligt \nnog wat oud gereedschap. Met wat geluk kun je iets vinden \nvoor je vishengel.",
+				"Duration" : 3.0
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "AddObjective",
+				"Name" : "Zoek het touw bij de oude wachttoren"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "Finished",
+				"Name" : "Rude"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "QueueScene",
+				"Name" : "RudeMono"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "UnlockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvUnlock"
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Ik zal gaan kijken. Dankjewel.",
+				"Duration" : 1.0,
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "Rude",
+				"VoiceKey" : "rude dude 8",
+				"Subtitles" : "Ja hoor. Succes.",
+				"Duration" : 3.0
+			}
+		]
+	},
+	{
+		"SceneName" : "RudeMono",
+		"Range" : 9999999,
+		"Interaction" : [
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 5",
+				"Subtitles" : "Dit vond ik geen prettig gesprek, maar nu had ik wel een \nbeter idee over de locatie van het touw voor mijn hengel.",
+				"Duration" : 2.5
+			}
+		]
+	},
+	{
+		"SceneName" : "CoupleScene",
+		"Range" : 1,
+		"Interaction" : [
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Hallo",
+				"Duration" : 0.3
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "LockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "CloseMenu"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvLock"
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "CoupleM",
+				"VoiceKey" : "frank 1",
+				"Subtitles" : "He! Een nieuw gezicht!",
+				"Duration" : 2.5
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "CoupleF",
+				"VoiceKey" : "ellis 1",
+				"Subtitles" : "Hallo, ik ben Ellis en dit is mijn man Frank.",
+				"Duration" : 2.5
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Kunnen jullie mij helpen een vishengel maken?",
+				"Duration" : 2.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "CoupleF",
+				"VoiceKey" : "ellis 2",
+				"Subtitles" : "Hmm... Als je een vishengel maakt dan heb je een stok nodig.",
+				"Duration" : 3.1
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Kan ik niet gewoon een dikke tak van een boom halen?",
+				"Duration" : 2.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "CoupleM",
+				"VoiceKey" : "frank 2",
+				"Subtitles" : "Ik zou niet zomaar een stok uit het bos pakken, als je een \nhengel wilt maken heb je een sterk stuk hout nodig. \nBijvoorbeeld van een esdoorn boom.",
+				"Duration" : 3.1
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Waar kan ik esdoorn hout vinden?",
+				"Duration" : 2.0
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "CoupleM",
+				"VoiceKey" : "frank 3",
+				"Subtitles" : "Tsja... Dat weet ik niet...  Misschien is er een handelaar \ndie een mooie stok verkoopt?",
+				"Duration" : 3.1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "CoupleF",
+				"VoiceKey" : "ellis 3",
+				"Subtitles" : "Achter in het bos staat een esdoorn boom. Hij staat helemaal \nalleen, los van de andere bomen.",
+				"Duration" : 3.1
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "CoupleM",
+				"VoiceKey" : "frank 4",
+				"Subtitles" : "Ohja, die boom is heel oud. Er ligt vast een mooie tak op de \ngrond.",
+				"Duration" : 3.1
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "AddObjective",
+				"Name" : "Zoek de stok achterin het bos"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "Finished",
+				"Name" : "CoupleM"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "Finished",
+				"Name" : "CoupleF"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "UnlockPlayer"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "InvUnlock"
+			},
+			{
+				"Type" : "Event",
+				"ScriptKey" : "QueueScene",
+				"Name" : "CouplePost"
+			},
+			{ 
+				"Type" : "PlayerLine",
+				"Hint" : "Oke. Het bos op dit eiland. Ik ga zoeken.",
+				"Duration" : 1.8
+			},
+			{ 
+				"Type" : "NPCLine",
+				"NpcName" : "CoupleF",
+				"VoiceKey" : "ellis 4",
+				"Subtitles" : "Als je het lukt om vis te vangen dan ben ik je eerste klant.",
+				"Duration" : 3.0
+			}
+		]
+	},
+	{
+		"SceneName" : "CouplePost",
+		"Range" : 9999999,
+		"Interaction" : [
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 4",
+				"Subtitles" : "Nu ik een beter idee had waar ik de stok kon vinden, ging ik \nverder zoeken naar de verschillende onderdelen van \nde vishengel.",
+				"Duration" : 2.5
+			}
+		]
+	},
+	{
+		"SceneName" : "EnoughFish",
+		"Range" : 99999,
+		"Interaction" : [
+			{
+				"Type" : "Event",
+				"ScriptKey" : "MoveToCrowd"
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 8",
+				"Subtitles" : "Het vissen ging verrassend goed, er zat hier inderdaad \nveel vis.",
+				"Duration" : 6
+			},
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 9",
+				"Subtitles" : "Ik besloot om de vissen te gaan verkopen in het dorp.",
+				"Duration" : 6
+			}
+		]
+	},
+	{
+		"SceneName" : "TooManyFish",
+		"Range" : 99999,
+		"Interaction" : [
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "Tutorial",
+				"Text" : "Je kunt niet meer vis vasthouden. Alle extra vis wordt \nweg gegooid.",
+				"Duration" : -1
+			}
+		]
+	},
+	{
+		"SceneName" : "FishTut1",
+		"Range" : 99999,
+		"Interaction" : [
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 6",
+				"Subtitles" : "Nu ik de verschillende materialen verzameld had, keek \nik in mijn logboek om een vishengel te maken. Dit deed \nik door de verschillende materialen samen te voegen.",
+				"Duration" : 6
+			},
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "Tutorial",
+				"WaitButton" : "Inventory",
+				"Text" : "Open je logboek om verder de gaan.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "Tutorial",
+				"Text" : "Ga naar de samenvoeging pagina.",
+				"Duration" : -1
+			}
+		]
+	},
+	{
+		"SceneName" : "FishTut2",
+		"Range" : 99999,
+		"Interaction" : [
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "Tutorial",
+				"WaitButton" : "Fire1",
+				"Text" : "Selecteer de verschillende onderdelen en druk op A om ze samen \nte voegen. Als je dat doet verschijnt de vishengel. Selecteer \nde hengel en druk op A om hem te maken.",
+				"Duration" : -1
+			}
+		]
+	},
+	{
+		"SceneName" : "FishTut3",
+		"Range" : 99999,
+		"Interaction" : [
+			{ 
+				"Type" : "Monologue",
+				"VoiceKey" : "monoloog 6",
+				"Subtitles" : "Toen ik mijn vishengel gemaakt had, ben ik naar het \nstrand gegaan om te vissen. Het was erg mooi visweer \ndeze dag.",
+				"Duration" : 6
+			}
+		]
+	},
+	{
+		"SceneName" : "FishTut4",
+		"Range" : 99999,
+		"Interaction" : [
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "Tutorial",
+				"WaitButton" : "Fire2",
+				"Text" : "Druk op de X knop om je vishengel te pakken.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "Tutorial",
+				"WaitButton" : "Fire1",
+				"Text" : "Met de A knop gooi je je hengel uit.",
+				"Duration" : -1
+			},
+			{ 
+				"Type" : "Event",
+				"ScriptKey" : "Tutorial",
+				"WaitButton" : "Fire1",
+				"Text" : "Met de A knop haal je ook weer in. Druk op B terwijl \nje haak binnen is om je hengel weg te leggen.",
+				"Duration" : -1
+			}
+		]
+	}
+]}
